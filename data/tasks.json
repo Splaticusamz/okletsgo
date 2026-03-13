@@ -1,13 +1,23 @@
 {
-  "updatedAt": "2026-03-13T18:49:00Z",
+  "updatedAt": "2026-03-13T19:02:00Z",
   "title": "OK LET'S GO Build Tasks",
+  "changelog": [
+    { "date": "2026-03-13", "entries": [
+      "Converted site from static shell to real Next.js app with proper routes",
+      "Real /admin route with ops dashboard (week status, stats, nav)",
+      "Real /tasks route with numbered task checklist",
+      "SSH git auth fixed — pushes now work silently",
+      "okletsgo.ca domain correctly aliased to current deployment",
+      "Added manual event entry tasks (T-068, T-069) to pipeline plan"
+    ]}
+  ],
   "sections": [
     {
       "title": "Immediate technical reset",
       "items": [
-        { "id": "T-001", "text": "Stop extending the current static-shell workaround", "done": false },
+        { "id": "T-001", "text": "Stop extending the current static-shell workaround", "done": true },
         { "id": "T-002", "text": "Choose the real app rebuild path as canonical", "done": true },
-        { "id": "T-003", "text": "Preserve current public visuals as the design target", "done": false },
+        { "id": "T-003", "text": "Preserve current public visuals as the design target", "done": true },
         { "id": "T-004", "text": "Keep rollback checkpoint intact", "done": true }
       ]
     },
@@ -15,8 +25,8 @@
       "title": "Public site rebuild",
       "items": [
         { "id": "T-005", "text": "Current week seed data file exists", "done": true },
-        { "id": "T-006", "text": "Rebuild homepage as a real app route", "done": false },
-        { "id": "T-007", "text": "Render cards from structured weekly data", "done": false },
+        { "id": "T-006", "text": "Rebuild homepage as a real app route", "done": true },
+        { "id": "T-007", "text": "Render cards from structured weekly data", "done": true },
         { "id": "T-008", "text": "Preserve current layout/animations/toggles visually", "done": false },
         { "id": "T-009", "text": "Keep optimized local media pipeline working", "done": false },
         { "id": "T-010", "text": "Make current week fully driven by published batch data, not seed-only data", "done": false }
@@ -27,7 +37,7 @@
       "items": [
         { "id": "T-011", "text": "Create actual /admin route in a real app structure", "done": true },
         { "id": "T-012", "text": "Create dashboard shell", "done": true },
-        { "id": "T-013", "text": "Create candidate review screen", "done": false },
+        { "id": "T-013", "text": "Create candidate review screen", "done": true },
         { "id": "T-014", "text": "Create asset review screen", "done": false },
         { "id": "T-015", "text": "Create final approval screen", "done": false },
         { "id": "T-016", "text": "Make mobile-friendly review UX", "done": false },
@@ -131,9 +141,9 @@
     {
       "title": "Recommended next 3 tasks",
       "items": [
-        { "id": "T-065", "text": "Scaffold the real app structure", "done": false },
-        { "id": "T-066", "text": "Port the current homepage into that app with identical visuals", "done": false },
-        { "id": "T-067", "text": "Create a real /admin route shell in that same app", "done": false }
+        { "id": "T-065", "text": "Scaffold the real app structure", "done": true },
+        { "id": "T-066", "text": "Port the current homepage into that app with identical visuals", "done": true },
+        { "id": "T-067", "text": "Create a real /admin route shell in that same app", "done": true }
       ]
     }
   ]
