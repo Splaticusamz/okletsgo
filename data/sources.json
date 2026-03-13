@@ -1,0 +1,69 @@
+{
+  "updatedAt": "2026-03-13T23:05:00Z",
+  "sources": [
+    {
+      "id": "tourismkelowna",
+      "name": "Tourism Kelowna",
+      "type": "scraper",
+      "url": "https://www.tourismkelowna.com/events/",
+      "active": true,
+      "notes": "Main tourism events calendar for Kelowna"
+    },
+    {
+      "id": "eveningout",
+      "name": "Evening Out",
+      "type": "scraper",
+      "url": "https://eveningout.ca/events/kelowna",
+      "active": true,
+      "notes": "Local nightlife and events aggregator"
+    },
+    {
+      "id": "eventbrite-kelowna",
+      "name": "Eventbrite Kelowna",
+      "type": "scraper",
+      "url": "https://www.eventbrite.ca/d/canada--kelowna/events/",
+      "active": true,
+      "notes": "Ticketed events across Kelowna"
+    },
+    {
+      "id": "city-of-kelowna",
+      "name": "City of Kelowna",
+      "type": "scraper",
+      "url": "https://www.kelowna.ca/community/events",
+      "active": true,
+      "notes": "Official city-run events and community programs"
+    },
+    {
+      "id": "kelownanow",
+      "name": "Kelowna Now",
+      "type": "scraper",
+      "url": "https://www.kelownanow.com/events/",
+      "active": true,
+      "notes": "Local news site with community events calendar"
+    },
+    {
+      "id": "castanet-kelowna",
+      "name": "Castanet Kelowna",
+      "type": "scraper",
+      "url": "https://www.castanet.net/events/Kelowna/upcoming",
+      "active": true,
+      "notes": "Okanagan-wide news network with events listings"
+    },
+    {
+      "id": "okanagan-life",
+      "name": "Okanagan Life",
+      "type": "scraper",
+      "url": "https://okanaganlife.com/events/",
+      "active": true,
+      "notes": "Regional lifestyle magazine — arts, culture, outdoor events"
+    },
+    {
+      "id": "discoverpenticton",
+      "name": "Discover Penticton",
+      "type": "scraper",
+      "url": "https://discoverpenticton.com/events/",
+      "active": false,
+      "notes": "Broader Okanagan coverage — add when expanding south"
+    }
+  ]
+}

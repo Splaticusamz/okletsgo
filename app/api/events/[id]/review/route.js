@@ -8,7 +8,7 @@ export async function POST(request, { params }) {
   try {
     const { id } = await params;
     const body = await request.json();
-    const { action, stage, notes, reviewer } = body;
+    const { action, stage, notes, reviewedBy, reviewer } = body;
 
     if (!action) {
       return NextResponse.json({ error: 'action is required' }, { status: 400 });
@@ -28,12 +28,15 @@ export async function POST(request, { params }) {
 
     const newStatus = transition(event, action);
 
-    // Add review record
+    // Build full audit record
     const review = {
-      action,
+      id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      eventId: id,
       stage: stage ?? null,
+      action,
+      reviewedBy: reviewedBy ?? reviewer ?? 'admin',
+      reviewedAt: new Date().toISOString(),
       notes: notes ?? '',
-      reviewer: reviewer ?? 'admin',
       previousStatus: event.status,
       newStatus,
     };

@@ -35,11 +35,53 @@ function ModeTag({ mode }) {
   );
 }
 
+function ReviewHistory({ reviews }) {
+  const [open, setOpen] = useState(false);
+  if (!reviews || reviews.length === 0) return null;
+
+  return (
+    <div className="rev-history">
+      <button
+        className="rev-history-toggle"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+      >
+        <span className="rev-history-icon">{open ? '▾' : '▸'}</span>
+        Review history
+        <span className="rev-history-count">{reviews.length}</span>
+      </button>
+      {open && (
+        <div className="rev-history-list">
+          {[...reviews].reverse().map((r, i) => {
+            const ts = r.reviewedAt
+              ? new Date(r.reviewedAt).toLocaleString('en-CA', {
+                  month: 'short', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                  timeZone: 'UTC', hour12: false,
+                }) + ' UTC'
+              : '—';
+            return (
+              <div key={r.id ?? i} className="rev-history-item">
+                <span className={`rev-action-badge rev-action-badge--${r.action}`}>{r.action}</span>
+                <span className="rev-by">{r.reviewedBy ?? 'admin'}</span>
+                {r.stage != null && <span className="rev-stage">stage {r.stage}</span>}
+                <span className="rev-when">{ts}</span>
+                {r.notes && <span className="rev-notes">{r.notes}</span>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CandidatesPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [acting, setActing] = useState({}); // id → true when in-flight
+  const [acting, setActing] = useState({});   // id → true when in-flight
+  const [cardError, setCardError] = useState({}); // id → error message
 
   useEffect(() => {
     fetch('/api/events')
@@ -55,40 +97,44 @@ export default function CandidatesPage() {
   }, []);
 
   async function doAction(id, action) {
+    setActing(a => ({ ...a, [id]: action }));
+    setCardError(e => ({ ...e, [id]: null }));
+
     // Optimistic update
-    setActing(a => ({ ...a, [id]: true }));
     const optimisticStatus = action === 'approve' ? 'approved_1'
       : action === 'reject' ? 'rejected'
       : action === 'defer' ? 'deferred'
       : null;
 
+    const prev = events.find(e => e.id === id);
     if (optimisticStatus) {
-      setEvents(prev => prev.map(e => e.id === id ? { ...e, status: optimisticStatus } : e));
+      setEvents(evs => evs.map(e => e.id === id ? { ...e, status: optimisticStatus } : e));
     }
 
     try {
       const res = await fetch(`/api/events/${id}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, stage: 1, notes: '' }),
+        body: JSON.stringify({ action, stage: 1, notes: '', reviewedBy: 'admin' }),
       });
       const data = await res.json();
       if (!res.ok) {
         // Revert on error
-        setEvents(prev => prev.map(e => e.id === id ? { ...e, status: e._prevStatus ?? e.status } : e));
-        console.error('Review error:', data.error);
+        setEvents(evs => evs.map(e => e.id === id ? prev : e));
+        setCardError(e => ({ ...e, [id]: data.error ?? 'Review failed' }));
       } else {
-        // Confirm server state
-        setEvents(prev => prev.map(e => e.id === id ? data.event : e));
+        // Confirm server state (includes updated reviews array)
+        setEvents(evs => evs.map(e => e.id === id ? data.event : e));
       }
     } catch (err) {
-      console.error('Network error:', err);
+      setEvents(evs => evs.map(e => e.id === id ? prev : e));
+      setCardError(e => ({ ...e, [id]: err.message }));
     } finally {
       setActing(a => ({ ...a, [id]: false }));
     }
   }
 
-  const candidates = events; // Show all events on this page
+  const candidates = events;
 
   return (
     <main className="admin-shell">
@@ -108,11 +154,11 @@ export default function CandidatesPage() {
 
         {/* ── Nav ── */}
         <nav className="adash-nav">
-          <Link href="/admin" className="adash-nav-link">Dashboard</Link>
+          <Link href="/admin"            className="adash-nav-link">Dashboard</Link>
           <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--active">Candidates</Link>
-          <Link href="/admin/assets" className="adash-nav-link adash-nav-link--dim">Assets</Link>
-          <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
-          <Link href="/tasks" className="adash-nav-link">Tasks</Link>
+          <Link href="/admin/assets"     className="adash-nav-link adash-nav-link--dim">Assets</Link>
+          <Link href="/admin/publish"    className="adash-nav-link adash-nav-link--dim">Publish</Link>
+          <Link href="/tasks"            className="adash-nav-link">Tasks</Link>
         </nav>
 
         {/* ── Page title row ── */}
@@ -125,7 +171,7 @@ export default function CandidatesPage() {
           </div>
         </div>
 
-        {/* ── State ── */}
+        {/* ── Page-level state ── */}
         {loading && (
           <div className="cand-empty">
             <div className="cand-empty-icon">⏳</div>
@@ -152,8 +198,10 @@ export default function CandidatesPage() {
         {!loading && !error && candidates.length > 0 && (
           <div className="cand-list">
             {candidates.map((c) => {
-              const isActing = acting[c.id];
+              const isActing = !!acting[c.id];
+              const actingAction = acting[c.id];
               const isDone = c.status !== 'candidate';
+              const errMsg = cardError[c.id];
               return (
                 <div key={c.id} className={`cand-card ${isDone ? 'cand-card--done' : ''}`}>
                   <div className="cand-card-main">
@@ -165,31 +213,35 @@ export default function CandidatesPage() {
                     </div>
                     <div className="cand-card-title">{c.title}</div>
                     <div className="cand-card-venue">{c.city ? `${c.title} · ${c.city}` : c.title}</div>
+                    {errMsg && (
+                      <div className="cand-card-error">⚠ {errMsg}</div>
+                    )}
+                    <ReviewHistory reviews={c.reviews} />
                   </div>
                   <div className="cand-card-actions">
                     <button
-                      className="cand-action cand-action--approve"
+                      className={`cand-action cand-action--approve ${actingAction === 'approve' ? 'cand-action--loading' : ''}`}
                       title="Approve"
                       disabled={isActing || isDone}
                       onClick={() => doAction(c.id, 'approve')}
                     >
-                      {isActing ? '…' : '✓ Approve'}
+                      {actingAction === 'approve' ? '…' : '✓ Approve'}
                     </button>
                     <button
-                      className="cand-action cand-action--reject"
+                      className={`cand-action cand-action--reject ${actingAction === 'reject' ? 'cand-action--loading' : ''}`}
                       title="Reject"
                       disabled={isActing || isDone}
                       onClick={() => doAction(c.id, 'reject')}
                     >
-                      {isActing ? '…' : '✗ Reject'}
+                      {actingAction === 'reject' ? '…' : '✗ Reject'}
                     </button>
                     <button
-                      className="cand-action cand-action--defer"
+                      className={`cand-action cand-action--defer ${actingAction === 'defer' ? 'cand-action--loading' : ''}`}
                       title="Defer"
                       disabled={isActing || isDone}
                       onClick={() => doAction(c.id, 'defer')}
                     >
-                      {isActing ? '…' : '→ Defer'}
+                      {actingAction === 'defer' ? '…' : '→ Defer'}
                     </button>
                   </div>
                 </div>
@@ -222,12 +274,16 @@ export default function CandidatesPage() {
         }
         .adash-nav {
           display: flex;
-          flex-wrap: wrap;
           gap: 4px;
           margin-bottom: 24px;
           border-bottom: 1px solid var(--border);
           padding-bottom: 16px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          flex-wrap: wrap;
         }
+        .adash-nav::-webkit-scrollbar { display: none; }
         .adash-nav-link {
           padding: 7px 14px;
           border-radius: 8px;
@@ -237,6 +293,7 @@ export default function CandidatesPage() {
           text-decoration: none;
           border: 1px solid var(--border);
           transition: background .15s, border-color .15s;
+          white-space: nowrap;
         }
         .adash-nav-link:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.15); }
         .adash-nav-link--active {
@@ -293,7 +350,7 @@ export default function CandidatesPage() {
         .cand-card {
           display: flex;
           justify-content: space-between;
-          align-items: center;
+          align-items: flex-start;
           gap: 16px;
           background: var(--panel);
           border: 1px solid var(--border);
@@ -329,6 +386,16 @@ export default function CandidatesPage() {
         }
         .cand-card-venue { font-size: 13px; color: var(--muted); }
 
+        .cand-card-error {
+          margin-top: 6px;
+          font-size: 12px;
+          color: #f87171;
+          background: rgba(248,113,113,.08);
+          border: 1px solid rgba(248,113,113,.2);
+          border-radius: 6px;
+          padding: 4px 8px;
+        }
+
         .cand-mode-tag {
           font-size: 11px;
           font-weight: 600;
@@ -352,7 +419,72 @@ export default function CandidatesPage() {
         .cand-badge--manual  { color: #34d399; border-color: rgba(52,211,153,.3); background: rgba(52,211,153,.08); }
         .cand-badge--scraper { color: #f472b6; border-color: rgba(244,114,182,.3); background: rgba(244,114,182,.08); }
 
-        .cand-card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        /* Review history */
+        .rev-history { margin-top: 8px; }
+        .rev-history-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--muted);
+          font-size: 12px;
+          font-weight: 500;
+          padding: 2px 0;
+          transition: color .15s;
+        }
+        .rev-history-toggle:hover { color: var(--text); }
+        .rev-history-icon { font-size: 10px; }
+        .rev-history-count {
+          font-size: 10px;
+          background: rgba(255,255,255,.08);
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          padding: 1px 6px;
+          color: var(--muted);
+        }
+        .rev-history-list {
+          margin-top: 6px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding-left: 4px;
+          border-left: 2px solid rgba(255,255,255,.08);
+        }
+        .rev-history-item {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 6px;
+          padding: 4px 8px;
+          font-size: 11px;
+          border-radius: 6px;
+          background: rgba(255,255,255,.02);
+        }
+        .rev-action-badge {
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: .05em;
+          padding: 1px 6px;
+          border-radius: 4px;
+        }
+        .rev-action-badge--approve { background: rgba(78,205,196,.15); color: #4ecdc4; }
+        .rev-action-badge--reject  { background: rgba(248,113,113,.15); color: #f87171; }
+        .rev-action-badge--defer   { background: rgba(245,158,11,.12); color: #f59e0b; }
+        .rev-by    { color: var(--text); font-weight: 600; }
+        .rev-stage { color: var(--muted); font-style: italic; }
+        .rev-when  { color: var(--muted); margin-left: auto; }
+        .rev-notes { color: var(--muted); font-style: italic; width: 100%; padding-top: 2px; }
+
+        .cand-card-actions {
+          display: flex;
+          gap: 8px;
+          flex-shrink: 0;
+          align-self: flex-start;
+          padding-top: 2px;
+        }
         .cand-action {
           padding: 8px 14px;
           border-radius: 8px;
@@ -363,8 +495,11 @@ export default function CandidatesPage() {
           background: transparent;
           transition: background .15s, opacity .15s;
           white-space: nowrap;
+          min-width: 88px;
+          text-align: center;
         }
         .cand-action:disabled { opacity: .35; cursor: default; }
+        .cand-action--loading { opacity: .7; }
         .cand-action--approve { color: #4ecdc4; border-color: rgba(78,205,196,.35); }
         .cand-action--approve:hover:not(:disabled) { background: rgba(78,205,196,.12); }
         .cand-action--reject  { color: #f87171; border-color: rgba(248,113,113,.35); }
@@ -372,11 +507,26 @@ export default function CandidatesPage() {
         .cand-action--defer   { color: var(--muted); border-color: var(--border); }
         .cand-action--defer:hover:not(:disabled)   { background: rgba(255,255,255,.05); color: var(--text); }
 
+        /* ── Mobile ── */
         @media (max-width: 640px) {
-          .adash-brand { font-size: 28px; }
-          .cand-card { flex-direction: column; align-items: flex-start; }
-          .cand-card-actions { width: 100%; }
-          .cand-action { flex: 1; text-align: center; }
+          .adash-brand { font-size: 26px; }
+          .adash-nav { flex-wrap: nowrap; }
+          .cand-card {
+            flex-direction: column;
+            align-items: stretch;
+          }
+          .cand-card-actions {
+            width: 100%;
+            align-self: stretch;
+            flex-direction: row;
+          }
+          .cand-action {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 6px;
+          }
+          .cand-card-title { white-space: normal; }
+          .rev-when { margin-left: 0; width: 100%; }
         }
       `}</style>
     </main>

@@ -12,6 +12,16 @@ function loadWeekData() {
   }
 }
 
+function loadSources() {
+  try {
+    const filePath = path.join(process.cwd(), 'data', 'sources.json');
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    return { sources: [] };
+  }
+}
+
 function countEvents(weekData) {
   if (!weekData?.days) return 0;
   let count = 0;
@@ -36,6 +46,9 @@ function countAssets(weekData) {
 
 export default function AdminPage() {
   const weekData = loadWeekData();
+  const sourcesData = loadSources();
+  const sources = sourcesData.sources ?? [];
+
   const isPublished = weekData?.status === 'published';
   const totalEvents = countEvents(weekData);
   const totalAssets = countAssets(weekData);
@@ -60,6 +73,9 @@ export default function AdminPage() {
         hour12: false,
       }) + ' UTC'
     : null;
+
+  const activeSources = sources.filter(s => s.active);
+  const inactiveSources = sources.filter(s => !s.active);
 
   return (
     <main className="admin-shell">
@@ -173,6 +189,44 @@ export default function AdminPage() {
 
         </div>
 
+        {/* ── Sources card ── */}
+        <section className="adash-sources-card">
+          <div className="adash-sources-header">
+            <h2 className="adash-card-title" style={{margin: 0}}>Event Sources</h2>
+            <div className="adash-sources-meta">
+              <span className="adash-src-chip adash-src-chip--active">{activeSources.length} active</span>
+              {inactiveSources.length > 0 && (
+                <span className="adash-src-chip adash-src-chip--inactive">{inactiveSources.length} inactive</span>
+              )}
+            </div>
+          </div>
+          <div className="adash-sources-list">
+            {sources.map(src => (
+              <div key={src.id} className={`adash-source-row ${src.active ? '' : 'adash-source-row--inactive'}`}>
+                <div className="adash-source-main">
+                  <span className={`adash-source-dot ${src.active ? 'adash-source-dot--on' : 'adash-source-dot--off'}`} />
+                  <span className="adash-source-name">{src.name}</span>
+                  <span className="adash-source-type">{src.type}</span>
+                </div>
+                <div className="adash-source-right">
+                  {src.notes && <span className="adash-source-notes">{src.notes}</span>}
+                  <a
+                    href={src.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="adash-source-url"
+                  >
+                    ↗
+                  </a>
+                  <span className={`adash-source-toggle ${src.active ? 'adash-source-toggle--on' : ''}`} title="Toggle (UI only)">
+                    {src.active ? 'ON' : 'OFF'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
       </div>
 
       <style>{`
@@ -199,12 +253,16 @@ export default function AdminPage() {
         /* Nav */
         .adash-nav {
           display: flex;
-          flex-wrap: wrap;
           gap: 4px;
           margin-bottom: 24px;
           border-bottom: 1px solid var(--border);
           padding-bottom: 16px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          flex-wrap: wrap;
         }
+        .adash-nav::-webkit-scrollbar { display: none; }
         .adash-nav-link {
           padding: 7px 14px;
           border-radius: 8px;
@@ -214,6 +272,7 @@ export default function AdminPage() {
           text-decoration: none;
           border: 1px solid var(--border);
           transition: background .15s, border-color .15s;
+          white-space: nowrap;
         }
         .adash-nav-link:hover {
           background: rgba(255,255,255,.06);
@@ -339,6 +398,7 @@ export default function AdminPage() {
           display: grid;
           grid-template-columns: 1fr 280px;
           gap: 16px;
+          margin-bottom: 16px;
         }
         .adash-card {
           background: var(--panel);
@@ -406,6 +466,96 @@ export default function AdminPage() {
           border-color: rgba(255,255,255,.15);
         }
 
+        /* Sources card */
+        .adash-sources-card {
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 20px 24px;
+        }
+        .adash-sources-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 16px;
+          flex-wrap: wrap;
+        }
+        .adash-sources-meta { display: flex; gap: 6px; align-items: center; }
+        .adash-src-chip {
+          font-size: 11px;
+          font-weight: 600;
+          padding: 2px 8px;
+          border-radius: 999px;
+          border: 1px solid;
+        }
+        .adash-src-chip--active { color: var(--accent); border-color: rgba(78,205,196,.3); background: rgba(78,205,196,.08); }
+        .adash-src-chip--inactive { color: var(--muted); border-color: var(--border); background: rgba(255,255,255,.03); }
+
+        .adash-sources-list { display: flex; flex-direction: column; gap: 6px; }
+        .adash-source-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 10px 14px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: rgba(255,255,255,.02);
+          transition: border-color .15s;
+        }
+        .adash-source-row:hover { border-color: rgba(255,255,255,.1); }
+        .adash-source-row--inactive { opacity: .5; }
+        .adash-source-main { display: flex; align-items: center; gap: 8px; }
+        .adash-source-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .adash-source-dot--on  { background: #4ecdc4; box-shadow: 0 0 6px rgba(78,205,196,.5); }
+        .adash-source-dot--off { background: rgba(255,255,255,.2); }
+        .adash-source-name { font-size: 14px; font-weight: 600; color: var(--text); }
+        .adash-source-type {
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: .06em;
+          color: var(--muted);
+          background: rgba(255,255,255,.05);
+          border: 1px solid var(--border);
+          border-radius: 4px;
+          padding: 1px 6px;
+        }
+        .adash-source-right { display: flex; align-items: center; gap: 8px; }
+        .adash-source-notes { font-size: 11px; color: var(--muted); max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .adash-source-url {
+          color: var(--muted);
+          text-decoration: none;
+          font-size: 13px;
+          padding: 2px 6px;
+          border-radius: 4px;
+          border: 1px solid var(--border);
+          transition: color .15s, background .15s;
+        }
+        .adash-source-url:hover { color: var(--text); background: rgba(255,255,255,.06); }
+        .adash-source-toggle {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: .06em;
+          padding: 3px 8px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          color: var(--muted);
+          background: rgba(255,255,255,.03);
+          cursor: pointer;
+          user-select: none;
+        }
+        .adash-source-toggle--on {
+          color: #4ecdc4;
+          border-color: rgba(78,205,196,.3);
+          background: rgba(78,205,196,.06);
+        }
+
         /* Mobile */
         @media (max-width: 640px) {
           .adash-stats-row {
@@ -415,7 +565,10 @@ export default function AdminPage() {
             grid-template-columns: 1fr;
           }
           .adash-week-stats { gap: 20px; }
-          .adash-brand { font-size: 28px; }
+          .adash-brand { font-size: 26px; }
+          .adash-nav { flex-wrap: nowrap; }
+          .adash-source-notes { display: none; }
+          .adash-source-row { gap: 8px; }
         }
       `}</style>
     </main>

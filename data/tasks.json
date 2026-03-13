@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-13T22:11:00Z",
+  "updatedAt": "2026-03-13T23:10:00Z",
   "title": "OK LET'S GO Build Tasks",
   "changelog": [
     {
@@ -11,7 +11,8 @@
         "SSH git auth fixed — pushes now work silently",
         "okletsgo.ca domain correctly aliased to current deployment",
         "Added manual event entry tasks (T-068, T-069) to pipeline plan",
-        "Wired double approval workflow — candidate and asset review screens now functional with persistent state"
+        "Wired double approval workflow — candidate and asset review screens now functional with persistent state",
+        "Wired review buttons, audit log, mobile UX polish, first source list defined"
       ]
     }
   ],
@@ -107,7 +108,7 @@
         {
           "id": "T-016",
           "text": "Make mobile-friendly review UX",
-          "done": false
+          "done": true
         },
         {
           "id": "T-017",
@@ -152,12 +153,12 @@
         {
           "id": "T-023",
           "text": "Add review actions: approve/reject/defer/reassign day/reassign mode/choose image/regenerate asset/hold",
-          "done": false
+          "done": true
         },
         {
           "id": "T-024",
           "text": "Record who approved what and when",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -167,7 +168,7 @@
         {
           "id": "T-025",
           "text": "Define first source list",
-          "done": false
+          "done": true
         },
         {
           "id": "T-026",
