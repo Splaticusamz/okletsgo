@@ -1,0 +1,169 @@
+{
+  "weekKey": "2026-03-09",
+  "status": "seed",
+  "title": "OK LET'S GO",
+  "updatedAt": "2026-03-13T13:30:00Z",
+  "days": [
+    {
+      "day": "MONDAY",
+      "entries": {
+        "night": {
+          "venue": "Storytime at the Library",
+          "city": "Kelowna",
+          "fallbackImage": "images/monday-night.jpg",
+          "video": "videos/optimized/monday-night.mp4"
+        },
+        "grownup": {
+          "venue": "La Maison Blanche Bistro",
+          "city": "Kelowna",
+          "fallbackImage": "images/monday.png",
+          "video": "videos/optimized/monday.mp4"
+        },
+        "family": {
+          "venue": "Neon Lounge Live",
+          "city": "Kelowna",
+          "fallbackImage": "images/monday-family.jpg",
+          "video": "videos/optimized/monday-family.mp4"
+        }
+      }
+    },
+    {
+      "day": "TUESDAY",
+      "entries": {
+        "night": {
+          "venue": "Splash Pad Park",
+          "city": "Osoyoos",
+          "fallbackImage": "images/tuesday-night.jpg",
+          "video": "videos/optimized/tuesday-night.mp4"
+        },
+        "grownup": {
+          "venue": "Chic Winery",
+          "city": "Osoyoos",
+          "fallbackImage": "images/tuesday.png",
+          "video": "videos/optimized/tuesday.mp4"
+        },
+        "family": {
+          "venue": "Lakeside Bonfire",
+          "city": "Osoyoos",
+          "fallbackImage": "images/tuesday-family.jpg",
+          "video": "videos/optimized/tuesday-family.mp4"
+        }
+      }
+    },
+    {
+      "day": "WEDNESDAY",
+      "entries": {
+        "night": {
+          "venue": "Mini Golf Adventure",
+          "city": "Penticton",
+          "fallbackImage": "images/wednesday-night.jpg",
+          "video": "videos/optimized/wednesday-night.mp4"
+        },
+        "grownup": {
+          "venue": "The Perch Pub",
+          "city": "Penticton",
+          "fallbackImage": "images/wednesday.png",
+          "video": "videos/optimized/wednesday.mp4"
+        },
+        "family": {
+          "venue": "Stargazing at Munson Mountain",
+          "city": "Penticton",
+          "fallbackImage": "images/wednesday-family.jpg",
+          "video": "videos/optimized/wednesday-family.mp4"
+        }
+      }
+    },
+    {
+      "day": "THURSDAY",
+      "entries": {
+        "night": {
+          "venue": "Kids Science Centre",
+          "city": "Kelowna",
+          "fallbackImage": "images/thursday-night.jpg",
+          "video": "videos/optimized/thursday-night.mp4"
+        },
+        "grownup": {
+          "venue": "Prospera Arena",
+          "city": "Kelowna",
+          "fallbackImage": "images/thursday.png",
+          "video": "videos/optimized/thursday-v2.mp4"
+        },
+        "family": {
+          "venue": "Summer Concert Series",
+          "city": "Kelowna",
+          "fallbackImage": "images/thursday-family.jpg",
+          "video": "videos/optimized/thursday-family.mp4"
+        }
+      }
+    },
+    {
+      "day": "FRIDAY",
+      "entries": {
+        "night": {
+          "venue": "Berry Picking Farm",
+          "city": "Oliver",
+          "fallbackImage": "images/friday-night.jpg",
+          "video": "videos/optimized/friday-night.mp4"
+        },
+        "grownup": {
+          "venue": "Okanagan Vines",
+          "city": "Oliver",
+          "fallbackImage": "images/friday.png",
+          "video": "videos/optimized/friday.mp4"
+        },
+        "family": {
+          "venue": "Night Bar Downtown",
+          "city": "Penticton",
+          "fallbackImage": "images/friday-family.jpg",
+          "video": "videos/optimized/friday-family.mp4"
+        }
+      }
+    },
+    {
+      "day": "SATURDAY",
+      "entries": {
+        "night": {
+          "venue": "Waterpark Fun Day",
+          "city": "Kelowna",
+          "fallbackImage": "images/saturday-night.jpg",
+          "video": "videos/optimized/saturday-night.mp4"
+        },
+        "grownup": {
+          "venue": "Ribfest",
+          "city": "Kelowna",
+          "fallbackImage": "images/saturday.png",
+          "video": "videos/optimized/saturday.mp4"
+        },
+        "family": {
+          "venue": "Fireworks Festival",
+          "city": "Kelowna",
+          "fallbackImage": "images/saturday-family.jpg",
+          "video": "videos/optimized/saturday-family.mp4"
+        }
+      }
+    },
+    {
+      "day": "SUNDAY",
+      "entries": {
+        "night": {
+          "venue": "Petting Zoo & Pony Rides",
+          "city": "Vernon",
+          "fallbackImage": "images/sunday-night.jpg",
+          "video": "videos/optimized/sunday-night.mp4"
+        },
+        "grownup": {
+          "venue": "Grand Parade Carnival",
+          "city": "Vernon",
+          "fallbackImage": "images/sunday.png",
+          "video": "videos/optimized/sunday.mp4"
+        },
+        "family": {
+          "venue": "Midnight Carnival",
+          "city": "Vernon",
+          "fallbackImage": "images/sunday-family.jpg",
+          "video": "videos/optimized/sunday-family.mp4"
+        }
+      }
+    }
+  ]
+}

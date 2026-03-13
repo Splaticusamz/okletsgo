@@ -525,6 +525,14 @@ body.dark-mode .utility-pill {
   color: #080B1A;
 }
 
+html[data-admin-mode='1'] #adminShell {
+  display: block !important;
+}
+
+html[data-admin-mode='1'] #publicApp {
+  display: none !important;
+}
+
 /* Tooltip */
 .tooltip {
   position: fixed;

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OK LET'S GO Admin</title>
+  <style>
+    :root {
+      --bg: #080b1a;
+      --panel: #0d1023;
+      --border: rgba(255,255,255,.08);
+      --text: #fff;
+      --muted: #94a3b8;
+      --accent: #4ecdc4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .title {
+      font-size: 40px;
+      line-height: .9;
+      font-weight: 800;
+      letter-spacing: -.05em;
+    }
+    .title .ok { color: var(--accent); }
+    .pill {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .card {
+      grid-column: span 12;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 18px; }
+    .muted { color: var(--muted); }
+    .list { display: grid; gap: 10px; margin-top: 12px; }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.02);
+    }
+    .item strong { display: block; }
+    .tag {
+      font-size: 12px;
+      color: var(--accent);
+      border: 1px solid rgba(78,205,196,.2);
+      border-radius: 999px;
+      padding: 6px 10px;
+      white-space: nowrap;
+      height: fit-content;
+    }
+    @media (min-width: 900px) {
+      .card.span-4 { grid-column: span 4; }
+      .card.span-8 { grid-column: span 8; }
+      .card.span-6 { grid-column: span 6; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="title"><span class="ok">OK</span><br>LET'S GO<br>ADMIN</div>
+      </div>
+      <div class="pill">Foundation scaffold · review-first pipeline</div>
+    </div>
+
+    <div class="grid">
+      <section class="card span-4">
+        <h2>Build status</h2>
+        <div class="muted">This is the initial admin shell under <code>/admin</code>. It exists to anchor the internal ops app on the same domain while we refactor the public homepage to read approved weekly batch data.</div>
+      </section>
+
+      <section class="card span-8">
+        <h2>Next milestones</h2>
+        <div class="list">
+          <div class="item"><div><strong>1. Dynamic public data layer</strong><span class="muted">Move homepage card content to published weekly batch data while preserving current visual design.</span></div><span class="tag">in progress</span></div>
+          <div class="item"><div><strong>2. Candidate review queue</strong><span class="muted">Double approval stage 1 before asset creation.</span></div><span class="tag">planned</span></div>
+          <div class="item"><div><strong>3. Asset pipeline review</strong><span class="muted">Crops, animation previews, re-generation controls.</span></div><span class="tag">planned</span></div>
+          <div class="item"><div><strong>4. Final publish review</strong><span class="muted">Double approval stage 2 before site/newsletter publish.</span></div><span class="tag">planned</span></div>
+        </div>
+      </section>
+
+      <section class="card span-6">
+        <h2>Current week seed source</h2>
+        <div class="muted">The refactor now has a canonical current-week data file at <code>/data/current-week.json</code>. This will be the bridge from the current handcrafted site into a truly dynamic published batch model.</div>
+      </section>
+
+      <section class="card span-6">
+        <h2>Archive/checkpoint safety</h2>
+        <div class="muted">A pre-refactor checkpoint and full snapshot archive were created before starting this migration, so the current live experience can be restored quickly if needed.</div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,5 +1,65 @@
-// Animated background video swap
+// Route mode bootstrap
 (function () {
+  var isAdminMode = document.documentElement.getAttribute('data-admin-mode') === '1';
+  if (isAdminMode) return;
+
+// Data-driven card rendering
+(function () {
+  var INSERT_BEFORE_TUESDAY = 'TUESDAY';
+  var INSERT_BEFORE_FRIDAY = 'FRIDAY';
+  var MODE_ORDER = ['night', 'grownup', 'family'];
+
+  function createCard(dayData) {
+    var template = document.getElementById('cardTemplate');
+    var fragment = template.content.cloneNode(true);
+    var card = fragment.querySelector('.card');
+    var imgStrip = fragment.querySelector('.card-img-strip');
+    var contentStrip = fragment.querySelector('.card-content-strip');
+
+    MODE_ORDER.forEach(function (mode) {
+      var entry = dayData.entries[mode];
+      var img = document.createElement('div');
+      img.className = 'card-img';
+      img.style.backgroundImage = "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('" + entry.fallbackImage + "')";
+      imgStrip.appendChild(img);
+
+      var content = document.createElement('a');
+      content.href = '#';
+      content.className = 'card-content';
+      content.innerHTML = '<span class="card-day">' + dayData.day + '</span>' +
+        '<span class="card-venue">' + entry.venue + '</span>' +
+        '<span class="card-city">' + entry.city + '</span>';
+      contentStrip.appendChild(content);
+    });
+
+    return card;
+  }
+
+  fetch('data/current-week.json', { cache: 'no-store' })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      var grid = document.getElementById('cardsGrid');
+      var ctaTile = grid.querySelector('.utility-tile--cta');
+      var brandTile = grid.querySelector('.utility-tile--brand');
+      grid.innerHTML = '';
+
+      data.days.forEach(function (day) {
+        if (day.day === INSERT_BEFORE_TUESDAY && ctaTile) grid.appendChild(ctaTile);
+        if (day.day === INSERT_BEFORE_FRIDAY && brandTile) grid.appendChild(brandTile);
+        grid.appendChild(createCard(day));
+      });
+
+      if (brandTile && !grid.contains(brandTile)) grid.appendChild(brandTile);
+
+      document.dispatchEvent(new CustomEvent('okletsgo:cards-rendered'));
+    })
+    .catch(function (err) {
+      console.error('Failed to load current week data', err);
+    });
+})();
+
+// Animated background video swap
+function initAnimatedBackgrounds() {
   var VIDEO_MAP = {
     'images/monday-family.jpg': 'videos/optimized/monday-family.mp4',
     'images/monday-night.jpg': 'videos/optimized/monday-night.mp4',
@@ -129,7 +189,9 @@
     if (!videoSrc) return;
     attachAnimatedLayer(el, videoSrc);
   });
-})();
+}
+
+document.addEventListener('okletsgo:cards-rendered', initAnimatedBackgrounds);
 
 // Countdown timer — resets every 48 hours from the start of the week
 (function () {
@@ -163,7 +225,7 @@
 })();
 
 // Toggle logic — family/grown-up + daytime/nightlife with interlock
-(function () {
+function initToggleLogic() {
   var dayToggle = document.getElementById('dayToggle');
   var familyToggle = document.getElementById('familyToggle');
   var cards = document.querySelectorAll('.card');
@@ -284,10 +346,12 @@
   });
 
   applyMode();
-})();
+}
+
+document.addEventListener('okletsgo:cards-rendered', initToggleLogic);
 
 // Tooltip on card hover
-(function () {
+function initTooltips() {
   var tooltip = document.getElementById('tooltip');
   var cards = document.querySelectorAll('.card');
   var OFFSET = 12;
@@ -334,4 +398,7 @@
       tooltip.classList.remove('visible');
     });
   });
+}
+
+document.addEventListener('okletsgo:cards-rendered', initTooltips);
 })();
