@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OK LET'S GO — Okanagan Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+SC:wght@600&family=Jost:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <div class="slide">
+      <div class="content">
+        <!-- Header -->
+        <div class="header">
+          <div class="title-area">
+            <h1 class="title"><span class="title-ok">OK</span><br>LET'S<br>GO</h1>
+          </div>
+          <div class="toggles">
+            <label class="toggle-group">
+              <div class="toggle-labels">
+                <span class="toggle-title" id="familyTitle">Grown up</span>
+                <span class="toggle-desc" id="familyDesc">nightlife available</span>
+              </div>
+              <input type="checkbox" class="toggle-input" id="familyToggle">
+              <div class="toggle-track toggle-track--family">
+                <div class="toggle-knob"></div>
+              </div>
+            </label>
+            <label class="toggle-group">
+              <div class="toggle-labels">
+                <span class="toggle-title" id="dayTitle">Daytime</span>
+                <span class="toggle-desc" id="dayDesc">daytime events</span>
+              </div>
+              <input type="checkbox" class="toggle-input" id="dayToggle" checked>
+              <div class="toggle-track toggle-track--day">
+                <div class="toggle-knob toggle-knob--day">
+                  <span class="toggle-icon toggle-icon--sun">☀︎</span>
+                  <span class="toggle-icon toggle-icon--moon">☾</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Event Cards -->
+        <div class="cards-section">
+          <div class="cards-grid">
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/monday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/monday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/monday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">MONDAY</span>
+                  <span class="card-venue">Storytime at the Library</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">MONDAY</span>
+                  <span class="card-venue">La Maison Blanche Bistro</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">MONDAY</span>
+                  <span class="card-venue">Neon Lounge Live</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/tuesday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/tuesday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/tuesday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">TUESDAY</span>
+                  <span class="card-venue">Splash Pad Park</span>
+                  <span class="card-city">Osoyoos</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">TUESDAY</span>
+                  <span class="card-venue">Chic Winery</span>
+                  <span class="card-city">Osoyoos</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">TUESDAY</span>
+                  <span class="card-venue">Lakeside Bonfire</span>
+                  <span class="card-city">Osoyoos</span>
+                </a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/wednesday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/wednesday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/wednesday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">WEDNESDAY</span>
+                  <span class="card-venue">Mini Golf Adventure</span>
+                  <span class="card-city">Penticton</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">WEDNESDAY</span>
+                  <span class="card-venue">The Perch Pub</span>
+                  <span class="card-city">Penticton</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">WEDNESDAY</span>
+                  <span class="card-venue">Stargazing at Munson Mountain</span>
+                  <span class="card-city">Penticton</span>
+                </a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/thursday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/thursday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/thursday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">THURSDAY</span>
+                  <span class="card-venue">Kids Science Centre</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">THURSDAY</span>
+                  <span class="card-venue">Prospera Arena</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">THURSDAY</span>
+                  <span class="card-venue">Summer Concert Series</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/friday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/friday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/friday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">FRIDAY</span>
+                  <span class="card-venue">Berry Picking Farm</span>
+                  <span class="card-city">Oliver</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">FRIDAY</span>
+                  <span class="card-venue">Okanagan Vines</span>
+                  <span class="card-city">Oliver</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">FRIDAY</span>
+                  <span class="card-venue">Night Bar Downtown</span>
+                  <span class="card-city">Penticton</span>
+                </a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/saturday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/saturday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/saturday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">SATURDAY</span>
+                  <span class="card-venue">Waterpark Fun Day</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">SATURDAY</span>
+                  <span class="card-venue">Ribfest</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">SATURDAY</span>
+                  <span class="card-venue">Fireworks Festival</span>
+                  <span class="card-city">Kelowna</span>
+                </a>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-strip">
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/sunday-night.jpg')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/sunday.png')"></div>
+                <div class="card-img" style="background-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('images/sunday-family.jpg')"></div>
+              </div>
+              <div class="card-content-strip">
+                <a href="#" class="card-content">
+                  <span class="card-day">SUNDAY</span>
+                  <span class="card-venue">Petting Zoo & Pony Rides</span>
+                  <span class="card-city">Vernon</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">SUNDAY</span>
+                  <span class="card-venue">Grand Parade Carnival</span>
+                  <span class="card-city">Vernon</span>
+                </a>
+                <a href="#" class="card-content">
+                  <span class="card-day">SUNDAY</span>
+                  <span class="card-venue">Midnight Carnival</span>
+                  <span class="card-city">Vernon</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="footer">
+            <div class="timer-area">
+              <span class="footer-text">List resets in <span id="countdown">44:03:41</span></span>
+            </div>
+            <div class="newsletter-area">
+              <span class="footer-text">Always stay up to date</span>
+              <button class="newsletter-btn">Join the Newsletter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="tooltip" class="tooltip"></div>
+  <script src="script.js"></script>
+</body>
+</html>

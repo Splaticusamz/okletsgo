@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__mcp-registry__search_mcp_registry",
+      "WebSearch",
+      "mcp__figma__get_figma_data",
+      "mcp__figma__download_figma_images",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/monday-night.jpg \"https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80\")",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/tuesday-night.jpg \"https://images.unsplash.com/photo-1497906539264-eb74442e37a9?w=800&q=80\")",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/wednesday-night.jpg \"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80\")",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/thursday-night.jpg \"https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80\")",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/friday-night.jpg \"https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=800&q=80\")",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/saturday-night.jpg \"https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80\")",
+      "Bash(curl -sL -o /d/src/okletsgo/website/images/sunday-night.jpg \"https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=800&q=80\")",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(curl -L -o monday-family.jpg \"https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80&fit=crop\")",
+      "Bash(curl -L -o tuesday-family.jpg \"https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=1200&q=80&fit=crop\")",
+      "Bash(curl -L -o wednesday-family.jpg \"https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80&fit=crop\")",
+      "Bash(curl -L -o thursday-family.jpg \"https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=1200&q=80&fit=crop\")",
+      "Bash(curl -L -o friday-family.jpg \"https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1200&q=80&fit=crop\")",
+      "Bash(curl -L -o saturday-family.jpg \"https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=1200&q=80&fit=crop\")",
+      "Bash(curl -L -o sunday-family.jpg \"https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=1200&q=80&fit=crop\")",
+      "Bash(ls -la \"D:/src/okletsgo/website/images/\"*family*)",
+      "Bash(curl -L -o wednesday-family.jpg \"https://images.unsplash.com/photo-1595429035839-c99c298ffdde?w=1200&q=80&fit=crop\")"
+    ]
+  }
+}

@@ -1,0 +1,474 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-page-bg: #EDEAE3;
+  --color-card-bg: #FEF7ED;
+  --color-title: #1A1B1D;
+  --color-accent: #F7795F;
+  --color-brown: #53352C;
+  --color-toggle-blue: #5FB5F7;
+  --color-toggle-dark: #2E2C53;
+  --color-white: #FFFFFF;
+
+  --font-primary: 'Jost', sans-serif;
+  --font-day: 'Alumni Sans SC', sans-serif;
+}
+
+body {
+  background: var(--color-page-bg);
+  font-family: var(--font-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s;
+}
+
+/* Dark mode overrides */
+body.dark-mode {
+  --color-page-bg: #080B1A;
+  --color-card-bg: #0D1023;
+  --color-title: #FFFFFF;
+  --color-accent: #4ECDC4;
+  --color-brown: #8899AA;
+  --color-toggle-blue: #4ECDC4;
+  --color-toggle-dark: #080B1A;
+}
+
+body.dark-mode .card-day {
+  color: #4ECDC4;
+}
+
+body.dark-mode .toggle-track--day {
+  background: #1A3A4A;
+}
+
+body.dark-mode .toggle-input:checked + .toggle-track--day {
+  background: #1A3A4A;
+}
+
+body.dark-mode .toggle-knob--day {
+  background: #080B1A;
+}
+
+body.dark-mode .toggle-input:checked + .toggle-track--day .toggle-knob {
+  background: #080B1A;
+}
+
+body.dark-mode .newsletter-btn {
+  background: #4ECDC4;
+  color: #080B1A;
+}
+
+/* Page wrapper */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 30px;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+/* Main slide card */
+.slide {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 10px;
+  padding: 30px;
+  background: var(--color-card-bg);
+  border-radius: 10px;
+  min-height: calc(100vh - 60px);
+  transition: background-color 0.3s;
+}
+
+/* Content column */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 25px;
+  flex: 1;
+}
+
+/* Header row */
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-area {
+  flex: 1;
+}
+
+.title {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 0.9em;
+  letter-spacing: -0.06em;
+  color: var(--color-title);
+}
+
+.title-ok {
+  color: var(--color-accent);
+}
+
+/* Toggles */
+.toggles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.toggle-title {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 0.9em;
+  color: var(--color-accent);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.toggle-desc {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 0.9em;
+  color: var(--color-brown);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.toggle-title.fading,
+.toggle-desc.fading {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.toggle-input {
+  display: none;
+}
+
+.toggle-track {
+  width: 70px;
+  height: 40px;
+  border-radius: 999px;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.toggle-track--family {
+  background: var(--color-accent);
+  justify-content: flex-start;
+}
+
+.toggle-track--day {
+  background: var(--color-accent);
+  justify-content: flex-start;
+}
+
+.toggle-input:checked + .toggle-track--family {
+  background: var(--color-toggle-blue);
+  justify-content: flex-end;
+}
+
+.toggle-input:checked + .toggle-track--day {
+  background: var(--color-accent);
+  justify-content: flex-end;
+}
+
+.toggle-knob {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.toggle-icon {
+  position: absolute;
+  font-size: 18px;
+  transition: opacity 0.2s;
+}
+
+.toggle-icon--sun {
+  opacity: 1;
+  color: #F7795F;
+}
+
+.toggle-icon--moon {
+  opacity: 0;
+  color: #4ECDC4;
+}
+
+.toggle-input:not(:checked) + .toggle-track--day .toggle-icon--sun {
+  opacity: 0;
+}
+
+.toggle-input:not(:checked) + .toggle-track--day .toggle-icon--moon {
+  opacity: 1;
+}
+
+.toggle-track--family .toggle-knob {
+  background: var(--color-brown);
+}
+
+.toggle-input:checked + .toggle-track--family .toggle-knob {
+  background: var(--color-toggle-dark);
+}
+
+.toggle-track--day .toggle-knob {
+  background: var(--color-brown);
+}
+
+.toggle-input:checked + .toggle-track--day .toggle-knob {
+  background: var(--color-brown);
+}
+
+/* Cards section */
+.cards-section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 25px;
+  flex: 1;
+}
+
+/* Cards grid */
+.cards-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex: 1;
+}
+
+.card {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 300px;
+  position: relative;
+}
+
+/* Three-layer filmstrip: images behind, content on top */
+/* Image order (top→bottom): night, grown-up, family */
+/* Content order (top→bottom): family, grown-up, night — reversed for opposite slide */
+.card-img-strip,
+.card-content-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300%;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-33.33%);
+}
+
+.card-content-strip {
+  z-index: 1;
+}
+
+.card-img {
+  width: 100%;
+  height: 33.33%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px;
+  width: 100%;
+  height: 33.33%;
+  text-decoration: none;
+}
+
+.card-day {
+  font-family: var(--font-day);
+  font-weight: 600;
+  font-size: 54px;
+  line-height: 0.9em;
+  color: var(--color-white);
+}
+
+.card-venue {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 0.9em;
+  color: var(--color-white);
+}
+
+.card-city {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 0.9em;
+  color: var(--color-white);
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer-area {
+  display: flex;
+  align-items: center;
+}
+
+.footer-text {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 0.9em;
+  color: var(--color-brown);
+}
+
+.newsletter-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.newsletter-btn {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 0.9em;
+  color: var(--color-white);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 99px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.newsletter-btn:hover {
+  opacity: 0.9;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 150ms, transform 150ms;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: #1A1B1D;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.dark-mode .tooltip {
+  background: rgba(13, 16, 35, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #E0E0E0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .cards-grid {
+    flex-wrap: wrap;
+  }
+
+  .card {
+    flex: 1 1 calc(25% - 10px);
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 15px;
+  }
+
+  .slide {
+    padding: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .toggles {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .toggle-labels {
+    align-items: flex-start;
+  }
+
+  .cards-grid {
+    flex-direction: column;
+  }
+
+  .card {
+    min-height: 200px;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .newsletter-area {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
