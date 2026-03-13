@@ -1,0 +1,53 @@
+{
+  "defaults": {
+    "durationSeconds": 4,
+    "loopSeconds": 3,
+    "camera": "static",
+    "style": [
+      "candid",
+      "naturalistic",
+      "documentary",
+      "subtle ambient motion",
+      "no cuts",
+      "loop friendly"
+    ],
+    "negative": [
+      "dramatic dolly",
+      "fast zoom",
+      "scene transition",
+      "heavy stylization",
+      "text artifacts",
+      "warped hands",
+      "warped faces"
+    ]
+  },
+  "assets": [
+    { "id": "monday-day", "day": "Monday", "mode": "grownup", "time": "day", "src": "images/monday.gif", "target": "images/animated/monday-day.mp4", "gifTarget": "images/animated/monday-day.gif", "prompt": "Adults enjoying a daytime outing in Kelowna, candid interactions, subtle movement only, static camera." },
+    { "id": "monday-night", "day": "Monday", "mode": "night", "time": "night", "src": "images/monday-night.jpg", "target": "images/animated/monday-night.mp4", "gifTarget": "images/animated/monday-night.gif", "prompt": "Nightlife scene in Kelowna, candid evening energy, subtle natural movement, static camera." },
+    { "id": "monday-family", "day": "Monday", "mode": "family", "time": "day", "src": "images/monday-family.jpg", "target": "images/animated/monday-family.mp4", "gifTarget": "images/animated/monday-family.gif", "prompt": "Family friendly daytime event in Kelowna, candid moments, gentle ambient motion, static camera." },
+
+    { "id": "tuesday-day", "day": "Tuesday", "mode": "grownup", "time": "day", "src": "images/tuesday.png", "target": "images/animated/tuesday-day.mp4", "gifTarget": "images/animated/tuesday-day.gif", "prompt": "Adults enjoying a daytime outing in Osoyoos, candid interactions, subtle movement only, static camera." },
+    { "id": "tuesday-night", "day": "Tuesday", "mode": "night", "time": "night", "src": "images/tuesday-night.jpg", "target": "images/animated/tuesday-night.mp4", "gifTarget": "images/animated/tuesday-night.gif", "prompt": "Nighttime social scene in Osoyoos, candid, subtle motion, static camera." },
+    { "id": "tuesday-family", "day": "Tuesday", "mode": "family", "time": "day", "src": "images/tuesday-family.jpg", "target": "images/animated/tuesday-family.mp4", "gifTarget": "images/animated/tuesday-family.gif", "prompt": "Family friendly Osoyoos event, candid and natural, subtle motion, static camera." },
+
+    { "id": "wednesday-day", "day": "Wednesday", "mode": "grownup", "time": "day", "src": "images/wednesday.png", "target": "images/animated/wednesday-day.mp4", "gifTarget": "images/animated/wednesday-day.gif", "prompt": "Adults at a daytime Penticton event, candid atmosphere, subtle movement, static camera." },
+    { "id": "wednesday-night", "day": "Wednesday", "mode": "night", "time": "night", "src": "images/wednesday-night.jpg", "target": "images/animated/wednesday-night.mp4", "gifTarget": "images/animated/wednesday-night.gif", "prompt": "Night scene in Penticton, candid evening vibe, gentle ambient motion, static camera." },
+    { "id": "wednesday-family", "day": "Wednesday", "mode": "family", "time": "day", "src": "images/wednesday-family.jpg", "target": "images/animated/wednesday-family.mp4", "gifTarget": "images/animated/wednesday-family.gif", "prompt": "Family mini golf or outdoor activity in Penticton, candid, subtle movement, static camera." },
+
+    { "id": "thursday-day", "day": "Thursday", "mode": "grownup", "time": "day", "src": "images/thursday.png", "target": "images/animated/thursday-day.mp4", "gifTarget": "images/animated/thursday-day.gif", "prompt": "Adults at a Kelowna daytime venue, candid interactions, soft ambient movement, static camera." },
+    { "id": "thursday-night", "day": "Thursday", "mode": "night", "time": "night", "src": "images/thursday-night.jpg", "target": "images/animated/thursday-night.mp4", "gifTarget": "images/animated/thursday-night.gif", "prompt": "Kelowna concert or evening scene, candid energy, subtle motion only, static camera." },
+    { "id": "thursday-family", "day": "Thursday", "mode": "family", "time": "day", "src": "images/thursday-family.jpg", "target": "images/animated/thursday-family.mp4", "gifTarget": "images/animated/thursday-family.gif", "prompt": "Family science or activity scene in Kelowna, candid movement, static camera." },
+
+    { "id": "friday-day", "day": "Friday", "mode": "grownup", "time": "day", "src": "images/friday.png", "target": "images/animated/friday-day.mp4", "gifTarget": "images/animated/friday-day.gif", "prompt": "Adults at a Friday daytime outing in Oliver, candid, natural movement, static camera." },
+    { "id": "friday-night", "day": "Friday", "mode": "night", "time": "night", "src": "images/friday-night.jpg", "target": "images/animated/friday-night.mp4", "gifTarget": "images/animated/friday-night.gif", "prompt": "Friday night social scene, candid bar atmosphere, subtle motion, static camera." },
+    { "id": "friday-family", "day": "Friday", "mode": "family", "time": "day", "src": "images/friday-family.jpg", "target": "images/animated/friday-family.mp4", "gifTarget": "images/animated/friday-family.gif", "prompt": "Family berry picking or outdoor activity, candid, static camera, subtle motion." },
+
+    { "id": "saturday-day", "day": "Saturday", "mode": "grownup", "time": "day", "src": "images/saturday.png", "target": "images/animated/saturday-day.mp4", "gifTarget": "images/animated/saturday-day.gif", "prompt": "Adults at a Saturday daytime event in Kelowna, candid scene, gentle motion, static camera." },
+    { "id": "saturday-night", "day": "Saturday", "mode": "night", "time": "night", "src": "images/saturday-night.jpg", "target": "images/animated/saturday-night.mp4", "gifTarget": "images/animated/saturday-night.gif", "prompt": "Saturday fireworks or nightlife scene, candid, subtle ambient movement, static camera." },
+    { "id": "saturday-family", "day": "Saturday", "mode": "family", "time": "day", "src": "images/saturday-family.jpg", "target": "images/animated/saturday-family.mp4", "gifTarget": "images/animated/saturday-family.gif", "prompt": "Family fun day in Kelowna, candid and natural, static camera, subtle movement." },
+
+    { "id": "sunday-day", "day": "Sunday", "mode": "grownup", "time": "day", "src": "images/sunday.png", "target": "images/animated/sunday-day.mp4", "gifTarget": "images/animated/sunday-day.gif", "prompt": "Adults at a Sunday daytime event in Vernon, candid interactions, subtle movement, static camera." },
+    { "id": "sunday-night", "day": "Sunday", "mode": "night", "time": "night", "src": "images/sunday-night.jpg", "target": "images/animated/sunday-night.mp4", "gifTarget": "images/animated/sunday-night.gif", "prompt": "Sunday night carnival scene, candid, subtle motion, static camera." },
+    { "id": "sunday-family", "day": "Sunday", "mode": "family", "time": "day", "src": "images/sunday-family.jpg", "target": "images/animated/sunday-family.mp4", "gifTarget": "images/animated/sunday-family.gif", "prompt": "Family petting zoo or carnival in Vernon, candid atmosphere, static camera, subtle movement." }
+  ]
+}

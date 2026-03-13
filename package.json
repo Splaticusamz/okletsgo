@@ -1,0 +1,12 @@
+{
+  "name": "okletsgo-animation-pipeline",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "pipeline:plan": "node scripts/animate-assets.mjs --plan",
+    "pipeline:run": "node scripts/animate-assets.mjs --run",
+    "pipeline:swap": "node scripts/animate-assets.mjs --swap",
+    "pipeline:rollback": "bash scripts/rollback-checkpoint.sh"
+  }
+}

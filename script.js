@@ -1,3 +1,136 @@
+// Animated background video swap
+(function () {
+  var VIDEO_MAP = {
+    'images/monday-family.jpg': 'videos/optimized/monday-family.mp4',
+    'images/monday-night.jpg': 'videos/optimized/monday-night.mp4',
+    'images/monday.png': 'videos/optimized/monday.mp4',
+    'images/saturday-night.jpg': 'videos/optimized/saturday-night.mp4',
+    'images/saturday.png': 'videos/optimized/saturday.mp4',
+    'images/sunday-night.jpg': 'videos/optimized/sunday-night.mp4',
+    'images/sunday.png': 'videos/optimized/sunday.mp4',
+    'images/sunday-family.jpg': 'videos/optimized/sunday-family.mp4',
+    'images/thursday-family.jpg': 'videos/optimized/thursday-family.mp4',
+    'images/thursday-night.jpg': 'videos/optimized/thursday-night.mp4',
+    'images/thursday.png': 'videos/optimized/thursday.mp4',
+    'images/tuesday-family.jpg': 'videos/optimized/tuesday-family.mp4',
+    'images/tuesday-night.jpg': 'videos/optimized/tuesday-night.mp4',
+    'images/tuesday.png': 'videos/optimized/tuesday.mp4',
+    'images/friday.png': 'videos/optimized/friday.mp4',
+    'images/friday-night.jpg': 'videos/optimized/friday-night.mp4',
+    'images/friday-family.jpg': 'videos/optimized/friday-family.mp4',
+    'images/saturday-family.jpg': 'videos/optimized/saturday-family.mp4',
+    'images/wednesday-family.jpg': 'videos/optimized/wednesday-family.mp4',
+    'images/wednesday-night.jpg': 'videos/optimized/wednesday-night.mp4',
+    'images/wednesday.png': 'videos/optimized/wednesday.mp4'
+  };
+
+  function extractUrl(el) {
+    var style = el.getAttribute('style') || '';
+    var match = style.match(/url\(['"]?([^'")]+)['"]?\)/);
+    return match ? match[1] : null;
+  }
+
+  function buildVideo(videoSrc) {
+    var video = document.createElement('video');
+    video.className = 'card-video';
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.controls = false;
+    video.preload = 'none';
+    video.disablePictureInPicture = true;
+    video.disableRemotePlayback = true;
+    video.removeAttribute('controls');
+    video.setAttribute('muted', '');
+    video.setAttribute('autoplay', '');
+    video.setAttribute('loop', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('x-webkit-airplay', 'deny');
+    video.setAttribute('disablepictureinpicture', '');
+    video.setAttribute('disableremoteplayback', '');
+    video.setAttribute('controlslist', 'nodownload noplaybackrate noremoteplayback nofullscreen');
+    video.setAttribute('tabindex', '-1');
+    video.setAttribute('aria-hidden', 'true');
+    video.src = videoSrc;
+    return video;
+  }
+
+  function attachAnimatedLayer(el, videoSrc) {
+    var spinner = document.createElement('span');
+    spinner.className = 'card-spinner is-visible';
+    spinner.setAttribute('aria-hidden', 'true');
+    el.appendChild(spinner);
+
+    var video = buildVideo(videoSrc);
+
+    var settled = false;
+
+    function done() {
+      if (settled) return;
+      settled = true;
+      video.classList.add('is-ready');
+      setTimeout(function () {
+        spinner.classList.remove('is-visible');
+      }, 700);
+    }
+
+    function fail() {
+      if (settled) return;
+      settled = true;
+      spinner.classList.remove('is-visible');
+    }
+
+    video.addEventListener('playing', done, { once: true });
+    video.addEventListener('timeupdate', function onTimeUpdate() {
+      if (video.currentTime > 0.2) {
+        video.removeEventListener('timeupdate', onTimeUpdate);
+        done();
+      }
+    });
+    video.addEventListener('error', fail, { once: true });
+    el.appendChild(video);
+
+    var started = false;
+    function start() {
+      if (started) return;
+      started = true;
+      video.preload = 'auto';
+      var p = video.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function () {});
+      }
+    }
+
+    var shouldLazyLoad = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+
+    if (shouldLazyLoad && 'IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            start();
+            observer.unobserve(el);
+          }
+        });
+      }, {
+        rootMargin: '300px 0px'
+      });
+      observer.observe(el);
+    } else {
+      start();
+    }
+  }
+
+  document.querySelectorAll('.card-img').forEach(function (el) {
+    var src = extractUrl(el);
+    var videoSrc = src && VIDEO_MAP[src];
+    if (!videoSrc) return;
+    attachAnimatedLayer(el, videoSrc);
+  });
+})();
+
 // Countdown timer — resets every 48 hours from the start of the week
 (function () {
   const countdownEl = document.getElementById('countdown');
