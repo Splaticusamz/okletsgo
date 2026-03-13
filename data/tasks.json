@@ -25,8 +25,8 @@
     {
       "title": "Real admin app",
       "items": [
-        { "id": "T-011", "text": "Create actual /admin route in a real app structure", "done": false },
-        { "id": "T-012", "text": "Create dashboard shell", "done": false },
+        { "id": "T-011", "text": "Create actual /admin route in a real app structure", "done": true },
+        { "id": "T-012", "text": "Create dashboard shell", "done": true },
         { "id": "T-013", "text": "Create candidate review screen", "done": false },
         { "id": "T-014", "text": "Create asset review screen", "done": false },
         { "id": "T-015", "text": "Create final approval screen", "done": false },
