@@ -533,6 +533,14 @@ html[data-admin-mode='1'] #publicApp {
   display: none !important;
 }
 
+html[data-tasks-mode='1'] #tasksShell {
+  display: block !important;
+}
+
+html[data-tasks-mode='1'] #publicApp {
+  display: none !important;
+}
+
 /* Tooltip */
 .tooltip {
   position: fixed;

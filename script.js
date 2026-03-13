@@ -1,6 +1,44 @@
 // Route mode bootstrap
 (function () {
   var isAdminMode = document.documentElement.getAttribute('data-admin-mode') === '1';
+  var isTasksMode = document.documentElement.getAttribute('data-tasks-mode') === '1';
+
+  if (isTasksMode) {
+    fetch('data/tasks.json', { cache: 'no-store' })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        var updated = document.getElementById('tasksUpdatedAt');
+        var content = document.getElementById('tasksContent');
+        if (updated) updated.textContent = 'Updated ' + new Date(data.updatedAt).toLocaleString();
+        if (!content) return;
+        content.innerHTML = '';
+        data.sections.forEach(function (section) {
+          var wrap = document.createElement('section');
+          wrap.style.background = '#0d1023';
+          wrap.style.border = '1px solid rgba(255,255,255,.08)';
+          wrap.style.borderRadius = '16px';
+          wrap.style.padding = '18px';
+          var html = '<h2 style="margin:0 0 12px;font-size:18px;">' + section.title + '</h2>';
+          html += '<div style="display:grid;gap:10px;">';
+          section.items.forEach(function (item) {
+            html += '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.02);">' +
+              '<input type="checkbox" disabled ' + (item.done ? 'checked' : '') + ' style="margin-top:3px;width:16px;height:16px;accent-color:#4ecdc4;" />' +
+              '<div><div style="font-size:12px;color:#4ecdc4;margin-bottom:4px;">' + item.id + '</div><div>' + item.text + '</div></div>' +
+              '</div>';
+          });
+          html += '</div>';
+          wrap.innerHTML = html;
+          content.appendChild(wrap);
+        });
+      })
+      .catch(function (err) {
+        var content = document.getElementById('tasksContent');
+        if (content) content.innerHTML = '<div style="color:#fca5a5;">Failed to load tasks.</div>';
+        console.error(err);
+      });
+    return;
+  }
+
   if (isAdminMode) return;
 
 // Data-driven card rendering

@@ -10,12 +10,24 @@
   <link rel="stylesheet" href="styles.css">
   <script>
     (function () {
-      var isAdminMode = window.location.pathname.replace(/\/+$/, '') === '/admin' || new URLSearchParams(window.location.search).get('admin') === '1' || window.location.hash === '#admin';
+      var normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
+      var isAdminMode = normalizedPath === '/admin' || new URLSearchParams(window.location.search).get('admin') === '1' || window.location.hash === '#admin';
+      var isTasksMode = normalizedPath === '/tasks' || new URLSearchParams(window.location.search).get('tasks') === '1' || window.location.hash === '#tasks';
       if (isAdminMode) { document.documentElement.setAttribute('data-admin-mode', '1'); document.write('<style>#publicApp{display:none!important}#adminShell{display:block!important}</style>'); }
+      if (isTasksMode) { document.documentElement.setAttribute('data-tasks-mode', '1'); document.write('<style>#publicApp{display:none!important}#tasksShell{display:block!important}</style>'); }
     })();
   </script>
 </head>
 <body>
+  <div id="tasksShell" style="display:none;min-height:100vh;background:#080b1a;color:#fff;font-family:Inter, ui-sans-serif, system-ui, sans-serif;padding:24px;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:24px;">
+        <div style="font-size:40px;line-height:.9;font-weight:800;letter-spacing:-.05em;"><span style="color:#4ecdc4;">OK</span><br>LET'S GO<br>TASKS</div>
+        <div id="tasksUpdatedAt" style="display:inline-flex;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:8px 12px;color:#94a3b8;font-size:13px;">Loading…</div>
+      </div>
+      <div id="tasksContent" style="display:grid;gap:16px;"></div>
+    </div>
+  </div>
   <div id="adminShell" style="display:none;min-height:100vh;background:#080b1a;color:#fff;font-family:Inter, ui-sans-serif, system-ui, sans-serif;padding:24px;">
     <div style="max-width:1200px;margin:0 auto;">
       <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:24px;">
