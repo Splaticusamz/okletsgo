@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="styles.css">
   <script>
     (function () {
-      var isAdminMode = window.location.pathname.replace(/\/+$/, '') === '/admin' || new URLSearchParams(window.location.search).get('admin') === '1';
+      var isAdminMode = window.location.pathname.replace(/\/+$/, '') === '/admin' || new URLSearchParams(window.location.search).get('admin') === '1' || window.location.hash === '#admin';
       if (isAdminMode) { document.documentElement.setAttribute('data-admin-mode', '1'); document.write('<style>#publicApp{display:none!important}#adminShell{display:block!important}</style>'); }
     })();
   </script>
