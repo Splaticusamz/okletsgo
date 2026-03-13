@@ -1,3 +1,5 @@
 .vercel
 .env
 images/animated/*.txt
+node_modules
+.next
