@@ -106,6 +106,7 @@ export default function AdminPage() {
           <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
           <Link href="/admin/newsletter" className="adash-nav-link adash-nav-link--dim">Newsletter</Link>
           <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
+          <Link href="/admin/guide" className="adash-nav-link adash-nav-link--dim">Guide</Link>
           <Link href="/tasks" className="adash-nav-link">Tasks</Link>
         </nav>
 
