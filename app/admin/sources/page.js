@@ -3,10 +3,18 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-function ResultCard({ result }) {
+function scoreTone(score) {
+  if (score >= 80) return 'score-pill--strong';
+  if (score >= 60) return 'score-pill--mid';
+  return 'score-pill--weak';
+}
+
+function ResultCard({ result, importing, importError, importResult, onImport }) {
   if (!result) return null;
 
   const summary = result.summary ?? {};
+  const venueSummary = summary.venueSummary ?? {};
+  const importableEvents = (result.events ?? []).filter((event) => (event.confidenceScore ?? 0) >= 45);
 
   return (
     <section className="panel">
@@ -23,8 +31,29 @@ function ResultCard({ result }) {
           <span className="chip">dupes {summary.duplicateCount ?? 0}</span>
           <span className="chip">errors {summary.errorCount ?? 0}</span>
           <span className="chip">fallbacks {summary.fallbackCount ?? 0}</span>
+          <span className="chip">avg confidence {summary.averageConfidence ?? '—'}</span>
+          <span className="chip">venues {venueSummary.uniqueVenues ?? 0}</span>
+          <span className="chip">addresses {venueSummary.addressParsed ?? 0}</span>
         </div>
       </div>
+
+      <div className="panel-sub" style={{ marginTop: 12 }}>
+        Transparent scoring and venue enrichment are now part of source normalization. Import pulls deduped candidates into review stage 1 and skips obvious duplicates already in the store.
+      </div>
+
+      <div className="import-bar">
+        <button className="primary-btn" disabled={importableEvents.length === 0 || importing} onClick={() => onImport(importableEvents)}>
+          {importing ? 'Importing…' : `Import ${importableEvents.length} candidate${importableEvents.length === 1 ? '' : 's'}`}
+        </button>
+        <div className="import-sub">Only candidates scoring 45+ are offered for import.</div>
+      </div>
+
+      {importError && <div className="error-banner">⚠ {importError}</div>}
+      {importResult && (
+        <div className="import-result">
+          Imported <strong>{importResult.summary?.importedCount ?? 0}</strong>, skipped <strong>{importResult.summary?.skippedCount ?? 0}</strong>, venues touched <strong>{importResult.summary?.venueCount ?? 0}</strong>.
+        </div>
+      )}
 
       {result.errors?.length > 0 && (
         <div className="error-list">
@@ -50,9 +79,13 @@ function ResultCard({ result }) {
           <div key={event.id} className="event-row">
             <div>
               <div className="event-title">{event.title}</div>
-              <div className="event-meta">{event.date} · {event.venue} · {event.city}</div>
+              <div className="event-meta">{event.date} · {event.venue} · {event.city}{event.address ? ` · ${event.address}` : ''}</div>
+              <div className="event-reasons">{(event.confidenceReasons ?? []).slice(0, 3).join(' • ')}</div>
             </div>
-            <span className={`mode-pill mode-pill--${event.mode}`}>{event.mode}</span>
+            <div className="event-right">
+              <span className={`score-pill ${scoreTone(event.confidenceScore ?? 0)}`}>{event.confidenceScore ?? '—'}</span>
+              <span className={`mode-pill mode-pill--${event.mode}`}>{event.mode}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -64,8 +97,11 @@ export default function SourcesPage() {
   const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(null);
+  const [importing, setImporting] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [importError, setImportError] = useState('');
+  const [importResult, setImportResult] = useState(null);
 
   useEffect(() => {
     fetch('/api/sources')
@@ -83,6 +119,8 @@ export default function SourcesPage() {
   async function run(body, label) {
     setRunning(label);
     setError('');
+    setImportError('');
+    setImportResult(null);
     try {
       const res = await fetch('/api/sources/run', {
         method: 'POST',
@@ -96,6 +134,26 @@ export default function SourcesPage() {
       setError(err.message);
     } finally {
       setRunning(null);
+    }
+  }
+
+  async function importCandidates(events) {
+    setImporting(true);
+    setImportError('');
+    setImportResult(null);
+    try {
+      const res = await fetch('/api/sources/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ events }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Import failed');
+      setImportResult(data);
+    } catch (err) {
+      setImportError(err.message);
+    } finally {
+      setImporting(false);
     }
   }
 
@@ -132,7 +190,7 @@ export default function SourcesPage() {
               {running === 'all' ? 'Running all…' : 'Run all active'}
             </button>
           </div>
-          <div className="panel-sub">Run source fetchers, normalize their output into a common candidate shape, and dedupe obvious duplicates before review.</div>
+          <div className="panel-sub">Run source fetchers, normalize their output into a common candidate shape, score confidence, enrich venues/addresses, and dedupe obvious duplicates before review.</div>
 
           {loading && <div className="empty">Loading sources…</div>}
           {error && <div className="error-banner">⚠ {error}</div>}
@@ -158,13 +216,13 @@ export default function SourcesPage() {
           )}
         </section>
 
-        <ResultCard result={result} />
+        <ResultCard result={result} importing={importing} importError={importError} importResult={importResult} onImport={importCandidates} />
       </div>
 
       <style>{`
         .adash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}.adash-brand{font-size:36px;line-height:.9;font-weight:800;letter-spacing:-.05em;color:#fff}.adash-brand-ok{color:var(--accent)}.adash-header-right{display:flex;align-items:flex-start;gap:10px;padding-top:4px}.adash-nav{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:16px;overflow:auto;flex-wrap:wrap}.adash-nav-link{padding:7px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text);text-decoration:none;border:1px solid var(--border)}.adash-nav-link--active{background:rgba(78,205,196,.12);border-color:rgba(78,205,196,.35);color:var(--accent)}.adash-nav-link--dim{color:var(--muted)}
-        .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:16px}.panel-header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}.page-title,.panel-title{font-size:28px;color:var(--text);margin:0}.panel-sub{color:var(--muted);margin-top:8px;font-size:14px}.primary-btn,.ghost-btn,.logout-btn{border-radius:10px;padding:10px 14px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;text-decoration:none;font:inherit}.primary-btn{background:var(--accent);border-color:var(--accent);color:#07121a;font-weight:700}.primary-btn:disabled,.ghost-btn:disabled{opacity:.45;cursor:not-allowed}.source-list,.events-list,.dupe-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}.source-row,.event-row,.dupe-row{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.02)}.source-row--inactive{opacity:.6}.source-name,.event-title,.dupe-title{font-weight:700;color:var(--text)}.source-meta,.source-notes,.event-meta{color:var(--muted);font-size:13px}.source-actions,.summary-chips{display:flex;gap:8px;flex-wrap:wrap}.chip,.mode-pill{font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}.mode-pill--day{color:#fbbf24}.mode-pill--night{color:#60a5fa}.error-banner,.error-row{color:#fecaca;background:rgba(127,29,29,.18);border:1px solid rgba(248,113,113,.25);padding:10px 12px;border-radius:10px}.error-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}.empty{margin-top:16px;color:var(--muted)}code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace}
-        @media (max-width: 640px){.adash-brand{font-size:26px}.source-row,.event-row{flex-direction:column}.page-title,.panel-title{font-size:22px}}
+        .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:16px}.panel-header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}.page-title,.panel-title{font-size:28px;color:var(--text);margin:0}.panel-sub{color:var(--muted);margin-top:8px;font-size:14px}.primary-btn,.ghost-btn,.logout-btn{border-radius:10px;padding:10px 14px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;text-decoration:none;font:inherit}.primary-btn{background:var(--accent);border-color:var(--accent);color:#07121a;font-weight:700}.primary-btn:disabled,.ghost-btn:disabled{opacity:.45;cursor:not-allowed}.source-list,.events-list,.dupe-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}.source-row,.event-row,.dupe-row{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.02)}.source-row--inactive{opacity:.6}.source-name,.event-title,.dupe-title{font-weight:700;color:var(--text)}.source-meta,.source-notes,.event-meta,.event-reasons,.import-sub{color:var(--muted);font-size:13px}.source-actions,.summary-chips,.event-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.chip,.mode-pill,.score-pill{font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}.mode-pill--day{color:#fbbf24}.mode-pill--night{color:#60a5fa}.score-pill--strong{color:#34d399;border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.08)}.score-pill--mid{color:#fbbf24;border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.08)}.score-pill--weak{color:#f87171;border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.08)}.error-banner,.error-row{color:#fecaca;background:rgba(127,29,29,.18);border:1px solid rgba(248,113,113,.25);padding:10px 12px;border-radius:10px}.error-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}.empty{margin-top:16px;color:var(--muted)}code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace}.import-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}.import-result{margin-top:14px;padding:12px 14px;border:1px solid rgba(78,205,196,.25);background:rgba(78,205,196,.08);border-radius:10px;color:var(--text)}
+        @media (max-width: 640px){.adash-brand{font-size:26px}.source-row,.event-row,.import-bar{flex-direction:column;align-items:flex-start}.page-title,.panel-title{font-size:22px}}
       `}</style>
     </main>
   );

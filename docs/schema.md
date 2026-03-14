@@ -36,21 +36,24 @@ Raw, unprocessed event data as fetched from a source. Immutable once stored.
 
 Normalized, enriched event records — the core entity of the system.
 
-| Field       | Type                                                              | Description                                         |
-|-------------|-------------------------------------------------------------------|-----------------------------------------------------|
-| id          | string (UUID)                                                     | Unique event identifier                             |
-| title       | string                                                            | Display title                                       |
-| date        | ISO 8601 date (YYYY-MM-DD)                                        | Event date                                          |
-| startTime   | string (HH:MM, 24h)                                               | Start time, nullable                                |
-| endTime     | string (HH:MM, 24h)                                               | End time, nullable                                  |
-| venueId     | string (UUID)                                                     | Reference to `venues.id`                           |
-| description | string                                                            | Event description, nullable                         |
-| tags        | string[]                                                          | e.g. `["family", "free", "outdoor", "night"]`      |
-| sourceId    | string (UUID)                                                     | Reference to `sources.id`                          |
-| source      | string: `manual\|scraper:<name>`                                  | Provenance label (e.g. `scraper:tourism-kelowna`)  |
-| status      | enum: `candidate\|approved\|rejected\|deferred\|published`        | Lifecycle state (see state machine below)           |
-| createdAt   | ISO 8601 datetime                                                 | Record creation time                                |
-| updatedAt   | ISO 8601 datetime                                                 | Last modification time                              |
+| Field            | Type                                                              | Description                                         |
+|------------------|-------------------------------------------------------------------|-----------------------------------------------------|
+| id               | string (UUID)                                                     | Unique event identifier                             |
+| title            | string                                                            | Display title                                       |
+| date             | ISO 8601 date (YYYY-MM-DD)                                        | Event date                                          |
+| startTime        | string (HH:MM, 24h)                                               | Start time, nullable                                |
+| endTime          | string (HH:MM, 24h)                                               | End time, nullable                                  |
+| venueId          | string (UUID)                                                     | Reference to `venues.id`                           |
+| address          | string                                                            | Normalized address text, nullable                   |
+| description      | string                                                            | Event description, nullable                         |
+| tags             | string[]                                                          | e.g. `["family", "free", "outdoor", "night"]`      |
+| sourceId         | string (UUID)                                                     | Reference to `sources.id`                          |
+| source           | string: `manual\|scraper:<name>`                                  | Provenance label (e.g. `scraper:tourism-kelowna`)  |
+| confidenceScore  | number (0-100)                                                    | Transparent heuristic confidence score              |
+| confidenceReasons| string[]                                                          | Human-readable reasons behind the score             |
+| status           | enum: `candidate\|approved\|rejected\|deferred\|published`        | Lifecycle state (see state machine below)           |
+| createdAt        | ISO 8601 datetime                                                 | Record creation time                                |
+| updatedAt        | ISO 8601 datetime                                                 | Last modification time                              |
 
 ### Event status state machine
 
@@ -68,14 +71,17 @@ candidate → approved → published
 
 Location entities referenced by events.
 
-| Field   | Type              | Description                       |
-|---------|-------------------|-----------------------------------|
-| id      | string (UUID)     | Unique venue identifier           |
-| name    | string            | Venue display name                |
-| address | string            | Street address, nullable          |
-| city    | string            | City name                         |
-| lat     | number (float)    | Latitude, nullable                |
-| lng     | number (float)    | Longitude, nullable               |
+| Field         | Type              | Description                                 |
+|---------------|-------------------|---------------------------------------------|
+| id            | string (UUID)     | Unique venue identifier                     |
+| name          | string            | Venue display name                          |
+| address       | string            | Normalized address text, nullable           |
+| streetAddress | string            | Parsed street-only portion, nullable        |
+| city          | string            | City name                                   |
+| lat           | number (float)    | Latitude, nullable                          |
+| lng           | number (float)    | Longitude, nullable                         |
+| createdAt     | ISO 8601 datetime | Venue record creation timestamp             |
+| updatedAt     | ISO 8601 datetime | Venue record last-maintained timestamp      |
 
 ---
 

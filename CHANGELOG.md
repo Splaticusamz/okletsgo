@@ -1,6 +1,10 @@
 # Changelog
 
 ## 2026-03-14
+- Added transparent confidence scoring via `lib/scoring.js`, attaching `confidenceScore` and `confidenceReasons` to normalized candidate events and surfacing them in `/admin/sources` and `/admin/candidates`
+- Added venue/address enrichment via `lib/enrich.js`, threaded normalized venue records through the JSON-backed store, and reported venue enrichment summary in source-run results
+- Added candidate import flow from `/admin/sources` into review stage 1 with `/api/sources/import`, duplicate guards against existing store records, and preserved `scraper:<id>` provenance for imported events
+- Updated schema docs plus task bookkeeping to mark T-029, T-030, T-031, and T-032 complete
 - Added admin password auth with signed cookie login/logout, protected `/admin` plus admin mutation APIs, and kept the public homepage/public GET APIs accessible
 - Added `lib/normalize.js` normalization + dedupe helpers and wired `/api/sources/run` plus `/admin/sources` to report raw/normalized/deduped results
 - Expanded `lib/db.js` to a dual-adapter shape with a `VercelPostgresAdapter` scaffold, and documented why T-018 remains open until a real provisioned production DB is wired

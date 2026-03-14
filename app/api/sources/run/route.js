@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getActiveSources, getSourceById } from '../../../../lib/sources.js';
 import { runSourceFetcher } from '../../../../lib/fetchers/index.js';
 import { dedupeEvents, normalizeEvents } from '../../../../lib/normalize.js';
+import { summarizeVenueEnrichment } from '../../../../lib/enrich.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
@@ -40,6 +41,11 @@ export async function POST(request) {
     const normalizedEvents = runs.flatMap((run) => normalizeEvents(run.events ?? [], { id: run.sourceId }));
     const { deduped, duplicates } = dedupeEvents(normalizedEvents);
     const errors = runs.flatMap((run) => (run.errors ?? []).map((message) => ({ sourceId: run.sourceId, message })));
+    const venueSummary = summarizeVenueEnrichment(deduped);
+    const scored = deduped.filter((event) => Number.isFinite(event.confidenceScore));
+    const averageConfidence = scored.length > 0
+      ? Math.round(scored.reduce((sum, event) => sum + event.confidenceScore, 0) / scored.length)
+      : null;
 
     return NextResponse.json({
       ran: runs.length,
@@ -54,6 +60,8 @@ export async function POST(request) {
         duplicateCount: duplicates.length,
         errorCount: errors.length,
         fallbackCount: runs.filter((run) => run.usedFallback).length,
+        averageConfidence,
+        venueSummary,
       },
     });
   } catch (error) {

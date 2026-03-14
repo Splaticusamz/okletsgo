@@ -5,6 +5,13 @@
     {
       "date": "2026-03-14",
       "entries": [
+        "Added transparent confidence scoring, venue/address enrichment, and candidate import-to-review flow for source runs; /admin/sources now shows score + enrichment summaries and can import deduped candidates into /admin/candidates.",
+        "Extended the JSON-backed db shape with venue records plus candidate import dedupe checks, preserving scraper:<id> provenance while keeping the current app stable."
+      ]
+    },
+    {
+      "date": "2026-03-14",
+      "entries": [
         "Added admin password auth with signed cookie login/logout, protected /admin plus admin mutation APIs, and wired source normalization/dedupe summaries; T-017, T-027, and T-028 are done while T-018 stays open with a production DB scaffold and documented blocker.",
         "Added lib/db.js adapter boundary with FileDbAdapter, migrated app routes to use it, and documented future SQLite/Postgres path in docs/persistence.md",
         "Built first source ingestion stack: lib/sources.js, fetcher registry, tourismkelowna + eventbrite-kelowna fetchers, /api/sources, /api/sources/run, and /admin/sources runner UI",
@@ -198,12 +205,12 @@
         {
           "id": "T-029",
           "text": "Confidence-score candidates",
-          "done": false
+          "done": true
         },
         {
           "id": "T-030",
           "text": "Route valid candidates into review 1",
-          "done": false
+          "done": true
         },
         {
           "id": "T-068",
@@ -223,12 +230,12 @@
         {
           "id": "T-031",
           "text": "Venue lookup",
-          "done": false
+          "done": true
         },
         {
           "id": "T-032",
           "text": "Address/location enrichment",
-          "done": false
+          "done": true
         },
         {
           "id": "T-033",

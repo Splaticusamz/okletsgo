@@ -1,0 +1,31 @@
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { importCandidateEvents } from '../../../../lib/db.js';
+import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
+
+export const dynamic = 'force-dynamic';
+
+async function isAuthorized() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(getAdminCookieName())?.value;
+  return await verifyAdminSessionValue(token);
+}
+
+export async function POST(request) {
+  try {
+    if (!await isAuthorized()) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await request.json().catch(() => ({}));
+    const events = Array.isArray(body?.events) ? body.events : [];
+    if (events.length === 0) {
+      return NextResponse.json({ error: 'No candidate events provided' }, { status: 400 });
+    }
+
+    const result = importCandidateEvents(events);
+    return NextResponse.json({ ok: true, ...result }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

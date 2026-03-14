@@ -38,6 +38,12 @@ function ModeTag({ mode }) {
   );
 }
 
+function ConfidenceBadge({ score }) {
+  const value = Number.isFinite(score) ? score : null;
+  const cls = value == null ? 'conf-badge--unknown' : value >= 80 ? 'conf-badge--strong' : value >= 60 ? 'conf-badge--mid' : 'conf-badge--weak';
+  return <span className={`conf-badge ${cls}`}>confidence {value ?? '—'}</span>;
+}
+
 function ReviewHistory({ reviews }) {
   const [open, setOpen] = useState(false);
   if (!reviews || reviews.length === 0) return null;
@@ -217,10 +223,14 @@ export default function CandidatesPage() {
                       <span className="cand-card-day">{c.date}</span>
                       <ModeTag mode={c.mode} />
                       <SourceBadge source={c.source} />
+                      <ConfidenceBadge score={c.confidenceScore} />
                       <StatusBadge status={c.status} />
                     </div>
                     <div className="cand-card-title">{c.title}</div>
-                    <div className="cand-card-venue">{c.city ? `${c.title} · ${c.city}` : c.title}</div>
+                    <div className="cand-card-venue">{[c.venue, c.city, c.address].filter(Boolean).join(' · ') || c.title}</div>
+                    {Array.isArray(c.confidenceReasons) && c.confidenceReasons.length > 0 && (
+                      <div className="cand-card-confidence">{c.confidenceReasons.slice(0, 3).join(' • ')}</div>
+                    )}
                     {errMsg && (
                       <div className="cand-card-error">⚠ {errMsg}</div>
                     )}
@@ -393,6 +403,7 @@ export default function CandidatesPage() {
           text-overflow: ellipsis;
         }
         .cand-card-venue { font-size: 13px; color: var(--muted); }
+        .cand-card-confidence { margin-top: 6px; font-size: 12px; color: var(--muted); }
 
         .cand-card-error {
           margin-top: 6px;
@@ -426,6 +437,11 @@ export default function CandidatesPage() {
         .cand-badge--seed    { color: #60a5fa; border-color: rgba(96,165,250,.3); background: rgba(96,165,250,.08); }
         .cand-badge--manual  { color: #34d399; border-color: rgba(52,211,153,.3); background: rgba(52,211,153,.08); }
         .cand-badge--scraper { color: #f472b6; border-color: rgba(244,114,182,.3); background: rgba(244,114,182,.08); }
+        .conf-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: 2px 8px; border-radius: 999px; border: 1px solid; }
+        .conf-badge--strong { color: #34d399; border-color: rgba(52,211,153,.3); background: rgba(52,211,153,.08); }
+        .conf-badge--mid { color: #fbbf24; border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.08); }
+        .conf-badge--weak { color: #f87171; border-color: rgba(248,113,113,.3); background: rgba(248,113,113,.08); }
+        .conf-badge--unknown { color: #94a3b8; border-color: rgba(148,163,184,.3); background: rgba(148,163,184,.08); }
 
         /* Review history */
         .rev-history { margin-top: 8px; }
