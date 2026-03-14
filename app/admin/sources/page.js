@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import AdminNav from '../../../components/AdminNav';
 
 function scoreTone(score) {
   if (score >= 80) return 'score-pill--strong';
@@ -172,16 +173,7 @@ export default function SourcesPage() {
           </div>
         </header>
 
-        <nav className="adash-nav">
-          <Link href="/admin" className="adash-nav-link">Dashboard</Link>
-          <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
-          <Link href="/admin/assets" className="adash-nav-link adash-nav-link--dim">Assets</Link>
-          <Link href="/admin/sources" className="adash-nav-link adash-nav-link--active">Sources</Link>
-          <Link href="/admin/manual" className="adash-nav-link adash-nav-link--dim">Manual</Link>
-          <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
-          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
-          <Link href="/tasks" className="adash-nav-link">Tasks</Link>
-        </nav>
+        <AdminNav />
 
         <section className="panel">
           <div className="panel-header">

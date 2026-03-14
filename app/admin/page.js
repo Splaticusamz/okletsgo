@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
+import AdminNav from '../../components/AdminNav';
 
 function loadWeekData() {
   try {
@@ -96,19 +97,7 @@ export default function AdminPage() {
           </div>
         </header>
 
-        {/* ── Nav ── */}
-        <nav className="adash-nav">
-          <Link href="/admin" className="adash-nav-link adash-nav-link--active">Dashboard</Link>
-          <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
-          <Link href="/admin/assets" className="adash-nav-link adash-nav-link--dim">Assets</Link>
-          <Link href="/admin/sources" className="adash-nav-link adash-nav-link--dim">Sources</Link>
-          <Link href="/admin/manual" className="adash-nav-link adash-nav-link--dim">Manual</Link>
-          <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
-          <Link href="/admin/newsletter" className="adash-nav-link adash-nav-link--dim">Newsletter</Link>
-          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
-          <Link href="/admin/guide" className="adash-nav-link adash-nav-link--dim">Guide</Link>
-          <Link href="/tasks" className="adash-nav-link">Tasks</Link>
-        </nav>
+        <AdminNav />
 
         {/* ── Current week status ── */}
         <section className="adash-week-card">
@@ -268,41 +257,7 @@ export default function AdminPage() {
         }
 
         /* Nav */
-        .adash-nav {
-          display: flex;
-          gap: 4px;
-          margin-bottom: 24px;
-          border-bottom: 1px solid var(--border);
-          padding-bottom: 16px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          flex-wrap: wrap;
-        }
-        .adash-nav::-webkit-scrollbar { display: none; }
-        .adash-nav-link {
-          padding: 7px 14px;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text);
-          text-decoration: none;
-          border: 1px solid var(--border);
-          transition: background .15s, border-color .15s;
-          white-space: nowrap;
-        }
-        .adash-nav-link:hover {
-          background: rgba(255,255,255,.06);
-          border-color: rgba(255,255,255,.15);
-        }
-        .adash-nav-link--active {
-          background: rgba(78,205,196,.12);
-          border-color: rgba(78,205,196,.35);
-          color: var(--accent);
-        }
-        .adash-nav-link--dim { color: var(--muted); }
-
-        /* Week card */
+/* Week card */
         .adash-week-card {
           background: var(--panel);
           border: 1px solid var(--border);
@@ -583,8 +538,7 @@ export default function AdminPage() {
           }
           .adash-week-stats { gap: 20px; }
           .adash-brand { font-size: 26px; }
-          .adash-nav { flex-wrap: nowrap; }
-          .adash-source-notes { display: none; }
+.adash-source-notes { display: none; }
           .adash-source-row { gap: 8px; }
         }
       `}</style>

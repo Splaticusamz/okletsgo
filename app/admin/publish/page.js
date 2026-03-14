@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AdminNav from '../../../components/AdminNav';
 
 function StatusBadge({ status }) {
   const map = {
@@ -101,16 +102,7 @@ export default function PublishPage() {
         </header>
 
         {/* Nav */}
-        <nav className="adash-nav">
-          <Link href="/admin" className="adash-nav-link">Dashboard</Link>
-          <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
-          <Link href="/admin/assets" className="adash-nav-link adash-nav-link--dim">Assets</Link>
-          <Link href="/admin/sources" className="adash-nav-link adash-nav-link--dim">Sources</Link>
-          <Link href="/admin/manual" className="adash-nav-link adash-nav-link--dim">Manual</Link>
-          <Link href="/admin/publish" className="adash-nav-link adash-nav-link--active">Publish</Link>
-          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
-          <Link href="/tasks" className="adash-nav-link">Tasks</Link>
-        </nav>
+        <AdminNav />
 
         {loading && <div className="pub-empty"><div className="pub-empty-icon">⏳</div><div className="pub-empty-text">Loading…</div></div>}
         {error && <div className="pub-error">⚠ {error}</div>}
@@ -227,13 +219,7 @@ export default function PublishPage() {
         .adash-brand { font-size:36px; line-height:.9; font-weight:800; letter-spacing:-.05em; color:#fff; }
         .adash-brand-ok { color:var(--accent); }
         .adash-header-right { display:flex; align-items:flex-start; padding-top:4px; }
-        .adash-nav { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; }
-        .adash-nav-link { padding:7px 14px; border-radius:8px; font-size:14px; font-weight:500; color:var(--text); text-decoration:none; border:1px solid var(--border); transition:background .15s; }
-        .adash-nav-link:hover { background:rgba(255,255,255,.06); }
-        .adash-nav-link--active { background:rgba(78,205,196,.12); border-color:rgba(78,205,196,.35); color:var(--accent); }
-        .adash-nav-link--dim { color:var(--muted); }
-
-        .pub-section { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px 24px; margin-bottom:20px; }
+.pub-section { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px 24px; margin-bottom:20px; }
         .pub-section-title { font-size:18px; font-weight:700; margin:0 0 16px; display:flex; align-items:center; gap:10px; }
         .pub-meta { display:flex; flex-wrap:wrap; gap:16px; margin-bottom:16px; font-size:13px; color:var(--muted); }
         .pub-meta strong { color:var(--text); }

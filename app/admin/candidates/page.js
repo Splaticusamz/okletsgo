@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AdminNav from '../../../components/AdminNav';
 
 function StatusBadge({ status }) {
   const map = {
@@ -185,16 +186,7 @@ export default function CandidatesPage() {
         </header>
 
         {/* ── Nav ── */}
-        <nav className="adash-nav">
-          <Link href="/admin"            className="adash-nav-link">Dashboard</Link>
-          <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--active">Candidates</Link>
-          <Link href="/admin/assets"     className="adash-nav-link adash-nav-link--dim">Assets</Link>
-          <Link href="/admin/sources"    className="adash-nav-link adash-nav-link--dim">Sources</Link>
-          <Link href="/admin/manual"     className="adash-nav-link adash-nav-link--dim">Manual</Link>
-          <Link href="/admin/publish"    className="adash-nav-link adash-nav-link--dim">Publish</Link>
-          <Link href="/admin/guide"     className="adash-nav-link adash-nav-link--dim">Guide</Link>
-          <Link href="/tasks"            className="adash-nav-link">Tasks</Link>
-        </nav>
+        <AdminNav />
 
         {/* ── Page title row ── */}
         <div className="cand-title-row">
@@ -313,38 +305,7 @@ export default function CandidatesPage() {
           align-items: flex-start;
           padding-top: 4px;
         }
-        .adash-nav {
-          display: flex;
-          gap: 4px;
-          margin-bottom: 24px;
-          border-bottom: 1px solid var(--border);
-          padding-bottom: 16px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          flex-wrap: wrap;
-        }
-        .adash-nav::-webkit-scrollbar { display: none; }
-        .adash-nav-link {
-          padding: 7px 14px;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text);
-          text-decoration: none;
-          border: 1px solid var(--border);
-          transition: background .15s, border-color .15s;
-          white-space: nowrap;
-        }
-        .adash-nav-link:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.15); }
-        .adash-nav-link--active {
-          background: rgba(78,205,196,.12);
-          border-color: rgba(78,205,196,.35);
-          color: var(--accent);
-        }
-        .adash-nav-link--dim { color: var(--muted); }
-
-        /* Status badge */
+/* Status badge */
         .sbadge {
           font-size: 10px;
           font-weight: 700;
@@ -572,8 +533,7 @@ export default function CandidatesPage() {
         /* ── Mobile ── */
         @media (max-width: 640px) {
           .adash-brand { font-size: 26px; }
-          .adash-nav { flex-wrap: nowrap; }
-          .cand-card {
+.cand-card {
             flex-direction: column;
             align-items: stretch;
           }

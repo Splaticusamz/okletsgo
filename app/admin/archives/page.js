@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AdminNav from '../../../components/AdminNav';
 
 function ModeTag({ mode }) {
   const isNight = mode === 'night';
@@ -150,17 +151,7 @@ export default function ArchivesPage() {
     }}>
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 16px' }}>
 
-        {/* Nav */}
-        <nav style={{ display: 'flex', gap: 8, marginBottom: 24, overflowX: 'auto', paddingBottom: 4 }}>
-          <Link href="/admin" style={navStyle}>Dashboard</Link>
-          <Link href="/admin/candidates" style={navStyle}>Candidates</Link>
-          <Link href="/admin/assets" style={navStyle}>Assets</Link>
-          <Link href="/admin/sources" style={navStyle}>Sources</Link>
-          <Link href="/admin/manual" style={navStyle}>Manual</Link>
-          <Link href="/admin/publish" style={navStyle}>Publish</Link>
-          <Link href="/admin/archives" style={{ ...navStyle, color: '#818cf8', borderBottom: '2px solid #818cf8' }}>Archives</Link>
-          <Link href="/tasks" style={navStyle}>Tasks</Link>
-        </nav>
+        <AdminNav />
 
         <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>📦 Week Archives</h1>
         <p style={{ color: '#64748b', fontSize: 13, marginBottom: 24 }}>
@@ -279,11 +270,6 @@ export default function ArchivesPage() {
     </div>
   );
 }
-
-const navStyle = {
-  color: '#94a3b8', textDecoration: 'none', fontSize: 13, fontWeight: 600,
-  padding: '6px 12px', borderRadius: 6, whiteSpace: 'nowrap',
-};
 
 const selectStyle = {
   background: '#0f0f1a', color: '#e2e8f0', border: '1px solid #333',

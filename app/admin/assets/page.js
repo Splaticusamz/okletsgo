@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import AdminNav from '../../../components/AdminNav';
 
 function StatusBadge({ status }) {
   const map = {
@@ -159,14 +160,7 @@ export default function AssetsPage() {
           </div>
         </header>
 
-        <nav className="adash-nav">
-          <Link href="/admin" className="adash-nav-link">Dashboard</Link>
-          <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
-          <Link href="/admin/assets" className="adash-nav-link adash-nav-link--active">Assets</Link>
-          <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
-          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
-          <Link href="/tasks" className="adash-nav-link">Tasks</Link>
-        </nav>
+        <AdminNav />
 
         <div className="asset-title-row">
           <div>
@@ -248,11 +242,7 @@ export default function AssetsPage() {
         .adash-brand { font-size:36px; line-height:.9; font-weight:800; letter-spacing:-.05em; color:#fff; }
         .adash-brand-ok { color:var(--accent); }
         .adash-header-right { display:flex; align-items:flex-start; padding-top:4px; }
-        .adash-nav { display:flex; gap:4px; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; overflow-x:auto; flex-wrap:wrap; }
-        .adash-nav-link { padding:7px 14px; border-radius:8px; font-size:14px; font-weight:500; color:var(--text); text-decoration:none; border:1px solid var(--border); }
-        .adash-nav-link--active { background:rgba(78,205,196,.12); border-color:rgba(78,205,196,.35); color:var(--accent); }
-        .adash-nav-link--dim { color:var(--muted); }
-        .asset-title-row { display:flex; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.asset-title-row { display:flex; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
         .asset-page-title { font-size:22px; font-weight:700; margin:0 0 4px; }
         .asset-page-sub { font-size:13px; color:var(--muted); }
         .asset-summary-chips { display:flex; gap:8px; flex-wrap:wrap; }

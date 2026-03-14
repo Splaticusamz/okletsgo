@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import AdminNav from '../../../components/AdminNav';
 
 const initialForm = {
   title: '',
@@ -54,16 +55,7 @@ export default function ManualPage() {
           <div className="adash-header-right"><span className="admin-pill">manual intake</span><form method="POST" action="/api/admin/logout"><button type="submit" className="logout-btn">Logout</button></form></div>
         </header>
 
-        <nav className="adash-nav">
-          <Link href="/admin" className="adash-nav-link">Dashboard</Link>
-          <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
-          <Link href="/admin/assets" className="adash-nav-link adash-nav-link--dim">Assets</Link>
-          <Link href="/admin/sources" className="adash-nav-link adash-nav-link--dim">Sources</Link>
-          <Link href="/admin/manual" className="adash-nav-link adash-nav-link--active">Manual</Link>
-          <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
-          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
-          <Link href="/tasks" className="adash-nav-link">Tasks</Link>
-        </nav>
+        <AdminNav />
 
         <section className="manual-panel">
           <div className="eyebrow">Candidate intake</div>

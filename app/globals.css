@@ -602,4 +602,40 @@ body.dark-mode .tooltip {
   .utility-heading { font-size: 24px; }
   .admin-shell, .tasks-shell { padding: 16px; }
   .admin-head, .tasks-head { flex-direction: column; }
+  .adash-nav { flex-wrap: nowrap; }
 }
+
+/* ── Shared Admin Nav ── */
+.adash-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  flex-wrap: wrap;
+}
+.adash-nav::-webkit-scrollbar { display: none; }
+.adash-nav-link {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: background .15s, border-color .15s;
+  white-space: nowrap;
+}
+.adash-nav-link:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.15);
+}
+.adash-nav-link--active {
+  background: rgba(78,205,196,.12);
+  border-color: rgba(78,205,196,.35);
+  color: var(--accent);
+}
+.adash-nav-link--dim { color: var(--muted); }
