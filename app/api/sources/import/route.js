@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { importCandidateEvents } from '../../../../lib/db.js';
+import { importCandidateEvents, initDb, flushDb } from '../../../../lib/db.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
@@ -17,6 +17,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await initDb();
     const body = await request.json().catch(() => ({}));
     const events = Array.isArray(body?.events) ? body.events : [];
     if (events.length === 0) {
@@ -24,6 +25,7 @@ export async function POST(request) {
     }
 
     const result = importCandidateEvents(events);
+    await flushDb();
     return NextResponse.json({ ok: true, ...result }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

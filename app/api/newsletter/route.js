@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../lib/admin-auth.js';
-import { getLatestNewsletterDraft, getNewsletterDrafts, getNewsletterSettings, updateNewsletterSettings } from '../../../lib/db.js';
+import { getLatestNewsletterDraft, getNewsletterDrafts, getNewsletterSettings, updateNewsletterSettings, initDb, flushDb } from '../../../lib/db.js';
 import { buildBeehiivPayload, generateNewsletterDraft, approveNewsletterDraft, markNewsletterReadyToSend } from '../../../lib/newsletter.js';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +15,7 @@ async function isAuthorized() {
 export async function GET() {
   try {
     if (!await isAuthorized()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await initDb();
     const latest = getLatestNewsletterDraft();
     return NextResponse.json({
       latest,
@@ -30,26 +31,34 @@ export async function GET() {
 export async function POST(request) {
   try {
     if (!await isAuthorized()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await initDb();
     const body = await request.json().catch(() => ({}));
     const action = body.action ?? 'generate';
 
     if (action === 'generate') {
       const draft = generateNewsletterDraft();
+      await flushDb();
       return NextResponse.json({ ok: true, draft }, { status: 201 });
     }
 
     if (action === 'approve') {
       if (!body.draftId) return NextResponse.json({ error: 'draftId is required' }, { status: 400 });
-      return NextResponse.json({ ok: true, draft: approveNewsletterDraft(body.draftId) });
+      const draft = approveNewsletterDraft(body.draftId);
+      await flushDb();
+      return NextResponse.json({ ok: true, draft });
     }
 
     if (action === 'ready') {
       if (!body.draftId) return NextResponse.json({ error: 'draftId is required' }, { status: 400 });
-      return NextResponse.json({ ok: true, draft: markNewsletterReadyToSend(body.draftId) });
+      const draft = markNewsletterReadyToSend(body.draftId);
+      await flushDb();
+      return NextResponse.json({ ok: true, draft });
     }
 
     if (action === 'save_settings') {
-      return NextResponse.json({ ok: true, settings: updateNewsletterSettings(body.settings ?? {}) });
+      const settings = updateNewsletterSettings(body.settings ?? {});
+      await flushDb();
+      return NextResponse.json({ ok: true, settings });
     }
 
     if (action === 'send_placeholder') {

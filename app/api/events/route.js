@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { getEvents, getCurrentPublishedBatch } from '../../../lib/db.js';
+import { getEvents, getCurrentPublishedBatch, initDb } from '../../../lib/db.js';
 import { getBatchEvents } from '../../../lib/publisher.js';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   try {
+    await initDb();
     const url = new URL(request.url);
     const showAll = url.searchParams.get('all') === '1';
 

@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { getEvent, updateEvent, addReview } from '../../../../../lib/db.js';
+import { getEvent, updateEvent, addReview, initDb, flushDb } from '../../../../../lib/db.js';
 import { ensurePendingAssetRecord } from '../../../../../lib/assets.js';
 import { transition, canTransition } from '../../../../../lib/state.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
@@ -19,6 +19,7 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await initDb();
     const { id } = await params;
     const body = await request.json();
     const { action, stage, notes, reviewedBy, reviewer } = body;
@@ -63,6 +64,7 @@ export async function POST(request, { params }) {
       }
     }
 
+    await flushDb();
     return NextResponse.json({ event: getEvent(id) ?? updated });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });

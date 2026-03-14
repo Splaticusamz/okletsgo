@@ -6,6 +6,8 @@ import {
   getLatestPublishBatch,
   getCurrentPublishedBatch,
   getBatchActions,
+  initDb,
+  flushDb,
 } from '../../../../lib/db.js';
 import {
   generateDraftBatch,
@@ -28,6 +30,7 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await initDb();
     const batches = getPublishBatches();
     const latest = getLatestPublishBatch();
     const currentPublished = getCurrentPublishedBatch();
@@ -54,12 +57,14 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await initDb();
     const body = await request.json().catch(() => ({}));
     const action = body?.action ?? 'generate';
 
     if (action === 'generate') {
       const batch = generateDraftBatch();
       const events = getBatchEvents(batch.id);
+      await flushDb();
       return NextResponse.json({ ok: true, batch: { ...batch, events } }, { status: 201 });
     }
 
@@ -68,6 +73,7 @@ export async function POST(request) {
       if (!batchId) return NextResponse.json({ error: 'batchId is required' }, { status: 400 });
       const batch = confirmPublish(batchId);
       const events = getBatchEvents(batch.id);
+      await flushDb();
       return NextResponse.json({ ok: true, batch: { ...batch, events } });
     }
 
@@ -75,6 +81,7 @@ export async function POST(request) {
       const batchId = body?.batchId;
       if (!batchId) return NextResponse.json({ error: 'batchId is required' }, { status: 400 });
       const result = rollbackBatch(batchId);
+      await flushDb();
       return NextResponse.json({ ok: true, ...result });
     }
 

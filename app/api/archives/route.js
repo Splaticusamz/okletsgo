@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../lib/admin-auth.js';
 import { listArchives, getArchive, compareArchives } from '../../../lib/archive.js';
-import { createEvent } from '../../../lib/db.js';
+import { createEvent, initDb, flushDb } from '../../../lib/db.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,6 +50,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await initDb();
     const body = await request.json().catch(() => ({}));
     const action = body?.action;
 
@@ -76,6 +77,7 @@ export async function POST(request) {
         status: 'candidate',
       });
 
+      await flushDb();
       return NextResponse.json({ ok: true, event: created }, { status: 201 });
     }
 

@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { createEvent } from '../../../../lib/db.js';
+import { createEvent, initDb, flushDb } from '../../../../lib/db.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
@@ -17,6 +17,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    await initDb();
     const body = await request.json();
     const required = ['title', 'date', 'venue', 'city', 'mode'];
     const missing = required.filter(field => !String(body?.[field] ?? '').trim());
@@ -41,6 +42,7 @@ export async function POST(request) {
       confidenceReasons: ['Manual entry', 'Required fields present'],
     });
 
+    await flushDb();
     return NextResponse.json({ ok: true, event }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
