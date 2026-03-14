@@ -7,7 +7,6 @@ import { summarizeVenueEnrichment } from '../../../../lib/enrich.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60; // browser scraping needs more time
 
 async function isAuthorized() {
   const cookieStore = await cookies();

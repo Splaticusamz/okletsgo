@@ -112,6 +112,9 @@ export default function CandidatesPage() {
   const [error, setError] = useState(null);
   const [acting, setActing] = useState({});   // id → true when in-flight
   const [cardError, setCardError] = useState({}); // id → error message
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterSource, setFilterSource] = useState('all');
+  const [filterMode, setFilterMode] = useState('all');
 
   useEffect(() => {
     fetch('/api/events?all=1')
@@ -164,7 +167,16 @@ export default function CandidatesPage() {
     }
   }
 
-  const candidates = events;
+  // Collect unique sources and modes for filter dropdowns
+  const uniqueSources = [...new Set(events.map(e => e.source || 'unknown'))].sort();
+  const uniqueModes = [...new Set(events.map(e => e.mode || 'unknown'))].sort();
+
+  const candidates = events.filter(e => {
+    if (filterStatus !== 'all' && e.status !== filterStatus) return false;
+    if (filterSource !== 'all' && (e.source || 'unknown') !== filterSource) return false;
+    if (filterMode !== 'all' && (e.mode || 'unknown') !== filterMode) return false;
+    return true;
+  });
 
   return (
     <main className="admin-shell">
@@ -211,6 +223,38 @@ export default function CandidatesPage() {
             <div className="cand-empty-icon">⚠️</div>
             <div className="cand-empty-title">Error loading events</div>
             <div className="cand-empty-sub">{error}</div>
+          </div>
+        )}
+
+        {!loading && !error && events.length > 0 && (
+          <div className="cand-filters">
+            <div className="cand-filter">
+              <label>Status</label>
+              <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+                <option value="all">All statuses</option>
+                <option value="candidate">Candidate</option>
+                <option value="approved_1">Approved ✓</option>
+                <option value="approved_2">Approved ✓✓</option>
+                <option value="published">Published</option>
+                <option value="rejected">Rejected</option>
+                <option value="deferred">Deferred</option>
+              </select>
+            </div>
+            <div className="cand-filter">
+              <label>Source</label>
+              <select value={filterSource} onChange={e => setFilterSource(e.target.value)}>
+                <option value="all">All sources</option>
+                {uniqueSources.map(s => <option key={s} value={s}>{s.replace('scraper:', '').replace('seed:', 'seed')}</option>)}
+              </select>
+            </div>
+            <div className="cand-filter">
+              <label>Mode</label>
+              <select value={filterMode} onChange={e => setFilterMode(e.target.value)}>
+                <option value="all">All modes</option>
+                {uniqueModes.map(m => <option key={m} value={m}>{m === 'day' ? '☀️ day' : m === 'night' ? '🌙 night' : m === 'family' ? '👨‍👩‍👧 family' : m}</option>)}
+              </select>
+            </div>
+            <div className="cand-filter-count">{candidates.length} of {events.length} shown</div>
           </div>
         )}
 
@@ -353,6 +397,11 @@ export default function CandidatesPage() {
         .cand-empty-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
         .cand-empty-sub { font-size: 14px; color: var(--muted); max-width: 360px; margin: 0 auto; }
 
+        .cand-filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; padding: 14px 16px; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; }
+        .cand-filter { display: flex; flex-direction: column; gap: 4px; }
+        .cand-filter label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+        .cand-filter select { background: #1e1e2e; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
+        .cand-filter-count { margin-left: auto; font-size: 12px; color: var(--muted); align-self: center; }
         .cand-list { display: flex; flex-direction: column; gap: 10px; }
         .cand-card {
           display: flex;
