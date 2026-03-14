@@ -37,7 +37,7 @@ export async function POST(request) {
       sourceId: body.source || 'discord',
       source: `discord:${body.source || 'manual'}`,
       sourceUrl: body.url || null,
-      status: 'candidate',
+      status: 'approved_1',
       confidenceScore: body.confidenceScore ?? 75,
       confidenceReasons: ['Discord pipeline import'],
       imageCandidates: body.image ? [{ url: body.image, source: body.source || 'discord' }] : [],
