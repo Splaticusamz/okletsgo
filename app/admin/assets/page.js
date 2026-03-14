@@ -107,7 +107,7 @@ export default function AssetsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const assets = useMemo(() => allEvents.filter((e) => ['approved_1', 'approved_2', 'published', 'rejected'].includes(e.status)), [allEvents]);
+  const assets = useMemo(() => allEvents.filter((e) => ['approved_1', 'approved_2', 'published'].includes(e.status)), [allEvents]);
 
   async function doReview(id, action) {
     setActing((a) => ({ ...a, [id]: action }));
