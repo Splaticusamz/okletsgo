@@ -11,8 +11,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST(request) {
   try {
-    const token = (request.headers.get('authorization') || '').replace('Bearer ', '');
-    const expected = process.env.INGEST_TOKEN;
+    const token = (request.headers.get('authorization') || '').replace('Bearer ', '').trim();
+    const expected = (process.env.INGEST_TOKEN || '').trim();
     if (!expected || token !== expected) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
