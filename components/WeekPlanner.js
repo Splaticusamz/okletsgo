@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DAY_NAME_UPPER = DAY_NAMES.map((d) => d.toUpperCase());
 
 function getWeekDates() {
   const now = new Date();
@@ -74,7 +75,16 @@ export default function WeekPlanner() {
     for (const d of weekDates) map[d.date] = [];
     for (const e of events) {
       if (e.status === 'rejected') continue;
-      if (map[e.date]) map[e.date].push(e);
+      // Match by ISO date (2026-03-14) or day name (MONDAY)
+      if (map[e.date]) {
+        map[e.date].push(e);
+      } else {
+        // Try matching day name to this week's dates
+        const dayIdx = DAY_NAME_UPPER.indexOf(String(e.date).toUpperCase());
+        if (dayIdx >= 0 && weekDates[dayIdx]) {
+          map[weekDates[dayIdx].date].push(e);
+        }
+      }
     }
     return map;
   }, [events, weekDates]);

@@ -12,6 +12,7 @@
     "pipeline:rollback": "bash scripts/rollback-checkpoint.sh"
   },
   "dependencies": {
+    "@fal-ai/client": "^1.9.4",
     "@neondatabase/serverless": "^1.0.2",
     "@vercel/postgres": "^0.10.0",
     "next": "15.5.12",
