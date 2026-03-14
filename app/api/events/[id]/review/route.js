@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, addReview } from '../../../../../lib/db.js';
+import { ensurePendingAssetRecord } from '../../../../../lib/assets.js';
 import { transition, canTransition } from '../../../../../lib/state.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
 
@@ -54,7 +55,15 @@ export async function POST(request, { params }) {
     addReview(id, review);
     const updated = updateEvent(id, { status: newStatus });
 
-    return NextResponse.json({ event: updated });
+    if (newStatus === 'approved_1') {
+      try {
+        ensurePendingAssetRecord(id);
+      } catch {
+        // Asset eligibility should not block the review transition.
+      }
+    }
+
+    return NextResponse.json({ event: getEvent(id) ?? updated });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

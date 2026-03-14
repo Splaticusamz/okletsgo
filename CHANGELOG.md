@@ -1,6 +1,11 @@
 # Changelog
 
 ## 2026-03-14
+- Built the approved-event asset pipeline: stage-1 approval now creates pending asset records, `lib/assets.js` orchestrates generation, and `/api/assets/generate` can generate or regenerate outputs for approved events
+- Added `lib/image-processor.js` with standardized 1080x1920 + 1080x1080 card crops, safe-zone overlays, title/date/venue branding, and optimized WebP/AVIF still outputs from selected image candidates or fallback images
+- Wired local ffmpeg animation generation for simple Ken Burns MP4 outputs, added still-only fallback + regenerate controls, and upgraded `/admin/assets` to preview still/animation assets side by side
+
+## 2026-03-14
 - Verified the production build/smoke-test path, synced stale `public/data/tasks.json` with the canonical task data, and redeployed `okletsgo.ca` to the current enrichment checkpoint
 - Added source/ticket link capture, image candidate gathering with provenance metadata, and category-tag inference across fetchers, normalization, import, and persisted candidate events
 - Surfaced source links, ticket links, tags, and image candidate counts in `/admin/candidates` and `/admin/sources`, and updated schema/task docs for T-033 through T-036
