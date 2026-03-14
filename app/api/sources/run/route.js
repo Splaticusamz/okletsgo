@@ -42,6 +42,7 @@ export async function POST(request) {
     const { deduped, duplicates } = dedupeEvents(normalizedEvents);
     const errors = runs.flatMap((run) => (run.errors ?? []).map((message) => ({ sourceId: run.sourceId, message })));
     const venueSummary = summarizeVenueEnrichment(deduped);
+    const imageCandidateCount = deduped.reduce((sum, event) => sum + (event.imageCandidateCount ?? event.imageCandidates?.length ?? 0), 0);
     const scored = deduped.filter((event) => Number.isFinite(event.confidenceScore));
     const averageConfidence = scored.length > 0
       ? Math.round(scored.reduce((sum, event) => sum + event.confidenceScore, 0) / scored.length)
@@ -62,6 +63,7 @@ export async function POST(request) {
         fallbackCount: runs.filter((run) => run.usedFallback).length,
         averageConfidence,
         venueSummary,
+        imageCandidateCount,
       },
     });
   } catch (error) {

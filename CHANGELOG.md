@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-03-14
+- Added source/ticket link capture, image candidate gathering with provenance metadata, and category-tag inference across fetchers, normalization, import, and persisted candidate events
+- Surfaced source links, ticket links, tags, and image candidate counts in `/admin/candidates` and `/admin/sources`, and updated schema/task docs for T-033 through T-036
 - Added transparent confidence scoring via `lib/scoring.js`, attaching `confidenceScore` and `confidenceReasons` to normalized candidate events and surfacing them in `/admin/sources` and `/admin/candidates`
 - Added venue/address enrichment via `lib/enrich.js`, threaded normalized venue records through the JSON-backed store, and reported venue enrichment summary in source-run results
 - Added candidate import flow from `/admin/sources` into review stage 1 with `/api/sources/import`, duplicate guards against existing store records, and preserved `scraper:<id>` provenance for imported events

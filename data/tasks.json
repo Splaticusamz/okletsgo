@@ -1,10 +1,12 @@
 {
-  "updatedAt": "2026-03-14T02:35:00Z",
+  "updatedAt": "2026-03-14T02:42:18Z",
   "title": "OK LET'S GO Build Tasks",
   "changelog": [
     {
       "date": "2026-03-14",
       "entries": [
+        "Added source/ticket link capture, image-candidate gathering with provenance metadata, and category-tag heuristics across fetchers, normalization, import, and the JSON-backed db shape.",
+        "Surfaced source links, ticket links, tags, and image candidate counts in /admin/candidates and /admin/sources, and updated schema/docs for T-033 through T-036.",
         "Added transparent confidence scoring, venue/address enrichment, and candidate import-to-review flow for source runs; /admin/sources now shows score + enrichment summaries and can import deduped candidates into /admin/candidates.",
         "Extended the JSON-backed db shape with venue records plus candidate import dedupe checks, preserving scraper:<id> provenance while keeping the current app stable."
       ]
@@ -240,22 +242,22 @@
         {
           "id": "T-033",
           "text": "Ticket/source link capture",
-          "done": false
+          "done": true
         },
         {
           "id": "T-034",
           "text": "Image candidate gathering",
-          "done": false
+          "done": true
         },
         {
           "id": "T-035",
           "text": "Provenance tracking for images",
-          "done": false
+          "done": true
         },
         {
           "id": "T-036",
           "text": "Category tagging: day/night/family/grown-up/free-paid/indoor-outdoor",
-          "done": false
+          "done": true
         }
       ]
     },

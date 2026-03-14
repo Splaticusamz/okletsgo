@@ -49,6 +49,8 @@ Normalized, enriched event records — the core entity of the system.
 | tags             | string[]                                                          | e.g. `["family", "free", "outdoor", "night"]`      |
 | sourceId         | string (UUID)                                                     | Reference to `sources.id`                          |
 | source           | string: `manual\|scraper:<name>`                                  | Provenance label (e.g. `scraper:tourism-kelowna`)  |
+| sourceUrl        | string (URL)                                                      | Canonical source/event page URL, nullable          |
+| ticketUrl        | string (URL)                                                      | Ticket/registration URL when available, nullable   |
 | confidenceScore  | number (0-100)                                                    | Transparent heuristic confidence score              |
 | confidenceReasons| string[]                                                          | Human-readable reasons behind the score             |
 | status           | enum: `candidate\|approved\|rejected\|deferred\|published`        | Lifecycle state (see state machine below)           |
@@ -94,7 +96,11 @@ Candidate images gathered for an event before asset creation.
 | id          | string (UUID)   | Unique image candidate identifier                    |
 | eventId     | string (UUID)   | Reference to `events.id`                            |
 | url         | string (URL)    | Remote URL or local path to the image                |
+| sourceUrl   | string (URL)    | Page/feed URL where this image candidate was observed |
 | provenance  | string          | Where the image came from (e.g. `google`, `manual`, `venue-site`) |
+| extractorId | string          | Scraper/source id that captured the candidate        |
+| capturedAt  | ISO 8601 datetime | When the image candidate was captured              |
+| rank        | number          | Discovery order / preference rank                    |
 | selected    | boolean         | Whether this image was chosen for asset generation   |
 
 ---

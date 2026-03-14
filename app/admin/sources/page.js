@@ -34,11 +34,12 @@ function ResultCard({ result, importing, importError, importResult, onImport }) 
           <span className="chip">avg confidence {summary.averageConfidence ?? '—'}</span>
           <span className="chip">venues {venueSummary.uniqueVenues ?? 0}</span>
           <span className="chip">addresses {venueSummary.addressParsed ?? 0}</span>
+          <span className="chip">images {summary.imageCandidateCount ?? 0}</span>
         </div>
       </div>
 
       <div className="panel-sub" style={{ marginTop: 12 }}>
-        Transparent scoring and venue enrichment are now part of source normalization. Import pulls deduped candidates into review stage 1 and skips obvious duplicates already in the store.
+        Transparent scoring, venue enrichment, source/ticket link capture, tag inference, and image-candidate gathering now happen during normalization. Import pulls deduped candidates into review stage 1 and skips obvious duplicates already in the store.
       </div>
 
       <div className="import-bar">
@@ -81,6 +82,7 @@ function ResultCard({ result, importing, importError, importResult, onImport }) 
               <div className="event-title">{event.title}</div>
               <div className="event-meta">{event.date} · {event.venue} · {event.city}{event.address ? ` · ${event.address}` : ''}</div>
               <div className="event-reasons">{(event.confidenceReasons ?? []).slice(0, 3).join(' • ')}</div>
+              <div className="event-reasons">🖼 {event.imageCandidateCount ?? 0} image candidate{(event.imageCandidateCount ?? 0) === 1 ? '' : 's'}{event.ticketUrl ? ' • ticket link' : ''}{event.sourceUrl ? ' • source link' : ''}{Array.isArray(event.tags) && event.tags.length > 0 ? ` • ${event.tags.slice(0, 4).join(', ')}` : ''}</div>
             </div>
             <div className="event-right">
               <span className={`score-pill ${scoreTone(event.confidenceScore ?? 0)}`}>{event.confidenceScore ?? '—'}</span>

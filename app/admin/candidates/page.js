@@ -30,11 +30,31 @@ function SourceBadge({ source }) {
 }
 
 function ModeTag({ mode }) {
-  const isDayMode = mode === 'family' || mode === 'grownup';
+  const isNightMode = mode === 'night';
   return (
-    <span className={`cand-mode-tag ${isDayMode ? 'cand-mode-tag--day' : 'cand-mode-tag--night'}`}>
-      {isDayMode ? '☀️ day' : '🌙 night'}
+    <span className={`cand-mode-tag ${isNightMode ? 'cand-mode-tag--night' : 'cand-mode-tag--day'}`}>
+      {isNightMode ? '🌙 night' : '☀️ day'}
     </span>
+  );
+}
+
+function TagsRow({ tags }) {
+  if (!Array.isArray(tags) || tags.length === 0) return null;
+  return (
+    <div className="cand-tags-row">
+      {tags.map((tag) => <span key={tag} className="cand-tag-pill">#{tag}</span>)}
+    </div>
+  );
+}
+
+function LinkRow({ sourceUrl, ticketUrl, imageCandidateCount }) {
+  if (!sourceUrl && !ticketUrl && !imageCandidateCount) return null;
+  return (
+    <div className="cand-links-row">
+      {sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer" className="cand-inline-link">Source ↗</a>}
+      {ticketUrl && <a href={ticketUrl} target="_blank" rel="noreferrer" className="cand-inline-link">Tickets ↗</a>}
+      <span className="cand-inline-meta">🖼 {imageCandidateCount ?? 0} image candidate{(imageCandidateCount ?? 0) === 1 ? '' : 's'}</span>
+    </div>
   );
 }
 
@@ -231,6 +251,8 @@ export default function CandidatesPage() {
                     {Array.isArray(c.confidenceReasons) && c.confidenceReasons.length > 0 && (
                       <div className="cand-card-confidence">{c.confidenceReasons.slice(0, 3).join(' • ')}</div>
                     )}
+                    <TagsRow tags={c.tags} />
+                    <LinkRow sourceUrl={c.sourceUrl} ticketUrl={c.ticketUrl} imageCandidateCount={c.imageCandidateCount} />
                     {errMsg && (
                       <div className="cand-card-error">⚠ {errMsg}</div>
                     )}
@@ -404,6 +426,21 @@ export default function CandidatesPage() {
         }
         .cand-card-venue { font-size: 13px; color: var(--muted); }
         .cand-card-confidence { margin-top: 6px; font-size: 12px; color: var(--muted); }
+        .cand-tags-row, .cand-links-row { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .cand-tag-pill, .cand-inline-meta {
+          font-size: 11px;
+          padding: 3px 8px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          color: var(--muted);
+          background: rgba(255,255,255,.03);
+        }
+        .cand-inline-link {
+          font-size: 12px;
+          color: var(--accent);
+          text-decoration: none;
+        }
+        .cand-inline-link:hover { text-decoration: underline; }
 
         .cand-card-error {
           margin-top: 6px;
