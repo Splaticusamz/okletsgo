@@ -7,6 +7,7 @@ import { summarizeVenueEnrichment } from '../../../../lib/enrich.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // browser scraping needs more time
 
 async function isAuthorized() {
   const cookieStore = await cookies();
@@ -36,7 +37,11 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Provide sourceId or all:true' }, { status: 400 });
     }
 
-    const runs = await Promise.all(sources.map((source) => runSourceFetcher(source)));
+    // Run sequentially — browser scrapers share one Chromium instance
+    const runs = [];
+    for (const source of sources) {
+      runs.push(await runSourceFetcher(source));
+    }
     const rawEvents = runs.flatMap((run) => run.events ?? []);
     const normalizedEvents = runs.flatMap((run) => normalizeEvents(run.events ?? [], { id: run.sourceId }));
     const { deduped, duplicates } = dedupeEvents(normalizedEvents);
