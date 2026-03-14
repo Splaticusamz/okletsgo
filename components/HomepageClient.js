@@ -234,7 +234,7 @@ export default function HomepageClient({ currentWeek }) {
                   }
                   const tooltipText = !dayMode ? EVENT_DATA[item.index]?.night : familyMode ? EVENT_DATA[item.index]?.family : EVENT_DATA[item.index]?.day;
                   return (
-                    <div key={item.day.day} onMouseEnter={(e) => { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); }} onMouseMove={moveTooltip} onMouseLeave={() => setTooltip((prev) => ({ ...prev, visible: false }))}>
+                    <div key={item.day.day} className="card-wrapper" onMouseEnter={(e) => { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); }} onMouseMove={moveTooltip} onMouseLeave={() => setTooltip((prev) => ({ ...prev, visible: false }))}>
                       <Card dayData={item.day} mode={mode} index={item.index} transitionDelayMs={item.index * staggerMs} />
                     </div>
                   );
