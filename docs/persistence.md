@@ -1,12 +1,13 @@
 # Persistence layer
 
-## Current adapter
+## Current adapter setup
 
 The app now reads and writes events through `lib/db.js`.
 
-- `FileDbAdapter` is the current production adapter.
-- It owns all access to `data/events.db.json`.
-- `createDb()` exposes a stable interface for the app layer:
+- `FileDbAdapter` is the active adapter used by default.
+- `VercelPostgresAdapter` now exists as the production-safe adapter scaffold.
+- `createDb()` selects an adapter via `DB_PROVIDER`.
+- The app layer still talks to one stable interface:
   - `getEvents()`
   - `getEvent(id)`
   - `createEvent(input)`
@@ -15,37 +16,31 @@ The app now reads and writes events through `lib/db.js`.
   - `addReview(eventId, review)`
   - `seedFromCurrentWeek()`
 
-`lib/store.js` remains only as a compatibility shim so older imports do not break while routes/pages migrate.
+`lib/store.js` remains a compatibility shim for older imports.
 
-## Why this counts as T-018 progress
+## Why T-018 is still open
 
-Before this change, app routes imported flat-file helpers directly and implicitly depended on JSON storage details.
-Now the app depends on a storage boundary instead of the file format itself.
+A JSON file in the repo/runtime is not real deploy-safe persistence on Vercel.
+Serverless filesystem writes are not durable across invocations or deployments, so file-backed JSON and local SQLite-in-project would both be misleading as a "real DB" in production.
 
-That means the next storage move is adapter work, not app-wide rewrites.
+The blocker is concrete:
 
-## Next migration path
+- no provisioned production database is wired into this repo/session yet
+- no Vercel Postgres client/package/config has been landed and exercised end-to-end
+- therefore the app cannot truthfully claim deploy-safe persistent storage beyond the current file adapter
 
-### SQLite
+## What is landed now
 
-Recommended first database upgrade:
+- The storage boundary is real and app routes already depend on it.
+- A production adapter slot now exists via `DB_PROVIDER=vercel-postgres`.
+- If that provider is selected today, the adapter throws a clear blocker message instead of silently pretending persistence is solved.
 
-1. Add `SqliteDbAdapter` in `lib/db.js` or `lib/db/sqlite.js`
-2. Implement the same adapter surface as `FileDbAdapter`
-3. Add a small migration/import script from `data/events.db.json`
-4. Switch the exported `db` instance by environment variable
+## Next step to close T-018 for real
 
-### Postgres
+1. Provision Vercel Postgres for the project.
+2. Add the runtime client/dependency and schema migration.
+3. Implement `VercelPostgresAdapter` operations against the live database.
+4. Set `DB_PROVIDER=vercel-postgres` in Vercel.
+5. Verify create/review/admin mutations persist across deployments.
 
-After SQLite stabilizes:
-
-1. Keep the same adapter interface
-2. Move to a pooled connection model
-3. Split `events`, `reviews`, `sources`, and future `assets` into normalized tables
-4. Keep API/routes unchanged by swapping only the adapter
-
-## Notes
-
-- Current storage is still file-backed, but it is no longer ad hoc from the app's point of view.
-- Manual event intake and review writes already go through the adapter boundary.
-- Source fetcher runs currently return normalized candidates without persisting them automatically.
+Until then, T-018 should remain open.

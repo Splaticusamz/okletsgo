@@ -82,6 +82,9 @@ export default function PublishPage() {
           </div>
           <div className="adash-header-right">
             <span className="admin-pill">publish</span>
+            <form method="POST" action="/api/admin/logout">
+              <button type="submit" className="logout-btn">Logout</button>
+            </form>
           </div>
         </header>
 

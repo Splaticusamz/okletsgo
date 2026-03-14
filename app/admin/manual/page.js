@@ -51,7 +51,7 @@ export default function ManualPage() {
       <div className="admin-wrap">
         <header className="adash-header">
           <div className="adash-brand"><span className="adash-brand-ok">OK</span><br />LET&apos;S GO<br />/ ADMIN</div>
-          <div className="adash-header-right"><span className="admin-pill">manual intake</span></div>
+          <div className="adash-header-right"><span className="admin-pill">manual intake</span><form method="POST" action="/api/admin/logout"><button type="submit" className="logout-btn">Logout</button></form></div>
         </header>
 
         <nav className="adash-nav">

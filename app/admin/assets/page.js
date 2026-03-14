@@ -133,6 +133,9 @@ export default function AssetsPage() {
           </div>
           <div className="adash-header-right">
             <span className="admin-pill">asset review</span>
+            <form method="POST" action="/api/admin/logout">
+              <button type="submit" className="logout-btn">Logout</button>
+            </form>
           </div>
         </header>
 

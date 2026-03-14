@@ -1,10 +1,11 @@
 {
-  "updatedAt": "2026-03-14T01:56:00Z",
+  "updatedAt": "2026-03-14T02:35:00Z",
   "title": "OK LET'S GO Build Tasks",
   "changelog": [
     {
       "date": "2026-03-14",
       "entries": [
+        "Added admin password auth with signed cookie login/logout, protected /admin plus admin mutation APIs, and wired source normalization/dedupe summaries; T-017, T-027, and T-028 are done while T-018 stays open with a production DB scaffold and documented blocker.",
         "Added lib/db.js adapter boundary with FileDbAdapter, migrated app routes to use it, and documented future SQLite/Postgres path in docs/persistence.md",
         "Built first source ingestion stack: lib/sources.js, fetcher registry, tourismkelowna + eventbrite-kelowna fetchers, /api/sources, /api/sources/run, and /admin/sources runner UI",
         "Built manual candidate intake: /admin/manual plus /api/events/create with persistent candidate writes and admin nav updates",
@@ -122,7 +123,7 @@
         {
           "id": "T-017",
           "text": "Protect admin access properly without blocking public site",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -187,12 +188,12 @@
         {
           "id": "T-027",
           "text": "Normalize dates/times/locations",
-          "done": false
+          "done": true
         },
         {
           "id": "T-028",
           "text": "Dedupe duplicate events",
-          "done": false
+          "done": true
         },
         {
           "id": "T-029",

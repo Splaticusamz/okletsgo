@@ -90,6 +90,9 @@ export default function AdminPage() {
           </div>
           <div className="adash-header-right">
             <span className="admin-pill">ops dashboard</span>
+            <form method="POST" action="/api/admin/logout">
+              <button type="submit" className="logout-btn">Logout</button>
+            </form>
           </div>
         </header>
 

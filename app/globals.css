@@ -66,6 +66,17 @@ body.dark-mode .tooltip {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+.logout-btn {
+  margin-left: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+}
+
 .page {
   display: flex;
   flex-direction: column;

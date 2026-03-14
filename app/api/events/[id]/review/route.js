@@ -1,11 +1,23 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, addReview } from '../../../../../lib/db.js';
 import { transition, canTransition } from '../../../../../lib/state.js';
+import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
 
+async function isAuthorized() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(getAdminCookieName())?.value;
+  return await verifyAdminSessionValue(token);
+}
+
 export async function POST(request, { params }) {
   try {
+    if (!await isAuthorized()) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { action, stage, notes, reviewedBy, reviewer } = body;
@@ -27,8 +39,6 @@ export async function POST(request, { params }) {
     }
 
     const newStatus = transition(event, action);
-
-    // Build full audit record
     const review = {
       id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       eventId: id,
@@ -41,7 +51,6 @@ export async function POST(request, { params }) {
       newStatus,
     };
 
-    // Persist: add review + update status
     addReview(id, review);
     const updated = updateEvent(id, { status: newStatus });
 

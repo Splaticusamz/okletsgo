@@ -152,6 +152,9 @@ export default function CandidatesPage() {
           </div>
           <div className="adash-header-right">
             <span className="admin-pill">candidate review</span>
+            <form method="POST" action="/api/admin/logout">
+              <button type="submit" className="logout-btn">Logout</button>
+            </form>
           </div>
         </header>
 
