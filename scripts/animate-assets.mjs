@@ -4,8 +4,11 @@ import path from 'node:path';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const configPath = path.join(root, 'pipeline', 'event-assets.json');
-const indexPath = path.join(root, 'index.html');
-const generatedDir = path.join(root, 'images', 'animated');
+const dataPaths = [
+  path.join(root, 'data', 'current-week.json'),
+  path.join(root, 'public', 'data', 'current-week.json'),
+];
+const generatedDir = path.join(root, 'public', 'images', 'animated');
 const manifestPath = path.join(root, 'pipeline', 'last-run.json');
 const reviewPath = path.join(root, 'pipeline', 'review-checklist.md');
 
@@ -73,9 +76,13 @@ function imageUrlFor(asset, providerCfg) {
   return `${base}/${asset.src.replace(/^\//, '')}`;
 }
 
+function publicPath(assetPath) {
+  return path.join(root, 'public', assetPath.replace(/^\//, ''));
+}
+
 async function writePlaceholder(asset, entry) {
-  const mp4Placeholder = path.join(root, asset.target + '.txt');
-  const gifPlaceholder = path.join(root, asset.gifTarget + '.txt');
+  const mp4Placeholder = publicPath(asset.target + '.txt');
+  const gifPlaceholder = publicPath(asset.gifTarget + '.txt');
   await fs.mkdir(path.dirname(mp4Placeholder), { recursive: true });
   await fs.writeFile(mp4Placeholder, `${asset.id}\n${entry.prompt}\n`);
   await fs.writeFile(gifPlaceholder, `${asset.id}\n${entry.prompt}\n`);
@@ -229,18 +236,25 @@ async function run() {
 }
 
 async function swap() {
-  let html = await fs.readFile(indexPath, 'utf8');
   let swaps = 0;
 
-  for (const asset of assets) {
-    if (html.includes(asset.src)) {
-      html = html.replace(asset.src, asset.gifTarget);
-      swaps += 1;
+  for (const dataPath of dataPaths) {
+    const raw = await fs.readFile(dataPath, 'utf8');
+    const data = JSON.parse(raw);
+
+    for (const day of data.days ?? []) {
+      for (const entry of Object.values(day.entries ?? {})) {
+        const matched = assets.find((asset) => entry.fallbackImage === asset.src);
+        if (!matched) continue;
+        entry.video = matched.target;
+        swaps += 1;
+      }
     }
+
+    await fs.writeFile(dataPath, JSON.stringify(data, null, 2) + '\n');
   }
 
-  await fs.writeFile(indexPath, html);
-  console.log(`Swapped ${swaps} image references to animated GIF targets.`);
+  console.log(`Updated ${swaps} current-week video references across data files.`);
 }
 
 async function review() {

@@ -11,6 +11,7 @@ function isProtectedAdminApi(pathname, method) {
   if (pathname === '/api/sources/run') return true;
   if (pathname === '/api/admin/logout') return true;
   if (pathname === '/api/archives') return true;
+  if (pathname === '/api/newsletter') return true;
   if (pathname.startsWith('/api/events/') && pathname.endsWith('/review')) return true;
   return false;
 }

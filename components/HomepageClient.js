@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const INSERT_BEFORE_TUESDAY = 'TUESDAY';
 const INSERT_BEFORE_FRIDAY = 'FRIDAY';
@@ -20,23 +20,80 @@ const EVENT_DATA = [
   { day: '⛅ 25°C  ·  🎪 Carnival  ·  🕐 1PM', night: '🌧️ 14°C  ·  🎠 Rides  ·  🕚 11PM', family: '⛅ 25°C  ·  🐾 Petting Zoo  ·  🕙 10AM' },
 ];
 
-function Card({ dayData, tooltipText, mode, index }) {
+function AnimatedCardMedia({ entry }) {
+  const [ready, setReady] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(Boolean(entry.video));
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!entry.video || !videoRef.current) return;
+    const video = videoRef.current;
+    let observer;
+    let started = false;
+
+    const markReady = () => {
+      setReady(true);
+      setTimeout(() => setShowSpinner(false), 700);
+    };
+    const markFail = () => setShowSpinner(false);
+
+    const start = () => {
+      if (started) return;
+      started = true;
+      video.preload = 'auto';
+      const playAttempt = video.play();
+      if (playAttempt?.catch) playAttempt.catch(() => {});
+    };
+
+    video.addEventListener('playing', markReady, { once: true });
+    video.addEventListener('error', markFail, { once: true });
+
+    if (window.matchMedia?.('(max-width: 768px)').matches && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((item) => {
+          if (item.isIntersecting) {
+            start();
+            observer?.disconnect();
+          }
+        });
+      }, { rootMargin: '300px 0px' });
+      observer.observe(video);
+    } else {
+      start();
+    }
+
+    return () => {
+      observer?.disconnect();
+      video.removeEventListener('playing', markReady);
+      video.removeEventListener('error', markFail);
+    };
+  }, [entry.video]);
+
+  return (
+    <>
+      {showSpinner ? <span className={`card-spinner ${showSpinner ? 'is-visible' : ''}`} aria-hidden="true" /> : null}
+      {entry.video ? <video ref={videoRef} className={`card-video ${ready ? 'is-ready' : ''}`} src={`/${entry.video.replace(/^\//, '')}`} muted autoPlay loop playsInline preload="none" /> : null}
+    </>
+  );
+}
+
+function Card({ dayData, mode, index, transitionDelayMs }) {
   const transforms = MODES[mode];
 
   return (
-    <div className="card tooltip-anchor" data-tooltip={tooltipText} data-index={index}>
-      <div className="card-img-strip" style={{ transform: transforms.img }}>
+    <div className="card tooltip-anchor" data-tooltip data-index={index}>
+      <div className="card-img-strip" style={{ transform: transforms.img, transitionDelay: `${transitionDelayMs}ms` }}>
         {MODE_ORDER.map((entryMode) => {
           const entry = dayData.entries[entryMode];
           return (
-            <div key={`${dayData.day}-${entryMode}-img`} className="card-img" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('/${entry.fallbackImage}')` }}>
-              {entry.video ? <video className="card-video is-ready" src={`/${entry.video}`} muted autoPlay loop playsInline preload="metadata" /> : null}
+            <div key={`${dayData.day}-${entryMode}-img`} className="card-img" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('/${String(entry.fallbackImage).replace(/^\//, '')}')` }}>
+              <AnimatedCardMedia entry={entry} />
             </div>
           );
         })}
       </div>
 
-      <div className="card-content-strip" style={{ transform: transforms.content }}>
+      <div className="card-content-strip" style={{ transform: transforms.content, transitionDelay: `${transitionDelayMs + 100}ms` }}>
         {MODE_ORDER.map((entryMode) => {
           const entry = dayData.entries[entryMode];
           return (
@@ -57,6 +114,8 @@ export default function HomepageClient({ currentWeek }) {
   const [dayMode, setDayMode] = useState(true);
   const [countdown, setCountdown] = useState('00:00:00');
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
+  const [fadeFamily, setFadeFamily] = useState(false);
+  const [fadeDay, setFadeDay] = useState(false);
 
   const mode = useMemo(() => {
     if (!dayMode) return 'night';
@@ -78,19 +137,29 @@ export default function HomepageClient({ currentWeek }) {
       target.setUTCHours(0, 0, 0, 0);
       return Math.max(0, Math.floor((target - now) / 1000));
     }
-
     function formatTime(totalSeconds) {
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
       return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
-
     const tick = () => setCountdown(formatTime(getSecondsUntilReset()));
     tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setFadeFamily(true);
+    const t = setTimeout(() => setFadeFamily(false), 200);
+    return () => clearTimeout(t);
+  }, [familyMode]);
+
+  useEffect(() => {
+    setFadeDay(true);
+    const t = setTimeout(() => setFadeDay(false), 200);
+    return () => clearTimeout(t);
+  }, [dayMode]);
 
   const cardsWithTiles = [];
   currentWeek.days.forEach((day, index) => {
@@ -100,12 +169,21 @@ export default function HomepageClient({ currentWeek }) {
   });
   if (!cardsWithTiles.find((item) => item.type === 'brand')) cardsWithTiles.push({ type: 'brand' });
 
-  const familyLabel = familyMode
-    ? { title: 'Family mode', desc: 'family friendly events' }
-    : { title: 'Grown up', desc: 'nightlife available' };
-  const dayLabel = dayMode
-    ? { title: 'Daytime', desc: 'daytime events' }
-    : { title: 'Nightlife', desc: 'evening events' };
+  const familyLabel = familyMode ? { title: 'Family mode', desc: 'family friendly events' } : { title: 'Grown up', desc: 'nightlife available' };
+  const dayLabel = dayMode ? { title: 'Daytime', desc: 'daytime events' } : { title: 'Nightlife', desc: 'evening events' };
+  const cardCount = currentWeek.days.length || 1;
+  const staggerMs = cardCount > 1 ? Math.round((720 - 400) / (cardCount - 1)) : 0;
+
+  const moveTooltip = (event) => {
+    const OFFSET = 12;
+    const tooltipWidth = 280;
+    const tooltipHeight = 56;
+    let x = event.clientX + OFFSET;
+    let y = event.clientY + OFFSET;
+    if (x + tooltipWidth > window.innerWidth) x = event.clientX - tooltipWidth - OFFSET;
+    if (y + tooltipHeight > window.innerHeight) y = event.clientY - tooltipHeight - OFFSET;
+    setTooltip((prev) => ({ ...prev, x: Math.max(12, x), y: Math.max(12, y) }));
+  };
 
   return (
     <>
@@ -119,39 +197,27 @@ export default function HomepageClient({ currentWeek }) {
               <div className="toggles">
                 <label className="toggle-group">
                   <div className="toggle-labels">
-                    <span className="toggle-title">{familyLabel.title}</span>
-                    <span className="toggle-desc">{familyLabel.desc}</span>
+                    <span className={`toggle-title ${fadeFamily ? 'fading' : ''}`}>{familyLabel.title}</span>
+                    <span className={`toggle-desc ${fadeFamily ? 'fading' : ''}`}>{familyLabel.desc}</span>
                   </div>
-                  <input
-                    type="checkbox"
-                    className="toggle-input"
-                    checked={familyMode}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setFamilyMode(checked);
-                      if (checked && !dayMode) setDayMode(true);
-                    }}
-                  />
-                  <div className="toggle-track toggle-track--family">
-                    <div className="toggle-knob"></div>
-                  </div>
+                  <input type="checkbox" className="toggle-input" checked={familyMode} onChange={(e) => {
+                    const checked = e.target.checked;
+                    setFamilyMode(checked);
+                    if (checked && !dayMode) setDayMode(true);
+                  }} />
+                  <div className="toggle-track toggle-track--family"><div className="toggle-knob"></div></div>
                 </label>
 
                 <label className="toggle-group">
                   <div className="toggle-labels">
-                    <span className="toggle-title">{dayLabel.title}</span>
-                    <span className="toggle-desc">{dayLabel.desc}</span>
+                    <span className={`toggle-title ${fadeDay ? 'fading' : ''}`}>{dayLabel.title}</span>
+                    <span className={`toggle-desc ${fadeDay ? 'fading' : ''}`}>{dayLabel.desc}</span>
                   </div>
-                  <input
-                    type="checkbox"
-                    className="toggle-input"
-                    checked={dayMode}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setDayMode(checked);
-                      if (!checked) setFamilyMode(false);
-                    }}
-                  />
+                  <input type="checkbox" className="toggle-input" checked={dayMode} onChange={(e) => {
+                    const checked = e.target.checked;
+                    setDayMode(checked);
+                    if (!checked) setFamilyMode(false);
+                  }} />
                   <div className="toggle-track toggle-track--day">
                     <div className="toggle-knob toggle-knob--day">
                       <span className="toggle-icon toggle-icon--sun">☀︎</span>
@@ -166,57 +232,28 @@ export default function HomepageClient({ currentWeek }) {
               <div className="cards-grid" id="cardsGrid">
                 {cardsWithTiles.map((item, order) => {
                   if (item.type === 'cta') {
-                    return (
-                      <a key={`cta-${order}`} href="#newsletter" className="utility-tile utility-tile--cta" aria-label="Join the newsletter">
-                        <div className="utility-inner">
-                          <span className="utility-kicker">Always stay up to date</span>
-                          <span className="utility-heading">Join the newsletter</span>
-                          <span className="utility-pill">Weekly drops →</span>
-                        </div>
-                      </a>
-                    );
+                    return <a key={`cta-${order}`} href="#newsletter" className="utility-tile utility-tile--cta" aria-label="Join the newsletter"><div className="utility-inner"><span className="utility-kicker">Always stay up to date</span><span className="utility-heading">Join the newsletter</span><span className="utility-pill">Weekly drops →</span></div></a>;
                   }
-
                   if (item.type === 'brand') {
-                    return (
-                      <a key={`brand-${order}`} href="#newsletter" className="utility-tile utility-tile--brand" aria-label="OK LET&apos;S GO brand tile">
-                        <div className="utility-inner utility-inner--brand">
-                          <span className="utility-logo"><span className="utility-logo-ok">OK</span><br />LET&apos;S<br />GO</span>
-                        </div>
-                      </a>
-                    );
+                    return <a key={`brand-${order}`} href="#newsletter" className="utility-tile utility-tile--brand" aria-label="OK LET&apos;S GO brand tile"><div className="utility-inner utility-inner--brand"><span className="utility-logo"><span className="utility-logo-ok">OK</span><br />LET&apos;S<br />GO</span></div></a>;
                   }
-
                   const tooltipText = !dayMode ? EVENT_DATA[item.index]?.night : familyMode ? EVENT_DATA[item.index]?.family : EVENT_DATA[item.index]?.day;
                   return (
-                    <div
-                      key={item.day.day}
-                      onMouseEnter={(e) => setTooltip({ visible: true, text: tooltipText || '', x: e.clientX + 12, y: e.clientY + 12 })}
-                      onMouseMove={(e) => setTooltip((prev) => ({ ...prev, x: e.clientX + 12, y: e.clientY + 12 }))}
-                      onMouseLeave={() => setTooltip((prev) => ({ ...prev, visible: false }))}
-                    >
-                      <Card dayData={item.day} tooltipText={tooltipText} mode={mode} index={item.index} />
+                    <div key={item.day.day} onMouseEnter={(e) => { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); }} onMouseMove={moveTooltip} onMouseLeave={() => setTooltip((prev) => ({ ...prev, visible: false }))}>
+                      <Card dayData={item.day} mode={mode} index={item.index} transitionDelayMs={item.index * staggerMs} />
                     </div>
                   );
                 })}
               </div>
-
               <div className="footer">
-                <div className="timer-area">
-                  <span className="footer-text">List resets in <span id="countdown">{countdown}</span></span>
-                </div>
-                <div className="newsletter-area" id="newsletter">
-                  <span className="footer-text">Always stay up to date</span>
-                  <button className="newsletter-btn">Join the Newsletter</button>
-                </div>
+                <div className="timer-area"><span className="footer-text">List resets in <span id="countdown">{countdown}</span></span></div>
+                <div className="newsletter-area" id="newsletter"><span className="footer-text">Always stay up to date</span><button className="newsletter-btn">Join the Newsletter</button></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className={`tooltip ${tooltip.visible ? 'visible' : ''}`} style={{ left: tooltip.x, top: tooltip.y }}>
-        {tooltip.text}
-      </div>
+      <div className={`tooltip ${tooltip.visible ? 'visible' : ''}`} style={{ left: tooltip.x, top: tooltip.y }}>{tooltip.text}</div>
     </>
   );
 }

@@ -154,6 +154,7 @@ body.dark-mode .tooltip {
   font-size: 16px;
   line-height: 0.9em;
   color: var(--color-accent);
+  transition: opacity 200ms, transform 200ms;
 }
 
 .toggle-desc {
@@ -161,6 +162,13 @@ body.dark-mode .tooltip {
   font-size: 14px;
   line-height: 0.9em;
   color: var(--color-brown);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.toggle-title.fading,
+.toggle-desc.fading {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 .toggle-input { display: none; }
@@ -271,9 +279,47 @@ body.dark-mode .tooltip {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 1;
+  opacity: 0;
+  transition: opacity 250ms ease;
   z-index: 1;
   pointer-events: none;
+}
+
+.card-video.is-ready {
+  opacity: 1;
+}
+
+.card-video::-webkit-media-controls,
+.card-video::-webkit-media-controls-panel,
+.card-video::-webkit-media-controls-play-button,
+.card-video::-webkit-media-controls-start-playback-button,
+.card-video::-webkit-media-controls-enclosure {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+.card-spinner {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.95);
+  animation: card-spin 0.8s linear infinite;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+.card-spinner.is-visible {
+  opacity: 0.9;
+}
+
+@keyframes card-spin {
+  to { transform: rotate(360deg); }
 }
 
 .card-content {
