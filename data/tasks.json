@@ -1,7 +1,16 @@
 {
-  "updatedAt": "2026-03-13T23:10:00Z",
+  "updatedAt": "2026-03-14T01:56:00Z",
   "title": "OK LET'S GO Build Tasks",
   "changelog": [
+    {
+      "date": "2026-03-14",
+      "entries": [
+        "Added lib/db.js adapter boundary with FileDbAdapter, migrated app routes to use it, and documented future SQLite/Postgres path in docs/persistence.md",
+        "Built first source ingestion stack: lib/sources.js, fetcher registry, tourismkelowna + eventbrite-kelowna fetchers, /api/sources, /api/sources/run, and /admin/sources runner UI",
+        "Built manual candidate intake: /admin/manual plus /api/events/create with persistent candidate writes and admin nav updates",
+        "Tracked manual vs scraper source provenance in stored events and marked T-026, T-068, and T-069 done; left T-018 open pending a non-JSON backend behind the new adapter boundary"
+      ]
+    },
     {
       "date": "2026-03-13",
       "entries": [
@@ -173,7 +182,7 @@
         {
           "id": "T-026",
           "text": "Build source fetchers (automated scraping)",
-          "done": false
+          "done": true
         },
         {
           "id": "T-027",
@@ -198,12 +207,12 @@
         {
           "id": "T-068",
           "text": "Manual event entry form in admin (same pipeline as scraped events)",
-          "done": false
+          "done": true
         },
         {
           "id": "T-069",
           "text": "Track event source: manual vs scraper:<name> in schema",
-          "done": false
+          "done": true
         }
       ]
     },

@@ -17,13 +17,16 @@ function StatusBadge({ status }) {
 }
 
 function SourceBadge({ source }) {
-  const map = {
-    seed:    { label: 'seed',    cls: 'cand-badge--seed' },
-    manual:  { label: 'manual',  cls: 'cand-badge--manual' },
-    scraper: { label: 'scraper', cls: 'cand-badge--scraper' },
-  };
-  const config = map[source] ?? map.manual;
-  return <span className={`cand-badge ${config.cls}`}>{config.label}</span>;
+  if (source === 'seed') {
+    return <span className="cand-badge cand-badge--seed">seed</span>;
+  }
+  if (source === 'manual') {
+    return <span className="cand-badge cand-badge--manual">manual</span>;
+  }
+  if (String(source).startsWith('scraper:')) {
+    return <span className="cand-badge cand-badge--scraper">{source.replace('scraper:', '')}</span>;
+  }
+  return <span className="cand-badge cand-badge--manual">{source || 'unknown'}</span>;
 }
 
 function ModeTag({ mode }) {
@@ -157,6 +160,8 @@ export default function CandidatesPage() {
           <Link href="/admin"            className="adash-nav-link">Dashboard</Link>
           <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--active">Candidates</Link>
           <Link href="/admin/assets"     className="adash-nav-link adash-nav-link--dim">Assets</Link>
+          <Link href="/admin/sources"    className="adash-nav-link adash-nav-link--dim">Sources</Link>
+          <Link href="/admin/manual"     className="adash-nav-link adash-nav-link--dim">Manual</Link>
           <Link href="/admin/publish"    className="adash-nav-link adash-nav-link--dim">Publish</Link>
           <Link href="/tasks"            className="adash-nav-link">Tasks</Link>
         </nav>

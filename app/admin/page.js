@@ -98,6 +98,8 @@ export default function AdminPage() {
           <Link href="/admin" className="adash-nav-link adash-nav-link--active">Dashboard</Link>
           <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
           <Link href="/admin/assets" className="adash-nav-link adash-nav-link--dim">Assets</Link>
+          <Link href="/admin/sources" className="adash-nav-link adash-nav-link--dim">Sources</Link>
+          <Link href="/admin/manual" className="adash-nav-link adash-nav-link--dim">Manual</Link>
           <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
           <Link href="/tasks" className="adash-nav-link">Tasks</Link>
         </nav>
@@ -180,6 +182,12 @@ export default function AdminPage() {
               </Link>
               <Link href="/admin/assets" className="adash-action-btn adash-action-btn--secondary">
                 Review assets →
+              </Link>
+              <Link href="/admin/sources" className="adash-action-btn adash-action-btn--secondary">
+                Run source fetchers →
+              </Link>
+              <Link href="/admin/manual" className="adash-action-btn adash-action-btn--secondary">
+                Add manual event →
               </Link>
               <button className="adash-action-btn adash-action-btn--primary" disabled>
                 Publish batch (not wired)
