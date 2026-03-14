@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-03-14
+- Verified the production build/smoke-test path, synced stale `public/data/tasks.json` with the canonical task data, and redeployed `okletsgo.ca` to the current enrichment checkpoint
 - Added source/ticket link capture, image candidate gathering with provenance metadata, and category-tag inference across fetchers, normalization, import, and persisted candidate events
 - Surfaced source links, ticket links, tags, and image candidate counts in `/admin/candidates` and `/admin/sources`, and updated schema/task docs for T-033 through T-036
 - Added transparent confidence scoring via `lib/scoring.js`, attaching `confidenceScore` and `confidenceReasons` to normalized candidate events and surfacing them in `/admin/sources` and `/admin/candidates`
