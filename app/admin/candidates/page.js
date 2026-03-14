@@ -190,7 +190,7 @@ export default function CandidatesPage() {
             <br />/ ADMIN
           </div>
           <div className="adash-header-right">
-            <span className="admin-pill">candidate review</span>
+            <span className="admin-pill">sent from discord</span>
             <form method="POST" action="/api/admin/logout">
               <button type="submit" className="logout-btn">Logout</button>
             </form>
@@ -203,7 +203,7 @@ export default function CandidatesPage() {
         {/* ── Page title row ── */}
         <div className="cand-title-row">
           <div>
-            <h1 className="cand-page-title">Candidate Events</h1>
+            <h1 className="cand-page-title">Sent from Discord</h1>
             <div className="cand-page-sub">
               {loading ? 'Loading…' : `${candidates.length} event${candidates.length !== 1 ? 's' : ''}`}
             </div>
