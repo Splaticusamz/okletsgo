@@ -108,6 +108,7 @@ export default function PublishPage() {
           <Link href="/admin/sources" className="adash-nav-link adash-nav-link--dim">Sources</Link>
           <Link href="/admin/manual" className="adash-nav-link adash-nav-link--dim">Manual</Link>
           <Link href="/admin/publish" className="adash-nav-link adash-nav-link--active">Publish</Link>
+          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
           <Link href="/tasks" className="adash-nav-link">Tasks</Link>
         </nav>
 

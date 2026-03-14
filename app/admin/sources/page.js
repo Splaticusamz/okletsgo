@@ -179,6 +179,7 @@ export default function SourcesPage() {
           <Link href="/admin/sources" className="adash-nav-link adash-nav-link--active">Sources</Link>
           <Link href="/admin/manual" className="adash-nav-link adash-nav-link--dim">Manual</Link>
           <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
+          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
           <Link href="/tasks" className="adash-nav-link">Tasks</Link>
         </nav>
 

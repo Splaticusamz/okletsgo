@@ -164,6 +164,7 @@ export default function AssetsPage() {
           <Link href="/admin/candidates" className="adash-nav-link adash-nav-link--dim">Candidates</Link>
           <Link href="/admin/assets" className="adash-nav-link adash-nav-link--active">Assets</Link>
           <Link href="/admin/publish" className="adash-nav-link adash-nav-link--dim">Publish</Link>
+          <Link href="/admin/archives" className="adash-nav-link adash-nav-link--dim">Archives</Link>
           <Link href="/tasks" className="adash-nav-link">Tasks</Link>
         </nav>
 
