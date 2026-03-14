@@ -583,7 +583,7 @@ body.dark-mode .tooltip {
   .toggle-labels { align-items: flex-end; }
   .cards-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 1fr;
+    grid-auto-rows: calc(50vw - 22px);
     grid-auto-flow: row dense;
     gap: 10px;
   }
