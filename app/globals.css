@@ -96,8 +96,6 @@ body.dark-mode .tooltip {
   background: var(--color-card-bg);
   border-radius: 10px;
   height: calc(100vh - 60px);
-  max-height: calc(100vh - 60px);
-  overflow: hidden;
   transition: background-color 0.3s;
 }
 
@@ -106,9 +104,8 @@ body.dark-mode .tooltip {
   flex-direction: column;
   align-items: stretch;
   gap: 15px;
-  flex: 1;
+  flex: 1 1 0%;
   min-height: 0;
-  overflow: hidden;
 }
 
 .header {
@@ -227,9 +224,8 @@ body.dark-mode .tooltip {
   flex-direction: column;
   align-items: stretch;
   gap: 15px;
-  flex: 1;
+  flex: 1 1 0%;
   min-height: 0;
-  overflow: hidden;
 }
 
 .cards-grid {
@@ -237,15 +233,14 @@ body.dark-mode .tooltip {
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: 1fr;
   gap: 10px;
-  flex: 1;
-  min-height: 0;
+  flex: 1 1 0%;
 }
 
 .card {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  min-height: 0;
+  min-height: 200px;
 }
 
 .card-img-strip,
