@@ -583,21 +583,25 @@ body.dark-mode .tooltip {
   .toggle-labels { align-items: flex-end; }
   .cards-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: calc((100vw - 58px) / 2);
-    grid-auto-flow: row dense;
+    grid-template-rows: repeat(8, 1fr);
     gap: 10px;
   }
-  /* Card wrappers span 2 rows = double height of tiles */
-  .card-wrapper { grid-row: span 2; }
+  /* Explicit placement: left=4 cards, right=2 tiles+3 cards */
+  .card-wrapper:nth-child(1) { grid-column: 1; grid-row: 1 / 3; }  /* MON */
+  .card-wrapper:nth-child(3) { grid-column: 2; grid-row: 2 / 4; }  /* TUE */
+  .card-wrapper:nth-child(4) { grid-column: 1; grid-row: 3 / 5; }  /* WED */
+  .card-wrapper:nth-child(5) { grid-column: 2; grid-row: 4 / 6; }  /* THU */
+  .card-wrapper:nth-child(7) { grid-column: 1; grid-row: 5 / 7; }  /* FRI */
+  .card-wrapper:nth-child(8) { grid-column: 2; grid-row: 6 / 8; }  /* SAT */
+  .card-wrapper:nth-child(9) { grid-column: 1; grid-row: 7 / 9; }  /* SUN */
+  .utility-tile--cta  { display: flex; grid-column: 2; grid-row: 1 / 2; }
+  .utility-tile--brand { display: flex; grid-column: 2; grid-row: 8 / 9; }
   .card-wrapper .card { height: 100%; min-height: 0; }
-  /* Utility tiles span 1 row = square */
-  .utility-tile { display: flex; grid-row: span 1; grid-column: 2; }
-  .utility-tile--brand { order: 99; }
   .card-content { padding: 20px; }
   .card-day { font-size: 42px; }
   .card-venue { font-size: 18px; }
   .card-city { font-size: 14px; }
-  .footer { flex-direction: column; gap: 15px; align-items: flex-start; }
+  .footer { flex-direction: column; gap: 15px; align-items: center; text-align: center; }
   .newsletter-area { display: none; }
 }
 
