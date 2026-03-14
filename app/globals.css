@@ -95,7 +95,9 @@ body.dark-mode .tooltip {
   padding: 30px;
   background: var(--color-card-bg);
   border-radius: 10px;
-  min-height: calc(100vh - 60px);
+  height: calc(100vh - 60px);
+  max-height: calc(100vh - 60px);
+  overflow: hidden;
   transition: background-color 0.3s;
 }
 
@@ -103,8 +105,10 @@ body.dark-mode .tooltip {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 25px;
+  gap: 15px;
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .header {
@@ -222,23 +226,26 @@ body.dark-mode .tooltip {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 25px;
+  gap: 15px;
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  grid-auto-rows: minmax(300px, 1fr);
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: 1fr;
   gap: 10px;
   flex: 1;
+  min-height: 0;
 }
 
 .card {
   border-radius: 10px;
   overflow: hidden;
-  min-height: 300px;
   position: relative;
+  min-height: 0;
 }
 
 .card-img-strip,
@@ -554,21 +561,26 @@ body.dark-mode .tooltip {
 }
 
 @media (max-width: 1200px) {
-  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .cards-grid {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr 1fr;
+  }
 }
 
 @media (max-width: 768px) {
   .page { padding: 12px; }
-  .slide { padding: 12px; min-height: auto; }
-  .content { gap: 18px; }
+  .slide { padding: 12px; height: auto; max-height: none; overflow: visible; min-height: calc(100vh - 24px); }
+  .content { gap: 12px; overflow: visible; }
+  .cards-section { overflow: visible; }
   .header { flex-direction: row; align-items: flex-start; gap: 12px; }
   .title { font-size: 34px; }
   .toggles { width: auto; flex-direction: column; align-items: flex-end; justify-content: flex-start; flex-shrink: 0; }
   .toggle-group { width: auto; justify-content: flex-end; }
   .toggle-labels { align-items: flex-end; }
   .cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 180px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: unset;
+    grid-auto-rows: minmax(160px, 1fr);
     grid-auto-flow: row dense;
     gap: 12px;
   }
