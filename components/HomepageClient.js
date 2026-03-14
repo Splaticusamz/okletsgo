@@ -22,57 +22,52 @@ const EVENT_DATA = [
 
 function AnimatedCardMedia({ entry }) {
   const [ready, setReady] = useState(false);
-  const [showSpinner, setShowSpinner] = useState(Boolean(entry.video));
   const videoRef = useRef(null);
 
   useEffect(() => {
     if (!entry.video || !videoRef.current) return;
     const video = videoRef.current;
-    let observer;
-    let started = false;
 
-    const markReady = () => {
-      setReady(true);
-      setTimeout(() => setShowSpinner(false), 700);
-    };
-    const markFail = () => setShowSpinner(false);
+    const markReady = () => setReady(true);
+    video.addEventListener('canplay', markReady, { once: true });
 
-    const start = () => {
-      if (started) return;
-      started = true;
-      video.preload = 'auto';
-      const playAttempt = video.play();
-      if (playAttempt?.catch) playAttempt.catch(() => {});
-    };
+    // Preload but don't play — hover triggers play via CSS opacity + JS
+    video.preload = 'auto';
+    video.load();
 
-    video.addEventListener('playing', markReady, { once: true });
-    video.addEventListener('error', markFail, { once: true });
-
-    if (window.matchMedia?.('(max-width: 768px)').matches && 'IntersectionObserver' in window) {
-      observer = new IntersectionObserver((entries) => {
-        entries.forEach((item) => {
-          if (item.isIntersecting) {
-            start();
-            observer?.disconnect();
-          }
-        });
-      }, { rootMargin: '300px 0px' });
-      observer.observe(video);
-    } else {
-      start();
-    }
-
-    return () => {
-      observer?.disconnect();
-      video.removeEventListener('playing', markReady);
-      video.removeEventListener('error', markFail);
-    };
+    return () => video.removeEventListener('canplay', markReady);
   }, [entry.video]);
+
+  // Expose play/pause for parent hover handlers
+  useEffect(() => {
+    if (!entry.video || !videoRef.current) return;
+    const card = videoRef.current.closest('.card');
+    if (!card) return;
+
+    const play = () => { if (ready) videoRef.current?.play().catch(() => {}); };
+    const pause = () => { if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; } };
+
+    card.addEventListener('mouseenter', play);
+    card.addEventListener('mouseleave', pause);
+    return () => {
+      card.removeEventListener('mouseenter', play);
+      card.removeEventListener('mouseleave', pause);
+    };
+  }, [entry.video, ready]);
 
   return (
     <>
-      {showSpinner ? <span className={`card-spinner ${showSpinner ? 'is-visible' : ''}`} aria-hidden="true" /> : null}
-      {entry.video ? <video ref={videoRef} className={`card-video ${ready ? 'is-ready' : ''}`} src={`/${entry.video.replace(/^\//, '')}`} muted autoPlay loop playsInline preload="none" /> : null}
+      {entry.video ? (
+        <video
+          ref={videoRef}
+          className={`card-video ${ready ? 'is-ready' : ''}`}
+          src={`/${entry.video.replace(/^\//, '')}`}
+          muted
+          loop
+          playsInline
+          preload="none"
+        />
+      ) : null}
     </>
   );
 }
