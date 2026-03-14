@@ -113,7 +113,7 @@ export default function CandidatesPage() {
   const [cardError, setCardError] = useState({}); // id → error message
 
   useEffect(() => {
-    fetch('/api/events')
+    fetch('/api/events?all=1')
       .then(r => r.json())
       .then(data => {
         setEvents(data.events ?? []);

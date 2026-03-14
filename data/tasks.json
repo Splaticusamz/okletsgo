@@ -1,7 +1,16 @@
 {
-  "updatedAt": "2026-03-14T03:05:52Z",
+  "updatedAt": "2026-03-14T03:30:00Z",
   "title": "OK LET'S GO Build Tasks",
   "changelog": [
+    {
+      "date": "2026-03-14",
+      "entries": [
+        "Added lib/publisher.js batch generation/publish/rollback lifecycle with audit trail, /api/publish/batch API (GET+POST), and full /admin/publish UI with draft preview, confirm publish, and rollback support.",
+        "Updated homepage data loading (lib/data.js) to prefer the latest published batch events over seed data, with seamless fallback to current-week.json.",
+        "Made public /api/events respect published batch visibility — only published batch events shown publicly, admin gets ?all=1 bypass.",
+        "Marked T-045 through T-049 (publishing system) done."
+      ]
+    },
     {
       "date": "2026-03-14",
       "entries": [
@@ -321,27 +330,27 @@
         {
           "id": "T-045",
           "text": "Generate approved weekly publish batch",
-          "done": false
+          "done": true
         },
         {
           "id": "T-046",
           "text": "Make homepage read latest published batch",
-          "done": false
+          "done": true
         },
         {
           "id": "T-047",
           "text": "Make unpublished drafts invisible to public",
-          "done": false
+          "done": true
         },
         {
           "id": "T-048",
           "text": "Keep preview/review before publish",
-          "done": false
+          "done": true
         },
         {
           "id": "T-049",
           "text": "Support rollback to previous published batch",
-          "done": false
+          "done": true
         }
       ]
     },

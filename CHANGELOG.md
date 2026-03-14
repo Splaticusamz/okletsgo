@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-03-14 (publishing system)
+- Added `lib/publisher.js` with batch generation, confirm-publish, and rollback lifecycle plus full audit trail stored in the JSON db
+- Added `app/api/publish/batch/route.js` — POST generates draft / confirms publish / rolls back; GET returns batches, current published, and audit trail
+- Rebuilt `/admin/publish` with live draft preview, confirm-publish action, rollback support, batch history, and audit trail UI
+- Updated `lib/data.js` to prefer events from the latest published batch on the homepage, falling back to `current-week.json` seed data
+- Made public `/api/events` respect published batch visibility (only published events shown to public; admin uses `?all=1`)
+- Updated admin candidate/asset pages to use `?all=1` for full event access
+- Extended `lib/db.js` with `publishBatches` and `batchActions` collections plus full CRUD
+- Marked T-045 through T-049 done
+
 ## 2026-03-14
 - Built the approved-event asset pipeline: stage-1 approval now creates pending asset records, `lib/assets.js` orchestrates generation, and `/api/assets/generate` can generate or regenerate outputs for approved events
 - Added `lib/image-processor.js` with standardized 1080x1920 + 1080x1080 card crops, safe-zone overlays, title/date/venue branding, and optimized WebP/AVIF still outputs from selected image candidates or fallback images

@@ -95,7 +95,7 @@ export default function AssetsPage() {
   const [stillOnly, setStillOnly] = useState({});
 
   async function loadEvents() {
-    const res = await fetch('/api/events');
+    const res = await fetch('/api/events?all=1');
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? 'Failed to load events');
     setAllEvents(data.events ?? []);
