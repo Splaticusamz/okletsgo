@@ -3,3 +3,4 @@
 images/animated/*.txt
 node_modules
 .next
+.env*.local

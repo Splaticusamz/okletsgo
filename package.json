@@ -12,6 +12,8 @@
     "pipeline:rollback": "bash scripts/rollback-checkpoint.sh"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@vercel/postgres": "^0.10.0",
     "next": "15.5.12",
     "react": "19.0.0",
     "react-dom": "19.0.0",

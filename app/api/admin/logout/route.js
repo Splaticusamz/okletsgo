@@ -12,5 +12,5 @@ export async function POST(request) {
   cookieStore.set(getAdminCookieName(), '', getAdminLogoutCookieOptions());
 
   const nextUrl = new URL('/admin/login?loggedOut=1', request.url);
-  return NextResponse.redirect(nextUrl);
+  return NextResponse.redirect(nextUrl, 303);
 }
