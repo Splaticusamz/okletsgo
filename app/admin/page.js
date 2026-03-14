@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
 import AdminNav from '../../components/AdminNav';
+import WeekPlanner from '../../components/WeekPlanner';
 
 function loadWeekData() {
   try {
@@ -98,6 +99,8 @@ export default function AdminPage() {
         </header>
 
         <AdminNav />
+
+        <WeekPlanner />
 
         {/* ── Current week status ── */}
         <section className="adash-week-card">

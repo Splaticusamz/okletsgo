@@ -240,7 +240,12 @@ export default function CandidatesPage() {
                       <StatusBadge status={c.status} />
                     </div>
                     <div className="cand-card-title">{c.title}</div>
-                    <div className="cand-card-venue">{[c.venue, c.city, c.address].filter(Boolean).join(' · ') || c.title}</div>
+                    <div className="cand-card-meta">
+                      {c.venue && <span className="cand-meta-item">📍 {c.venue}</span>}
+                      {c.city && <span className="cand-meta-item">🏙️ {c.city}</span>}
+                      {c.startTime && <span className="cand-meta-item">🕐 {c.startTime}{c.endTime ? ` – ${c.endTime}` : ''}</span>}
+                      {c.address && <span className="cand-meta-item cand-meta-addr">{c.address}</span>}
+                    </div>
                     {Array.isArray(c.confidenceReasons) && c.confidenceReasons.length > 0 && (
                       <div className="cand-card-confidence">{c.confidenceReasons.slice(0, 3).join(' • ')}</div>
                     )}
@@ -386,7 +391,9 @@ export default function CandidatesPage() {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .cand-card-venue { font-size: 13px; color: var(--muted); }
+        .cand-card-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+        .cand-meta-item { font-size: 13px; color: #94a3b8; background: #1e1b4b; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+        .cand-meta-addr { color: #64748b; background: transparent; padding: 0; }
         .cand-card-confidence { margin-top: 6px; font-size: 12px; color: var(--muted); }
         .cand-tags-row, .cand-links-row { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .cand-tag-pill, .cand-inline-meta {
