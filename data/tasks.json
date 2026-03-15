@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-03-15T08:46:00Z",
-  "title": "OK LET'S GO — Pipeline V2",
+  "updatedAt": "2026-03-15T15:15:00Z",
+  "title": "OK LET'S GO \u2014 Pipeline V2",
   "changelog": [
     {
       "date": "2026-03-15",
       "entries": [
-        "Replaced all previous tasks with the new end-to-end pipeline plan. Prior work (T-001–T-069) archived — all were completed."
+        "Replaced all previous tasks with the new end-to-end pipeline plan. Prior work (T-001\u2013T-069) archived \u2014 all were completed."
       ]
     }
   ],
@@ -13,56 +13,156 @@
     {
       "title": "1. Scrape & Discord Candidates",
       "items": [
-        { "id": "V2-001", "text": "Scrape events from configured sources (Tourism Kelowna, Castanet, etc.)", "done": true },
-        { "id": "V2-002", "text": "Post each scraped event to Discord #candidates with approval buttons", "done": true },
-        { "id": "V2-003", "text": "On ✅ approval, ingest event to DB as approved_1 with source image attached", "done": true }
+        {
+          "id": "V2-001",
+          "text": "Scrape events from configured sources (Tourism Kelowna, Castanet, etc.)",
+          "done": true
+        },
+        {
+          "id": "V2-002",
+          "text": "Post each scraped event to Discord #candidates with approval buttons",
+          "done": true
+        },
+        {
+          "id": "V2-003",
+          "text": "On \u2705 approval, ingest event to DB as approved_1 with source image attached",
+          "done": true
+        }
       ]
     },
     {
-      "title": "2. Assets Page — Single-Edit View",
+      "title": "2. Assets Page \u2014 Single-Edit View",
       "items": [
-        { "id": "V2-010", "text": "Replace grid layout with queue list + full-width edit panel", "done": false },
-        { "id": "V2-011", "text": "Edit panel: 1:2 card preview (left) + editable metadata fields (right)", "done": false },
-        { "id": "V2-012", "text": "Editable fields: title, venue, city, date, mode, description — auto-populated from scrape", "done": false },
-        { "id": "V2-013", "text": "Queue list: clickable sidebar showing all approved_1 events, highlight active", "done": false }
+        {
+          "id": "V2-010",
+          "text": "Replace grid layout with queue list + full-width edit panel",
+          "done": true
+        },
+        {
+          "id": "V2-011",
+          "text": "Edit panel: 1:2 card preview (left) + editable metadata fields (right)",
+          "done": true
+        },
+        {
+          "id": "V2-012",
+          "text": "Editable fields: title, venue, city, date, mode, description \u2014 auto-populated from scrape",
+          "done": true
+        },
+        {
+          "id": "V2-013",
+          "text": "Queue list: clickable sidebar showing all approved_1 events, highlight active",
+          "done": true
+        }
       ]
     },
     {
-      "title": "3. Image Fetching (3×3 grid: venue, event, activity)",
+      "title": "3. Image Fetching (3\u00d73 grid: venue, event, activity)",
       "items": [
-        { "id": "V2-020", "text": "Fetch 3 images of the venue/business itself", "done": false },
-        { "id": "V2-021", "text": "Fetch 3 images of the specific event", "done": false },
-        { "id": "V2-022", "text": "Generate/fetch 3 stock/AI images of the general activity type", "done": false },
-        { "id": "V2-023", "text": "Display all 9 as a selectable gallery in the edit panel", "done": false },
-        { "id": "V2-024", "text": "User selects one as the static default image", "done": false }
+        {
+          "id": "V2-020",
+          "text": "Fetch 3 images of the venue/business itself",
+          "done": false
+        },
+        {
+          "id": "V2-021",
+          "text": "Fetch 3 images of the specific event",
+          "done": false
+        },
+        {
+          "id": "V2-022",
+          "text": "Generate/fetch 3 stock/AI images of the general activity type",
+          "done": false
+        },
+        {
+          "id": "V2-023",
+          "text": "Display all 9 as a selectable gallery in the edit panel",
+          "done": false
+        },
+        {
+          "id": "V2-024",
+          "text": "User selects one as the static default image",
+          "done": false
+        }
       ]
     },
     {
       "title": "4. Animation & Card Approval",
       "items": [
-        { "id": "V2-030", "text": "Once static image selected, offer 'Animate' button", "done": false },
-        { "id": "V2-031", "text": "Generate animated version (Ken Burns / fal.ai video)", "done": false },
-        { "id": "V2-032", "text": "Preview both still and animated in 1:2 viewport", "done": false },
-        { "id": "V2-033", "text": "Approve card button — moves event to approved_2 (publish queue)", "done": false }
+        {
+          "id": "V2-030",
+          "text": "Once static image selected, offer 'Animate' button",
+          "done": false
+        },
+        {
+          "id": "V2-031",
+          "text": "Generate animated version (Ken Burns / fal.ai video)",
+          "done": false
+        },
+        {
+          "id": "V2-032",
+          "text": "Preview both still and animated in 1:2 viewport",
+          "done": false
+        },
+        {
+          "id": "V2-033",
+          "text": "Approve card button \u2014 moves event to approved_2 (publish queue)",
+          "done": false
+        }
       ]
     },
     {
-      "title": "5. Publish Calendar — Drag & Drop",
+      "title": "5. Publish Calendar \u2014 Drag & Drop",
       "items": [
-        { "id": "V2-040", "text": "Calendar grid: 7 columns (Mon–Sun) × 3 rows (Family, Grown-up, Night)", "done": false },
-        { "id": "V2-041", "text": "Approved_2 events appear in a sidebar pool for drag-and-drop", "done": false },
-        { "id": "V2-042", "text": "Drag events onto calendar slots", "done": false },
-        { "id": "V2-043", "text": "Visual progress bar showing slots filled / 21 total", "done": false },
-        { "id": "V2-044", "text": "Slot validation: warn if mode mismatch (night event in family slot, etc.)", "done": false }
+        {
+          "id": "V2-040",
+          "text": "Calendar grid: 7 columns (Mon\u2013Sun) \u00d7 3 rows (Family, Grown-up, Night)",
+          "done": false
+        },
+        {
+          "id": "V2-041",
+          "text": "Approved_2 events appear in a sidebar pool for drag-and-drop",
+          "done": false
+        },
+        {
+          "id": "V2-042",
+          "text": "Drag events onto calendar slots",
+          "done": false
+        },
+        {
+          "id": "V2-043",
+          "text": "Visual progress bar showing slots filled / 21 total",
+          "done": false
+        },
+        {
+          "id": "V2-044",
+          "text": "Slot validation: warn if mode mismatch (night event in family slot, etc.)",
+          "done": false
+        }
       ]
     },
     {
       "title": "6. Publish & Archive",
       "items": [
-        { "id": "V2-050", "text": "Publish button enabled once all 21 slots filled (or override available)", "done": false },
-        { "id": "V2-051", "text": "On publish: archive current live page as snapshot", "done": false },
-        { "id": "V2-052", "text": "Replace homepage cards with new published batch", "done": false },
-        { "id": "V2-053", "text": "Confirmation + rollback support", "done": false }
+        {
+          "id": "V2-050",
+          "text": "Publish button enabled once all 21 slots filled (or override available)",
+          "done": false
+        },
+        {
+          "id": "V2-051",
+          "text": "On publish: archive current live page as snapshot",
+          "done": false
+        },
+        {
+          "id": "V2-052",
+          "text": "Replace homepage cards with new published batch",
+          "done": false
+        },
+        {
+          "id": "V2-053",
+          "text": "Confirmation + rollback support",
+          "done": false
+        }
       ]
     }
   ]
