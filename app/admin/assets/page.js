@@ -75,6 +75,125 @@ function ReviewHistory({ reviews }) {
   );
 }
 
+function ImageGallery({ event, onUpdate }) {
+  const [uploading, setUploading] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [cropCandidate, setCropCandidate] = useState(null);
+  const candidates = event.imageCandidates ?? [];
+
+  async function handleUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append('image', file);
+      const res = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) {
+      alert('Upload failed: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleFindMore() {
+    setSearching(true);
+    try {
+      const res = await fetch(`/api/events/${event.id}/find-images`, { method: 'POST' });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) {
+      alert('Search failed: ' + err.message);
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  async function handleSelect(candidateId) {
+    try {
+      const res = await fetch(`/api/events/${event.id}/select-image`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidateId }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) {
+      alert('Select failed: ' + err.message);
+    }
+  }
+
+  return (
+    <div className="img-gallery">
+      <div className="img-gallery-header">
+        <span className="img-gallery-label">Image Candidates ({candidates.length})</span>
+        <div className="img-gallery-actions">
+          <label className="img-gallery-btn img-gallery-btn--upload">
+            {uploading ? '…' : '📤 Upload'}
+            <input type="file" accept="image/*" onChange={handleUpload} hidden />
+          </label>
+          <button className="img-gallery-btn img-gallery-btn--search" onClick={handleFindMore} disabled={searching}>
+            {searching ? '…' : '🔍 Find More'}
+          </button>
+        </div>
+      </div>
+      {candidates.length > 0 ? (
+        <div className="img-gallery-scroll">
+          {candidates.map((c) => (
+            <div
+              key={c.id}
+              className={`img-gallery-thumb ${c.selected ? 'img-gallery-thumb--selected' : ''}`}
+              onClick={() => setCropCandidate(c)}
+              title={c.source || 'image candidate'}
+            >
+              <img src={c.url} alt="" loading="lazy" />
+              {c.selected && <div className="img-gallery-check">✓</div>}
+              <div className="img-gallery-overlay">
+                <span>Select</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="img-gallery-empty">No images yet — upload or search</div>
+      )}
+      {cropCandidate && (
+        <CropModal
+          candidate={cropCandidate}
+          onSelect={(id) => { handleSelect(id); setCropCandidate(null); }}
+          onClose={() => setCropCandidate(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function CropModal({ candidate, onSelect, onClose }) {
+  return (
+    <div className="crop-backdrop" onClick={onClose}>
+      <div className="crop-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="crop-close" onClick={onClose}>×</button>
+        <div className="crop-title">Select & Crop (1:2 Portrait)</div>
+        <div className="crop-preview-wrap">
+          <div className="crop-aspect-box">
+            <img src={candidate.url} alt="" />
+          </div>
+        </div>
+        <div className="crop-info">
+          <span>Source: {candidate.source || 'unknown'}</span>
+          <span>Crop will be applied at 1:2 ratio on generation</span>
+        </div>
+        <div className="crop-actions">
+          <button className="crop-btn crop-btn--cancel" onClick={onClose}>Cancel</button>
+          <button className="crop-btn crop-btn--confirm" onClick={() => onSelect(candidate.id)}>✓ Select This Image</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PreviewPane({ asset, title }) {
   if (!asset?.portraitUrl) {
     return <div className="asset-preview-empty">No preview yet</div>;
@@ -94,6 +213,7 @@ export default function AssetsPage() {
   const [acting, setActing] = useState({});
   const [cardError, setCardError] = useState({});
   const [stillOnly, setStillOnly] = useState({});
+  const [dismissed, setDismissed] = useState({});
 
   async function loadEvents() {
     const res = await fetch('/api/events?all=1');
@@ -108,7 +228,7 @@ export default function AssetsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const assets = useMemo(() => allEvents.filter((e) => ['approved_1', 'approved_2', 'published'].includes(e.status)), [allEvents]);
+  const assets = useMemo(() => allEvents.filter((e) => ['approved_1', 'approved_2', 'published'].includes(e.status) && !dismissed[e.id]), [allEvents, dismissed]);
 
   async function doReview(id, action) {
     setActing((a) => ({ ...a, [id]: action }));
@@ -192,6 +312,7 @@ export default function AssetsPage() {
 
               return (
                 <div key={assetEvent.id} className={`asset-card ${isDone ? 'asset-card--done' : ''}`}>
+                  <button className="asset-card-close" onClick={() => setDismissed((d) => ({ ...d, [assetEvent.id]: true }))} title="Dismiss">×</button>
                   <div className="asset-previews">
                     <div className="asset-preview-panel"><div className="asset-preview-label">Still</div><PreviewPane asset={asset} title="Still" /></div>
                     <div className="asset-preview-panel"><div className="asset-preview-label">Animation</div><PreviewPane asset={asset} title="Animation" /></div>
@@ -211,6 +332,7 @@ export default function AssetsPage() {
                       <span>Portrait: 1080×1920</span>
                       <span>Square: 1080×1080</span>
                     </div>
+                    <ImageGallery event={assetEvent} onUpdate={loadEvents} />
                     {asset?.notes && <div className="asset-note">{asset.notes}</div>}
                     {errMsg && <div className="asset-card-error">⚠ {errMsg}</div>}
                     <ReviewHistory reviews={assetEvent.reviews} />
@@ -297,6 +419,39 @@ export default function AssetsPage() {
         .rev-action-badge--defer { background:rgba(245,158,11,.12); color:#f59e0b; }
         .rev-by { color:var(--text); font-weight:600; } .rev-stage,.rev-when,.rev-notes { color:var(--muted); }
         .rev-when { margin-left:auto; }
+        .asset-card { position:relative; }
+        .asset-card-close { position:absolute; top:8px; right:8px; z-index:10; width:28px; height:28px; border-radius:50%; border:none; background:rgba(0,0,0,.5); color:rgba(255,255,255,.5); font-size:18px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+        .asset-card-close:hover { background:rgba(248,113,113,.3); color:#fff; }
+        .img-gallery { margin:10px 0; }
+        .img-gallery-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+        .img-gallery-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+        .img-gallery-actions { display:flex; gap:6px; }
+        .img-gallery-btn { font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text); cursor:pointer; transition:all .15s; }
+        .img-gallery-btn:hover { background:rgba(255,255,255,.08); }
+        .img-gallery-btn:disabled { opacity:.4; cursor:default; }
+        .img-gallery-scroll { display:flex; gap:8px; overflow-x:auto; padding:4px 0 8px; scrollbar-width:thin; }
+        .img-gallery-thumb { position:relative; flex-shrink:0; width:72px; height:144px; border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid transparent; transition:border-color .15s; }
+        .img-gallery-thumb:hover { border-color:rgba(78,205,196,.5); }
+        .img-gallery-thumb--selected { border-color:var(--accent); box-shadow:0 0 8px rgba(78,205,196,.3); }
+        .img-gallery-thumb img { width:100%; height:100%; object-fit:cover; }
+        .img-gallery-check { position:absolute; top:4px; right:4px; width:18px; height:18px; border-radius:50%; background:var(--accent); color:#000; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+        .img-gallery-overlay { position:absolute; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .15s; font-size:11px; font-weight:600; color:#fff; }
+        .img-gallery-thumb:hover .img-gallery-overlay { opacity:1; }
+        .img-gallery-thumb--selected:hover .img-gallery-overlay { opacity:0; }
+        .img-gallery-empty { font-size:12px; color:var(--muted); padding:12px; text-align:center; border:1px dashed rgba(255,255,255,.1); border-radius:8px; }
+        .crop-backdrop { position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; }
+        .crop-modal { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; max-width:420px; width:90%; position:relative; }
+        .crop-close { position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%; border:none; background:rgba(255,255,255,.08); color:var(--muted); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .crop-close:hover { color:#fff; background:rgba(255,255,255,.15); }
+        .crop-title { font-size:16px; font-weight:700; margin-bottom:14px; }
+        .crop-preview-wrap { display:flex; justify-content:center; margin-bottom:14px; }
+        .crop-aspect-box { width:200px; aspect-ratio:1/2; border-radius:10px; overflow:hidden; border:2px solid var(--accent); }
+        .crop-aspect-box img { width:100%; height:100%; object-fit:cover; }
+        .crop-info { display:flex; flex-direction:column; gap:4px; font-size:11px; color:var(--muted); margin-bottom:14px; }
+        .crop-actions { display:flex; gap:8px; }
+        .crop-btn { flex:1; padding:10px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:1px solid; }
+        .crop-btn--cancel { color:var(--muted); border-color:rgba(255,255,255,.12); background:transparent; }
+        .crop-btn--confirm { color:#000; border-color:var(--accent); background:var(--accent); }
         @media (max-width: 640px) { .adash-brand{font-size:26px;} .asset-grid{grid-template-columns:1fr;} .asset-previews{grid-template-columns:1fr;} .asset-meta-grid{grid-template-columns:1fr;} .rev-when{margin-left:0;width:100%;} }
       `}</style>
     </main>

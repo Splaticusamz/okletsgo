@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, addReview, initDb, flushDb } from '../../../../../lib/db.js';
 import { ensurePendingAssetRecord } from '../../../../../lib/assets.js';
 import { transition, canTransition } from '../../../../../lib/state.js';
+import { findImagesForEvent } from '../../../../../lib/image-search.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
@@ -61,6 +62,19 @@ export async function POST(request, { params }) {
         ensurePendingAssetRecord(id);
       } catch {
         // Asset eligibility should not block the review transition.
+      }
+
+      // Auto-search for images if event has none
+      const freshEvent = getEvent(id);
+      if (freshEvent && (!freshEvent.imageCandidates || freshEvent.imageCandidates.length === 0)) {
+        try {
+          const candidates = await findImagesForEvent(freshEvent);
+          if (candidates.length > 0) {
+            updateEvent(id, { imageCandidates: candidates });
+          }
+        } catch {
+          // Image search failure should not block approval
+        }
       }
     }
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createEvent, initDb, flushDb } from '../../../../lib/db.js';
+import { createEvent, updateEvent, initDb, flushDb } from '../../../../lib/db.js';
+import { findImagesForEvent } from '../../../../lib/image-search.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,6 +43,18 @@ export async function POST(request) {
       confidenceReasons: ['Discord pipeline import'],
       imageCandidates: body.image ? [{ url: body.image, source: body.source || 'discord' }] : [],
     });
+
+    // Auto-search for images if none were provided
+    if (!event.imageCandidateCount) {
+      try {
+        const candidates = await findImagesForEvent(event);
+        if (candidates.length > 0) {
+          updateEvent(event.id, { imageCandidates: candidates });
+        }
+      } catch {
+        // Image search failure should not block ingest
+      }
+    }
 
     await flushDb();
     return NextResponse.json({ ok: true, event: { id: event.id, title: event.title, status: event.status } }, { status: 201 });
