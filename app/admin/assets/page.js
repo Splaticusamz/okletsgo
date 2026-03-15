@@ -213,7 +213,9 @@ export default function AssetsPage() {
   const [acting, setActing] = useState({});
   const [cardError, setCardError] = useState({});
   const [stillOnly, setStillOnly] = useState({});
-  const [dismissed, setDismissed] = useState({});
+  const [dismissed, setDismissed] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('asset-dismissed') || '{}'); } catch { return {}; }
+  });
 
   async function loadEvents() {
     const res = await fetch('/api/events?all=1');
@@ -312,7 +314,7 @@ export default function AssetsPage() {
 
               return (
                 <div key={assetEvent.id} className={`asset-card ${isDone ? 'asset-card--done' : ''}`}>
-                  <button className="asset-card-close" onClick={() => setDismissed((d) => ({ ...d, [assetEvent.id]: true }))} title="Dismiss">×</button>
+                  <button className="asset-card-close" onClick={() => setDismissed((d) => { const next = { ...d, [assetEvent.id]: true }; try { localStorage.setItem('asset-dismissed', JSON.stringify(next)); } catch {} return next; })} title="Dismiss">×</button>
                   <div className="asset-previews">
                     <div className="asset-preview-panel"><div className="asset-preview-label">Still</div><PreviewPane asset={asset} title="Still" /></div>
                     <div className="asset-preview-panel"><div className="asset-preview-label">Animation</div><PreviewPane asset={asset} title="Animation" /></div>
