@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-15T15:15:00Z",
+  "updatedAt": "2026-03-15T17:10:00Z",
   "title": "OK LET'S GO \u2014 Pipeline V2",
   "changelog": [
     {
@@ -61,27 +61,27 @@
         {
           "id": "V2-020",
           "text": "Fetch 3 images of the venue/business itself",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-021",
           "text": "Fetch 3 images of the specific event",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-022",
           "text": "Generate/fetch 3 stock/AI images of the general activity type",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-023",
           "text": "Display all 9 as a selectable gallery in the edit panel",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-024",
           "text": "User selects one as the static default image",
-          "done": false
+          "done": true
         }
       ]
     },
