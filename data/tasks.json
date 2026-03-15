@@ -1,473 +1,68 @@
 {
-  "updatedAt": "2026-03-14T04:04:00Z",
-  "title": "OK LET'S GO Build Tasks",
+  "updatedAt": "2026-03-15T08:46:00Z",
+  "title": "OK LET'S GO — Pipeline V2",
   "changelog": [
     {
-      "date": "2026-03-14",
+      "date": "2026-03-15",
       "entries": [
-        "Closed newsletter/admin send-prep flow, polished homepage behavior around published batches/media/toggles, moved dead static-shell leftovers out of the main path, and documented final architecture; T-008, T-009, T-010, T-056 through T-064 are done while T-018 remains the only open item pending a real production DB."
-      ]
-    },
-    {
-      "date": "2026-03-14",
-      "entries": [
-        "Added lib/publisher.js batch generation/publish/rollback lifecycle with audit trail, /api/publish/batch API (GET+POST), and full /admin/publish UI with draft preview, confirm publish, and rollback support.",
-        "Updated homepage data loading (lib/data.js) to prefer the latest published batch events over seed data, with seamless fallback to current-week.json.",
-        "Made public /api/events respect published batch visibility \u2014 only published batch events shown publicly, admin gets ?all=1 bypass.",
-        "Marked T-045 through T-049 (publishing system) done."
-      ]
-    },
-    {
-      "date": "2026-03-14",
-      "entries": [
-        "Built the approved-event asset pipeline: stage-1 approval now creates pending asset records, lib/assets.js orchestrates generation, and /api/assets/generate can generate or regenerate outputs for approved events.",
-        "Added sharp-based image processing with standardized portrait/square card framing, safe zones, text overlays, WebP/AVIF still outputs, and selected-image/fallback-image handling via lib/image-processor.js.",
-        "Connected local ffmpeg animation generation for simple Ken Burns MP4 outputs, added still-only fallback handling, surfaced generated previews plus regenerate controls in /admin/assets, and marked T-038 through T-044 done."
-      ]
-    },
-    {
-      "date": "2026-03-14",
-      "entries": [
-        "Verified production build/smoke-test path, synced stale public/data/tasks.json with the canonical tasks data, and redeployed okletsgo.ca to the current enrichment checkpoint.",
-        "Added source/ticket link capture, image-candidate gathering with provenance metadata, and category-tag heuristics across fetchers, normalization, import, and the JSON-backed db shape.",
-        "Surfaced source links, ticket links, tags, and image candidate counts in /admin/candidates and /admin/sources, and updated schema/docs for T-033 through T-036.",
-        "Added transparent confidence scoring, venue/address enrichment, and candidate import-to-review flow for source runs; /admin/sources now shows score + enrichment summaries and can import deduped candidates into /admin/candidates.",
-        "Extended the JSON-backed db shape with venue records plus candidate import dedupe checks, preserving scraper:<id> provenance while keeping the current app stable."
-      ]
-    },
-    {
-      "date": "2026-03-14",
-      "entries": [
-        "Added admin password auth with signed cookie login/logout, protected /admin plus admin mutation APIs, and wired source normalization/dedupe summaries; T-017, T-027, and T-028 are done while T-018 stays open with a production DB scaffold and documented blocker.",
-        "Added lib/db.js adapter boundary with FileDbAdapter, migrated app routes to use it, and documented future SQLite/Postgres path in docs/persistence.md",
-        "Built first source ingestion stack: lib/sources.js, fetcher registry, tourismkelowna + eventbrite-kelowna fetchers, /api/sources, /api/sources/run, and /admin/sources runner UI",
-        "Built manual candidate intake: /admin/manual plus /api/events/create with persistent candidate writes and admin nav updates",
-        "Tracked manual vs scraper source provenance in stored events and marked T-026, T-068, and T-069 done; left T-018 open pending a non-JSON backend behind the new adapter boundary"
-      ]
-    },
-    {
-      "date": "2026-03-13",
-      "entries": [
-        "Converted site from static shell to real Next.js app with proper routes",
-        "Real /admin route with ops dashboard (week status, stats, nav)",
-        "Real /tasks route with numbered task checklist",
-        "SSH git auth fixed \u2014 pushes now work silently",
-        "okletsgo.ca domain correctly aliased to current deployment",
-        "Added manual event entry tasks (T-068, T-069) to pipeline plan",
-        "Wired double approval workflow \u2014 candidate and asset review screens now functional with persistent state",
-        "Wired review buttons, audit log, mobile UX polish, first source list defined"
+        "Replaced all previous tasks with the new end-to-end pipeline plan. Prior work (T-001–T-069) archived — all were completed."
       ]
     }
   ],
   "sections": [
     {
-      "title": "Immediate technical reset",
+      "title": "1. Scrape & Discord Candidates",
       "items": [
-        {
-          "id": "T-001",
-          "text": "Stop extending the current static-shell workaround",
-          "done": true
-        },
-        {
-          "id": "T-002",
-          "text": "Choose the real app rebuild path as canonical",
-          "done": true
-        },
-        {
-          "id": "T-003",
-          "text": "Preserve current public visuals as the design target",
-          "done": true
-        },
-        {
-          "id": "T-004",
-          "text": "Keep rollback checkpoint intact",
-          "done": true
-        }
+        { "id": "V2-001", "text": "Scrape events from configured sources (Tourism Kelowna, Castanet, etc.)", "done": true },
+        { "id": "V2-002", "text": "Post each scraped event to Discord #candidates with approval buttons", "done": true },
+        { "id": "V2-003", "text": "On ✅ approval, ingest event to DB as approved_1 with source image attached", "done": true }
       ]
     },
     {
-      "title": "Public site rebuild",
+      "title": "2. Assets Page — Single-Edit View",
       "items": [
-        {
-          "id": "T-005",
-          "text": "Current week seed data file exists",
-          "done": true
-        },
-        {
-          "id": "T-006",
-          "text": "Rebuild homepage as a real app route",
-          "done": true
-        },
-        {
-          "id": "T-007",
-          "text": "Render cards from structured weekly data",
-          "done": true
-        },
-        {
-          "id": "T-008",
-          "text": "Preserve current layout/animations/toggles visually",
-          "done": true
-        },
-        {
-          "id": "T-009",
-          "text": "Keep optimized local media pipeline working",
-          "done": true
-        },
-        {
-          "id": "T-010",
-          "text": "Make current week fully driven by published batch data, not seed-only data",
-          "done": true
-        }
+        { "id": "V2-010", "text": "Replace grid layout with queue list + full-width edit panel", "done": false },
+        { "id": "V2-011", "text": "Edit panel: 1:2 card preview (left) + editable metadata fields (right)", "done": false },
+        { "id": "V2-012", "text": "Editable fields: title, venue, city, date, mode, description — auto-populated from scrape", "done": false },
+        { "id": "V2-013", "text": "Queue list: clickable sidebar showing all approved_1 events, highlight active", "done": false }
       ]
     },
     {
-      "title": "Real admin app",
+      "title": "3. Image Fetching (3×3 grid: venue, event, activity)",
       "items": [
-        {
-          "id": "T-011",
-          "text": "Create actual /admin route in a real app structure",
-          "done": true
-        },
-        {
-          "id": "T-012",
-          "text": "Create dashboard shell",
-          "done": true
-        },
-        {
-          "id": "T-013",
-          "text": "Create candidate review screen",
-          "done": true
-        },
-        {
-          "id": "T-014",
-          "text": "Create asset review screen",
-          "done": true
-        },
-        {
-          "id": "T-015",
-          "text": "Create final approval screen",
-          "done": true
-        },
-        {
-          "id": "T-016",
-          "text": "Make mobile-friendly review UX",
-          "done": true
-        },
-        {
-          "id": "T-017",
-          "text": "Protect admin access properly without blocking public site",
-          "done": true
-        }
+        { "id": "V2-020", "text": "Fetch 3 images of the venue/business itself", "done": false },
+        { "id": "V2-021", "text": "Fetch 3 images of the specific event", "done": false },
+        { "id": "V2-022", "text": "Generate/fetch 3 stock/AI images of the general activity type", "done": false },
+        { "id": "V2-023", "text": "Display all 9 as a selectable gallery in the edit panel", "done": false },
+        { "id": "V2-024", "text": "User selects one as the static default image", "done": false }
       ]
     },
     {
-      "title": "Data layer",
+      "title": "4. Animation & Card Approval",
       "items": [
-        {
-          "id": "T-018",
-          "text": "Replace ad hoc JSON with real persistent storage",
-          "done": false
-        },
-        {
-          "id": "T-019",
-          "text": "Define schema for sources/raw events/normalized events/event occurrences/venues/image candidates/assets/reviews/publish batches",
-          "done": true
-        },
-        {
-          "id": "T-020",
-          "text": "Implement state machine for event lifecycle",
-          "done": true
-        }
+        { "id": "V2-030", "text": "Once static image selected, offer 'Animate' button", "done": false },
+        { "id": "V2-031", "text": "Generate animated version (Ken Burns / fal.ai video)", "done": false },
+        { "id": "V2-032", "text": "Preview both still and animated in 1:2 viewport", "done": false },
+        { "id": "V2-033", "text": "Approve card button — moves event to approved_2 (publish queue)", "done": false }
       ]
     },
     {
-      "title": "Double approval workflow",
+      "title": "5. Publish Calendar — Drag & Drop",
       "items": [
-        {
-          "id": "T-021",
-          "text": "Approval 1 before asset creation",
-          "done": true
-        },
-        {
-          "id": "T-022",
-          "text": "Approval 2 before publishing",
-          "done": true
-        },
-        {
-          "id": "T-023",
-          "text": "Add review actions: approve/reject/defer/reassign day/reassign mode/choose image/regenerate asset/hold",
-          "done": true
-        },
-        {
-          "id": "T-024",
-          "text": "Record who approved what and when",
-          "done": true
-        }
+        { "id": "V2-040", "text": "Calendar grid: 7 columns (Mon–Sun) × 3 rows (Family, Grown-up, Night)", "done": false },
+        { "id": "V2-041", "text": "Approved_2 events appear in a sidebar pool for drag-and-drop", "done": false },
+        { "id": "V2-042", "text": "Drag events onto calendar slots", "done": false },
+        { "id": "V2-043", "text": "Visual progress bar showing slots filled / 21 total", "done": false },
+        { "id": "V2-044", "text": "Slot validation: warn if mode mismatch (night event in family slot, etc.)", "done": false }
       ]
     },
     {
-      "title": "Event ingestion pipeline",
+      "title": "6. Publish & Archive",
       "items": [
-        {
-          "id": "T-025",
-          "text": "Define first source list",
-          "done": true
-        },
-        {
-          "id": "T-026",
-          "text": "Build source fetchers (automated scraping)",
-          "done": true
-        },
-        {
-          "id": "T-027",
-          "text": "Normalize dates/times/locations",
-          "done": true
-        },
-        {
-          "id": "T-028",
-          "text": "Dedupe duplicate events",
-          "done": true
-        },
-        {
-          "id": "T-029",
-          "text": "Confidence-score candidates",
-          "done": true
-        },
-        {
-          "id": "T-030",
-          "text": "Route valid candidates into review 1",
-          "done": true
-        },
-        {
-          "id": "T-068",
-          "text": "Manual event entry form in admin (same pipeline as scraped events)",
-          "done": true
-        },
-        {
-          "id": "T-069",
-          "text": "Track event source: manual vs scraper:<name> in schema",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Enrichment",
-      "items": [
-        {
-          "id": "T-031",
-          "text": "Venue lookup",
-          "done": true
-        },
-        {
-          "id": "T-032",
-          "text": "Address/location enrichment",
-          "done": true
-        },
-        {
-          "id": "T-033",
-          "text": "Ticket/source link capture",
-          "done": true
-        },
-        {
-          "id": "T-034",
-          "text": "Image candidate gathering",
-          "done": true
-        },
-        {
-          "id": "T-035",
-          "text": "Provenance tracking for images",
-          "done": true
-        },
-        {
-          "id": "T-036",
-          "text": "Category tagging: day/night/family/grown-up/free-paid/indoor-outdoor",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Asset pipeline",
-      "items": [
-        {
-          "id": "T-037",
-          "text": "Basic animation pipeline exists",
-          "done": true
-        },
-        {
-          "id": "T-038",
-          "text": "Connect it to approved event records instead of manual assets",
-          "done": true
-        },
-        {
-          "id": "T-039",
-          "text": "Crop from chosen real photos",
-          "done": true
-        },
-        {
-          "id": "T-040",
-          "text": "Standardize card framing",
-          "done": true
-        },
-        {
-          "id": "T-041",
-          "text": "Generate animation",
-          "done": true
-        },
-        {
-          "id": "T-042",
-          "text": "Optimize local outputs",
-          "done": true
-        },
-        {
-          "id": "T-043",
-          "text": "Review previews in admin",
-          "done": true
-        },
-        {
-          "id": "T-044",
-          "text": "Allow regenerate / still-only fallback",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Publishing system",
-      "items": [
-        {
-          "id": "T-045",
-          "text": "Generate approved weekly publish batch",
-          "done": true
-        },
-        {
-          "id": "T-046",
-          "text": "Make homepage read latest published batch",
-          "done": true
-        },
-        {
-          "id": "T-047",
-          "text": "Make unpublished drafts invisible to public",
-          "done": true
-        },
-        {
-          "id": "T-048",
-          "text": "Keep preview/review before publish",
-          "done": true
-        },
-        {
-          "id": "T-049",
-          "text": "Support rollback to previous published batch",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Archives",
-      "items": [
-        {
-          "id": "T-050",
-          "text": "Store every week as a snapshot on publish",
-          "done": true
-        },
-        {
-          "id": "T-051",
-          "text": "Create internal archive browser at /admin/archives",
-          "done": true
-        },
-        {
-          "id": "T-052",
-          "text": "Inspect previous weeks with full event list",
-          "done": true
-        },
-        {
-          "id": "T-053",
-          "text": "Compare weeks with added/removed/kept diff",
-          "done": true
-        },
-        {
-          "id": "T-054",
-          "text": "Restore/reuse older items from archives",
-          "done": true
-        },
-        {
-          "id": "T-055",
-          "text": "Archives are admin-only, middleware protected",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Newsletter side",
-      "items": [
-        {
-          "id": "T-056",
-          "text": "Define newsletter output from same approved batch",
-          "done": true
-        },
-        {
-          "id": "T-057",
-          "text": "Generate draft blocks automatically",
-          "done": true
-        },
-        {
-          "id": "T-058",
-          "text": "Connect Beehiiv later",
-          "done": true
-        },
-        {
-          "id": "T-059",
-          "text": "Add final approval before send",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Ops / reliability",
-      "items": [
-        {
-          "id": "T-060",
-          "text": "Set proper commit cadence in practice, not just intention",
-          "done": true
-        },
-        {
-          "id": "T-061",
-          "text": "Clean repo structure",
-          "done": true
-        },
-        {
-          "id": "T-062",
-          "text": "Reduce deployment weight/noise",
-          "done": true
-        },
-        {
-          "id": "T-063",
-          "text": "Remove dead admin fallback experiments once real app is in place",
-          "done": true
-        },
-        {
-          "id": "T-064",
-          "text": "Document the final architecture as it changes",
-          "done": true
-        }
-      ]
-    },
-    {
-      "title": "Recommended next 3 tasks",
-      "items": [
-        {
-          "id": "T-065",
-          "text": "Scaffold the real app structure",
-          "done": true
-        },
-        {
-          "id": "T-066",
-          "text": "Port the current homepage into that app with identical visuals",
-          "done": true
-        },
-        {
-          "id": "T-067",
-          "text": "Create a real /admin route shell in that same app",
-          "done": true
-        }
+        { "id": "V2-050", "text": "Publish button enabled once all 21 slots filled (or override available)", "done": false },
+        { "id": "V2-051", "text": "On publish: archive current live page as snapshot", "done": false },
+        { "id": "V2-052", "text": "Replace homepage cards with new published batch", "done": false },
+        { "id": "V2-053", "text": "Confirmation + rollback support", "done": false }
       ]
     }
   ]
