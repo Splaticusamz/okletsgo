@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, initDb, flushDb } from '../../../../../lib/db.js';
-import { findImagesForEvent } from '../../../../../lib/image-search.js';
+import { fetchCategorizedImages, findImagesForEvent } from '../../../../../lib/image-search.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
@@ -26,11 +26,20 @@ export async function POST(request, { params }) {
     }
 
     const body = await request.json().catch(() => ({}));
-    const offset = body.offset ?? 0;
-    const limit = body.limit ?? 5;
-    const newCandidates = await findImagesForEvent(event, { offset, limit });
+    const categorized = body.categorized !== false; // default true
+
+    let newCandidates;
+    let categories = null;
+
+    if (categorized) {
+      const result = await fetchCategorizedImages(event);
+      categories = result;
+      newCandidates = [...result.venue, ...result.event, ...result.activity];
+    } else {
+      newCandidates = await findImagesForEvent(event, { offset: body.offset ?? 0, limit: body.limit ?? 5 });
+    }
+
     const existing = event.imageCandidates ?? [];
-    // Deduplicate by URL
     const existingUrls = new Set(existing.map(c => c.url));
     const deduped = newCandidates.filter(c => !existingUrls.has(c.url));
     const merged = [...existing, ...deduped];
@@ -38,7 +47,7 @@ export async function POST(request, { params }) {
     const updated = updateEvent(id, { imageCandidates: merged });
     await flushDb();
 
-    return NextResponse.json({ ok: true, candidates: updated.imageCandidates });
+    return NextResponse.json({ ok: true, candidates: updated.imageCandidates, categories });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

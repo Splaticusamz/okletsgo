@@ -35,8 +35,16 @@ function AssetStateBadge({ asset }) {
 
 function ImageGallery({ event, onUpdate, onSelectImage }) {
   const [uploading, setUploading] = useState(false);
-  const [searching, setSearching] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [categories, setCategories] = useState(null);
   const candidates = event.imageCandidates ?? [];
+
+  // Group existing candidates by category
+  const venueImgs = candidates.filter(c => c.category === 'venue');
+  const eventImgs = candidates.filter(c => c.category === 'event');
+  const activityImgs = candidates.filter(c => c.category === 'activity');
+  const otherImgs = candidates.filter(c => !c.category);
+  const hasCategorized = venueImgs.length > 0 || eventImgs.length > 0 || activityImgs.length > 0;
 
   async function handleUpload(e) {
     const file = e.target.files?.[0];
@@ -52,17 +60,35 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
     finally { setUploading(false); }
   }
 
-  async function handleFindMore() {
-    setSearching(true);
+  async function handleFetchImages() {
+    setFetching(true);
     try {
       const res = await fetch(`/api/events/${event.id}/find-images`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ offset: candidates.length, limit: 5 }),
+        body: JSON.stringify({ categorized: true }),
       });
       if (!res.ok) throw new Error((await res.json()).error);
+      const data = await res.json();
+      if (data.categories) setCategories(data.categories);
       onUpdate?.();
-    } catch (err) { alert('Search failed: ' + err.message); }
-    finally { setSearching(false); }
+    } catch (err) { alert('Fetch failed: ' + err.message); }
+    finally { setFetching(false); }
+  }
+
+  function renderRow(label, emoji, images) {
+    return (
+      <div className="img-cat">
+        <div className="img-cat-label">{emoji} {label} ({images.length})</div>
+        <div className="img-cat-row">
+          {images.length > 0 ? images.map(c => (
+            <div key={c.id} className={`img-thumb ${c.selected ? 'img-thumb--sel' : ''}`} onClick={() => onSelectImage?.(c)}>
+              <img src={c.url} alt="" loading="lazy" />
+              {c.selected && <div className="img-check">✓</div>}
+            </div>
+          )) : <span className="img-cat-empty">—</span>}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -71,19 +97,27 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
         <span className="img-gal-label">Images ({candidates.length})</span>
         <div className="img-gal-acts">
           <label className="img-gal-btn">{uploading ? '…' : '📤 Upload'}<input type="file" accept="image/*" onChange={handleUpload} hidden /></label>
-          <button className="img-gal-btn" onClick={handleFindMore} disabled={searching}>{searching ? '…' : '🔍 Find More'}</button>
+          <button className="img-gal-btn img-gal-btn--fetch" onClick={handleFetchImages} disabled={fetching}>{fetching ? '⏳ Fetching…' : '📥 Fetch Images'}</button>
         </div>
       </div>
-      {candidates.length > 0 ? (
+
+      {hasCategorized ? (
+        <div className="img-grid-3x3">
+          {renderRow('Venue', '🏢', venueImgs)}
+          {renderRow('Event', '🎫', eventImgs)}
+          {renderRow('Activity', '🎨', activityImgs)}
+          {otherImgs.length > 0 && renderRow('Other', '📷', otherImgs)}
+        </div>
+      ) : candidates.length > 0 ? (
         <div className="img-gal-scroll">
-          {candidates.map((c) => (
+          {candidates.map(c => (
             <div key={c.id} className={`img-thumb ${c.selected ? 'img-thumb--sel' : ''}`} onClick={() => onSelectImage?.(c)}>
               <img src={c.url} alt="" loading="lazy" />
               {c.selected && <div className="img-check">✓</div>}
             </div>
           ))}
         </div>
-      ) : <div className="img-gal-empty">No images — upload or fetch from source</div>}
+      ) : <div className="img-gal-empty">No images — click Fetch Images to load venue, event, and AI-generated options</div>}
     </div>
   );
 }
@@ -314,7 +348,6 @@ function EditPanel({ event, onUpdate, onAction }) {
           {error && <div className="ep-error">⚠ {error}</div>}
 
           <div className="ep-actions">
-            <button className="ep-btn ep-btn--fetch" disabled={!!acting} onClick={() => doAction('fetch-images')}>{acting === 'fetch-images' ? '…' : '📥 Fetch Images'}</button>
             <button className="ep-btn ep-btn--build" disabled={!!acting} onClick={() => doAction('build-card')}>{acting === 'build-card' ? '…' : '🎨 Build Card'}</button>
             <button className="ep-btn ep-btn--animate" disabled={!!acting || !asset} onClick={() => doAction('animate')}>{acting === 'animate' ? '…' : '🎬 Animate'}</button>
           </div>
@@ -484,6 +517,12 @@ export default function AssetsPage() {
         .img-thumb img{width:100%;height:100%;object-fit:cover}
         .img-check{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--accent);color:#000;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
         .img-gal-empty{font-size:11px;color:var(--muted);padding:10px;text-align:center;border:1px dashed rgba(255,255,255,.1);border-radius:6px}
+        .img-gal-btn--fetch{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:#60a5fa}
+        .img-grid-3x3{display:flex;flex-direction:column;gap:8px}
+        .img-cat{}
+        .img-cat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+        .img-cat-row{display:flex;gap:6px;flex-wrap:wrap}
+        .img-cat-empty{font-size:11px;color:rgba(255,255,255,.2);font-style:italic}
 
         /* Crop modal */
         .crop-backdrop{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center}
