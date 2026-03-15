@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-15T17:10:00Z",
+  "updatedAt": "2026-03-15T18:00:00Z",
   "title": "OK LET'S GO \u2014 Pipeline V2",
   "changelog": [
     {
@@ -91,22 +91,22 @@
         {
           "id": "V2-030",
           "text": "Once static image selected, offer 'Animate' button",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-031",
           "text": "Generate animated version (Ken Burns / fal.ai video)",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-032",
           "text": "Preview both still and animated in 1:2 viewport",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-033",
           "text": "Approve card button \u2014 moves event to approved_2 (publish queue)",
-          "done": false
+          "done": true
         }
       ]
     },
