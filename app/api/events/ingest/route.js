@@ -41,7 +41,7 @@ export async function POST(request) {
       status: 'approved_1',
       confidenceScore: body.confidenceScore ?? 75,
       confidenceReasons: ['Discord pipeline import'],
-      imageCandidates: body.image ? [{ url: body.image, source: body.source || 'discord' }] : [],
+      imageCandidates: body.image ? [{ url: body.image, source: body.source || 'discord', selected: true }] : [],
     });
 
     // Auto-search for images if none were provided

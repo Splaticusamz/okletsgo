@@ -345,8 +345,8 @@ export default function AssetsPage() {
                     </label>
 
                     <div className="asset-card-actions">
-                      <button className={`asset-action asset-action--generate ${actingAction === 'generate' ? 'asset-action--loading' : ''}`} disabled={isActing || assetEvent.status === 'rejected'} onClick={() => generateAsset(assetEvent.id, false)}>{actingAction === 'generate' ? '…' : asset ? 'Rebuild outputs' : 'Generate assets'}</button>
-                      <button className={`asset-action asset-action--regen ${actingAction === 'regenerate' ? 'asset-action--loading' : ''}`} disabled={isActing || assetEvent.status === 'rejected'} onClick={() => generateAsset(assetEvent.id, true)}>{actingAction === 'regenerate' ? '…' : 'Regenerate +'}</button>
+                      <button className={`asset-action asset-action--fetch ${actingAction === 'fetching' ? 'asset-action--loading' : ''}`} disabled={isActing || assetEvent.status === 'rejected'} onClick={async () => { setActing(a => ({...a, [assetEvent.id]: 'fetching'})); setCardError(e => ({...e, [assetEvent.id]: null})); try { const res = await fetch(`/api/events/${assetEvent.id}/find-images`, { method: 'POST' }); if (!res.ok) throw new Error((await res.json()).error); await loadEvents(); } catch(err) { setCardError(e => ({...e, [assetEvent.id]: err.message})); } finally { setActing(a => ({...a, [assetEvent.id]: false})); } }}>{actingAction === 'fetching' ? '…' : '📥 Fetch from Source'}</button>
+                      <button className={`asset-action asset-action--generate ${actingAction === 'generate' ? 'asset-action--loading' : ''}`} disabled={isActing || assetEvent.status === 'rejected'} onClick={() => generateAsset(assetEvent.id, false)}>{actingAction === 'generate' ? '…' : '🎨 Build Card'}</button>
                     </div>
 
                     <div className="asset-card-actions">
@@ -404,8 +404,9 @@ export default function AssetsPage() {
         .asset-action { flex:1; padding:9px 8px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid; background:transparent; }
         .asset-action:disabled { opacity:.35; cursor:default; }
         .asset-action--loading { opacity:.7; }
+        .asset-action--fetch { color:#60a5fa; border-color:rgba(96,165,250,.35); }
+        .asset-action--fetch:hover:not(:disabled) { background:rgba(96,165,250,.1); }
         .asset-action--generate { color:#4ecdc4; border-color:rgba(78,205,196,.35); }
-        .asset-action--regen { color:#c084fc; border-color:rgba(192,132,252,.35); }
         .asset-action--approve { color:var(--accent); border-color:rgba(78,205,196,.35); }
         .asset-action--reject { color:#f87171; border-color:rgba(248,113,113,.35); }
         .asset-mode-tag { font-size:10px; font-weight:600; padding:2px 7px; border-radius:999px; border:1px solid; text-transform:lowercase; }
