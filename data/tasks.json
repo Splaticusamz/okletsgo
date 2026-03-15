@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-15T18:00:00Z",
+  "updatedAt": "2026-03-15T18:10:00Z",
   "title": "OK LET'S GO \u2014 Pipeline V2",
   "changelog": [
     {
@@ -116,27 +116,27 @@
         {
           "id": "V2-040",
           "text": "Calendar grid: 7 columns (Mon\u2013Sun) \u00d7 3 rows (Family, Grown-up, Night)",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-041",
           "text": "Approved_2 events appear in a sidebar pool for drag-and-drop",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-042",
           "text": "Drag events onto calendar slots",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-043",
           "text": "Visual progress bar showing slots filled / 21 total",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-044",
           "text": "Slot validation: warn if mode mismatch (night event in family slot, etc.)",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -146,22 +146,22 @@
         {
           "id": "V2-050",
           "text": "Publish button enabled once all 21 slots filled (or override available)",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-051",
           "text": "On publish: archive current live page as snapshot",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-052",
           "text": "Replace homepage cards with new published batch",
-          "done": false
+          "done": true
         },
         {
           "id": "V2-053",
           "text": "Confirmation + rollback support",
-          "done": false
+          "done": true
         }
       ]
     }
