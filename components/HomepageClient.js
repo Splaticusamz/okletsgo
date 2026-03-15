@@ -109,6 +109,15 @@ export default function HomepageClient({ currentWeek }) {
   const [dayMode, setDayMode] = useState(true);
   const [countdown, setCountdown] = useState('00:00:00');
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
+  const [sheet, setSheet] = useState({ visible: false, day: null, index: -1 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
   const [fadeFamily, setFadeFamily] = useState(false);
   const [fadeDay, setFadeDay] = useState(false);
 
@@ -233,8 +242,23 @@ export default function HomepageClient({ currentWeek }) {
                     return <a key={`brand-${order}`} href="#newsletter" className="utility-tile utility-tile--brand" aria-label="OK LET&apos;S GO brand tile"><div className="utility-inner utility-inner--brand"><span className="utility-logo"><span className="utility-logo-ok">OK</span><br />LET&apos;S<br />GO</span></div></a>;
                   }
                   const tooltipText = !dayMode ? EVENT_DATA[item.index]?.night : familyMode ? EVENT_DATA[item.index]?.family : EVENT_DATA[item.index]?.day;
+                  const entry = item.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'];
                   return (
-                    <div key={item.day.day} className="card-wrapper" onMouseEnter={(e) => { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); }} onMouseMove={moveTooltip} onMouseLeave={() => setTooltip((prev) => ({ ...prev, visible: false }))}>
+                    <div
+                      key={item.day.day}
+                      className="card-wrapper"
+                      onClick={(e) => {
+                        if (isMobile) {
+                          e.preventDefault();
+                          setSheet((prev) => prev.visible && prev.index === item.index
+                            ? { visible: false, day: null, index: -1 }
+                            : { visible: true, day: item.day, index: item.index });
+                        }
+                      }}
+                      onMouseEnter={(e) => { if (!isMobile) { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); } }}
+                      onMouseMove={(e) => { if (!isMobile) moveTooltip(e); }}
+                      onMouseLeave={() => { if (!isMobile) setTooltip((prev) => ({ ...prev, visible: false })); }}
+                    >
                       <Card dayData={item.day} mode={mode} index={item.index} transitionDelayMs={item.index * staggerMs} />
                     </div>
                   );
@@ -249,6 +273,29 @@ export default function HomepageClient({ currentWeek }) {
         </div>
       </div>
       <div className={`tooltip ${tooltip.visible ? 'visible' : ''}`} style={{ left: tooltip.x, top: tooltip.y }}>{tooltip.text}</div>
+
+      {/* Mobile bottom sheet */}
+      <div className={`bottom-sheet-overlay ${sheet.visible ? 'visible' : ''}`} onClick={() => setSheet({ visible: false, day: null, index: -1 })} />
+      <div className={`bottom-sheet ${sheet.visible ? 'visible' : ''}`}>
+        {sheet.day && (() => {
+          const entry = sheet.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'];
+          const eventInfo = !dayMode ? EVENT_DATA[sheet.index]?.night : familyMode ? EVENT_DATA[sheet.index]?.family : EVENT_DATA[sheet.index]?.day;
+          return (
+            <>
+              <div className="bottom-sheet-handle" />
+              <div className="bottom-sheet-content">
+                <div className="bottom-sheet-day">{sheet.day.day}</div>
+                <div className="bottom-sheet-venue">{entry?.venue || 'Coming soon'}</div>
+                {entry?.city && <div className="bottom-sheet-city">{entry.city}</div>}
+                {eventInfo && <div className="bottom-sheet-meta">{eventInfo}</div>}
+                <button className="bottom-sheet-btn" onClick={(e) => { e.stopPropagation(); setSheet({ visible: false, day: null, index: -1 }); }}>
+                  Close
+                </button>
+              </div>
+            </>
+          );
+        })()}
+      </div>
     </>
   );
 }

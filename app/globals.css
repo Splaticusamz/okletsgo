@@ -472,6 +472,110 @@ body.dark-mode .tooltip {
   transform: translateY(0);
 }
 
+/* Bottom sheet — mobile only */
+.bottom-sheet-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.35s ease;
+  pointer-events: none;
+}
+.bottom-sheet-overlay.visible {
+  background: rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+}
+.bottom-sheet {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 24px 32px;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  min-height: 40vh;
+  max-height: 50vh;
+  box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.15);
+}
+.bottom-sheet.visible {
+  transform: translateY(0);
+}
+body.dark-mode .bottom-sheet {
+  background: rgba(13, 16, 35, 0.95);
+  box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.4);
+}
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  margin: 0 auto 20px;
+}
+body.dark-mode .bottom-sheet-handle {
+  background: rgba(255, 255, 255, 0.2);
+}
+.bottom-sheet-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.bottom-sheet-day {
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--color-accent);
+}
+.bottom-sheet-venue {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-title);
+  line-height: 1.2;
+}
+.bottom-sheet-city {
+  font-size: 15px;
+  color: var(--color-brown);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.bottom-sheet-meta {
+  font-size: 16px;
+  color: var(--color-title);
+  padding: 14px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin-top: 4px;
+}
+body.dark-mode .bottom-sheet-meta {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+.bottom-sheet-btn {
+  margin-top: 8px;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: var(--color-accent);
+  color: #07121a;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@media (min-width: 769px) {
+  .bottom-sheet, .bottom-sheet-overlay { display: none !important; }
+}
+@media (max-width: 768px) {
+  .bottom-sheet, .bottom-sheet-overlay { display: block; }
+  .tooltip { display: none !important; }
+}
+
 .admin-shell,
 .tasks-shell {
   min-height: 100vh;
