@@ -25,9 +25,15 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: `Event not found: ${id}` }, { status: 404 });
     }
 
-    const newCandidates = await findImagesForEvent(event);
+    const body = await request.json().catch(() => ({}));
+    const offset = body.offset ?? 0;
+    const limit = body.limit ?? 5;
+    const newCandidates = await findImagesForEvent(event, { offset, limit });
     const existing = event.imageCandidates ?? [];
-    const merged = [...existing, ...newCandidates];
+    // Deduplicate by URL
+    const existingUrls = new Set(existing.map(c => c.url));
+    const deduped = newCandidates.filter(c => !existingUrls.has(c.url));
+    const merged = [...existing, ...deduped];
 
     const updated = updateEvent(id, { imageCandidates: merged });
     await flushDb();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import AdminNav from '../../../components/AdminNav';
 
@@ -101,7 +101,11 @@ function ImageGallery({ event, onUpdate }) {
   async function handleFindMore() {
     setSearching(true);
     try {
-      const res = await fetch(`/api/events/${event.id}/find-images`, { method: 'POST' });
+      const res = await fetch(`/api/events/${event.id}/find-images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ offset: candidates.length, limit: 5 }),
+      });
       if (!res.ok) throw new Error((await res.json()).error);
       onUpdate?.();
     } catch (err) {
@@ -111,12 +115,12 @@ function ImageGallery({ event, onUpdate }) {
     }
   }
 
-  async function handleSelect(candidateId) {
+  async function handleSelect(candidateId, cropOffsetX) {
     try {
       const res = await fetch(`/api/events/${event.id}/select-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ candidateId }),
+        body: JSON.stringify({ candidateId, cropOffsetX }),
       });
       if (!res.ok) throw new Error((await res.json()).error);
       onUpdate?.();
@@ -171,23 +175,70 @@ function ImageGallery({ event, onUpdate }) {
 }
 
 function CropModal({ candidate, onSelect, onClose }) {
+  const [dragState, setDragState] = useState(null);
+  const [offsetX, setOffsetX] = useState(50); // percentage 0-100, 50 = centered
+  const imgRef = React.useRef(null);
+  const boxRef = React.useRef(null);
+
+  function handlePointerDown(e) {
+    e.preventDefault();
+    const box = boxRef.current?.getBoundingClientRect();
+    if (!box) return;
+    setDragState({ startX: e.clientX, startOffset: offsetX, boxWidth: box.width });
+    boxRef.current?.setPointerCapture(e.pointerId);
+  }
+
+  function handlePointerMove(e) {
+    if (!dragState) return;
+    const img = imgRef.current;
+    if (!img || !img.naturalWidth) return;
+    const aspectBox = 0.5; // 1:2
+    const imgAspect = img.naturalWidth / img.naturalHeight;
+    if (imgAspect <= aspectBox) return; // image is narrower than viewport, no pan needed
+    const visibleFraction = aspectBox / imgAspect;
+    const maxPan = ((1 - visibleFraction) / 2) * 100; // max offset from 50%
+    const dx = e.clientX - dragState.startX;
+    const pxToPercent = (dx / dragState.boxWidth) * 100 * (imgAspect / aspectBox);
+    const next = Math.max(50 - maxPan, Math.min(50 + maxPan, dragState.startOffset - pxToPercent));
+    setOffsetX(next);
+  }
+
+  function handlePointerUp() {
+    setDragState(null);
+  }
+
   return (
     <div className="crop-backdrop" onClick={onClose}>
       <div className="crop-modal" onClick={(e) => e.stopPropagation()}>
         <button className="crop-close" onClick={onClose}>×</button>
-        <div className="crop-title">Select & Crop (1:2 Portrait)</div>
-        <div className="crop-preview-wrap">
+        <div className="crop-title">Position Image (1:2 Portrait)</div>
+        <div className="crop-hint">Drag left/right to set the crop center</div>
+        <div
+          className="crop-preview-wrap"
+          ref={boxRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={{ cursor: dragState ? 'grabbing' : 'grab' }}
+        >
           <div className="crop-aspect-box">
-            <img src={candidate.url} alt="" />
+            <img
+              ref={imgRef}
+              src={candidate.url}
+              alt=""
+              draggable={false}
+              style={{ objectPosition: `${offsetX}% 50%` }}
+            />
           </div>
         </div>
         <div className="crop-info">
           <span>Source: {candidate.source || 'unknown'}</span>
-          <span>Crop will be applied at 1:2 ratio on generation</span>
+          <span>Full image shown — drag to position the crop window</span>
         </div>
         <div className="crop-actions">
           <button className="crop-btn crop-btn--cancel" onClick={onClose}>Cancel</button>
-          <button className="crop-btn crop-btn--confirm" onClick={() => onSelect(candidate.id)}>✓ Select This Image</button>
+          <button className="crop-btn crop-btn--confirm" onClick={() => onSelect(candidate.id, Math.round(offsetX))}>✓ Select This Image</button>
         </div>
       </div>
     </div>
@@ -446,7 +497,8 @@ export default function AssetsPage() {
         .crop-modal { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px; max-width:420px; width:90%; position:relative; }
         .crop-close { position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%; border:none; background:rgba(255,255,255,.08); color:var(--muted); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
         .crop-close:hover { color:#fff; background:rgba(255,255,255,.15); }
-        .crop-title { font-size:16px; font-weight:700; margin-bottom:14px; }
+        .crop-title { font-size:16px; font-weight:700; margin-bottom:4px; }
+        .crop-hint { font-size:12px; color:var(--muted); margin-bottom:14px; }
         .crop-preview-wrap { display:flex; justify-content:center; margin-bottom:14px; }
         .crop-aspect-box { width:200px; aspect-ratio:1/2; border-radius:10px; overflow:hidden; border:2px solid var(--accent); }
         .crop-aspect-box img { width:100%; height:100%; object-fit:cover; }
