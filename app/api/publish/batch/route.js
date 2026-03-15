@@ -62,7 +62,7 @@ export async function POST(request) {
     const action = body?.action ?? 'generate';
 
     if (action === 'generate') {
-      const batch = generateDraftBatch();
+      const batch = generateDraftBatch({ assignments: body.assignments });
       const events = getBatchEvents(batch.id);
       await flushDb();
       return NextResponse.json({ ok: true, batch: { ...batch, events } }, { status: 201 });

@@ -1,280 +1,320 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import AdminNav from '../../../components/AdminNav';
 
-function StatusBadge({ status }) {
-  const map = {
-    draft: ['draft', 'batch-badge--draft'],
-    published: ['published', 'batch-badge--published'],
-    superseded: ['superseded', 'batch-badge--superseded'],
-    rolled_back: ['rolled back', 'batch-badge--rolledback'],
-  };
-  const [label, cls] = map[status] ?? [status, ''];
-  return <span className={`batch-badge ${cls}`}>{label}</span>;
+const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+const DAY_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const MODES = ['family', 'grownup', 'night'];
+const MODE_LABELS = { family: '👨‍👩‍👧 Family', grownup: '☀️ Grown-up', night: '🌙 Night' };
+const TOTAL_SLOTS = DAYS.length * MODES.length; // 21
+
+function ModeTag({ mode }) {
+  const cls = mode === 'night' ? 'mt--night' : 'mt--day';
+  const icon = mode === 'night' ? '🌙' : mode === 'family' ? '👨‍👩‍👧' : '☀️';
+  return <span className={`mt ${cls}`}>{icon} {mode}</span>;
 }
 
-function EventRow({ event }) {
-  return (
-    <div className="pub-row">
-      <span className="pub-row-title">{event.title || event.venue || event.id}</span>
-      <span className="pub-row-day">{event.date || '—'}</span>
-      <span className="pub-row-mode">{event.mode || '—'}</span>
-      <span className="pub-row-city">{event.city || '—'}</span>
-    </div>
-  );
-}
+/* ── Calendar Slot ── */
+function CalendarSlot({ day, mode, event, onDrop, onRemove }) {
+  const [over, setOver] = useState(false);
 
-function AuditTrail({ actions }) {
-  if (!actions || actions.length === 0) return null;
+  function handleDragOver(e) { e.preventDefault(); setOver(true); }
+  function handleDragLeave() { setOver(false); }
+  function handleDrop(e) {
+    e.preventDefault(); setOver(false);
+    const eventId = e.dataTransfer.getData('text/plain');
+    if (eventId) onDrop(day, mode, eventId);
+  }
+
   return (
-    <div className="pub-audit">
-      <h3 className="pub-audit-title">Audit trail</h3>
-      {actions.map((a) => (
-        <div key={a.id} className="pub-audit-row">
-          <span className={`pub-audit-action pub-audit-action--${a.action}`}>{a.action}</span>
-          <span className="pub-audit-detail">{a.detail}</span>
-          <span className="pub-audit-by">{a.by}</span>
-          <span className="pub-audit-time">{a.timestamp ? new Date(a.timestamp).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC' : '—'}</span>
+    <div
+      className={`cs ${over ? 'cs--over' : ''} ${event ? 'cs--filled' : ''}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {event ? (
+        <div className="cs-card">
+          {event.selectedImageCandidate?.url || event.imageCandidates?.[0]?.url ? (
+            <img className="cs-img" src={event.selectedImageCandidate?.url || event.imageCandidates[0].url} alt="" />
+          ) : event.latestAsset?.portraitUrl ? (
+            <img className="cs-img" src={event.latestAsset.portraitUrl} alt="" />
+          ) : null}
+          <div className="cs-info">
+            <div className="cs-title">{event.title}</div>
+            <div className="cs-venue">{event.venue}</div>
+          </div>
+          <button className="cs-remove" onClick={() => onRemove(day, mode)} title="Remove">×</button>
         </div>
-      ))}
+      ) : (
+        <div className="cs-empty">Drop here</div>
+      )}
     </div>
   );
 }
 
+/* ── Draggable Event Card ── */
+function DraggableEvent({ event }) {
+  function handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', event.id);
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  return (
+    <div className="de" draggable onDragStart={handleDragStart}>
+      <div className="de-title">{event.title}</div>
+      <div className="de-meta">
+        <ModeTag mode={event.mode} />
+        <span className="de-city">{event.city}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── Progress Bar ── */
+function ProgressBar({ filled, total }) {
+  const pct = Math.round((filled / total) * 100);
+  return (
+    <div className="pb">
+      <div className="pb-bar"><div className="pb-fill" style={{ width: `${pct}%` }} /></div>
+      <span className="pb-text">{filled}/{total} slots filled ({pct}%)</span>
+    </div>
+  );
+}
+
+/* ── Main Page ── */
 export default function PublishPage() {
-  const [data, setData] = useState(null);
+  const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [acting, setActing] = useState(null);
+  const [assignments, setAssignments] = useState({}); // { "MONDAY:family": eventId }
+  const [publishing, setPublishing] = useState(false);
+  const [publishError, setPublishError] = useState(null);
 
-  async function loadData() {
-    const res = await fetch('/api/publish/batch');
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error ?? 'Failed to load batch data');
-    setData(json);
+  async function loadEvents() {
+    const res = await fetch('/api/events?all=1');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? 'Failed');
+    setAllEvents(data.events ?? []);
   }
 
   useEffect(() => {
-    loadData().catch((err) => setError(err.message)).finally(() => setLoading(false));
+    loadEvents().catch(e => setError(e.message)).finally(() => setLoading(false));
   }, []);
 
-  async function doAction(action, batchId) {
-    setActing(action);
-    setError(null);
+  // Events eligible for the calendar (approved_2)
+  const approved = useMemo(() => allEvents.filter(e => e.status === 'approved_2'), [allEvents]);
+
+  // Events already assigned to slots
+  const assignedIds = new Set(Object.values(assignments));
+  const unassigned = approved.filter(e => !assignedIds.has(e.id));
+
+  // Count filled slots
+  const filledCount = Object.keys(assignments).length;
+
+  function handleDrop(day, mode, eventId) {
+    setAssignments(a => ({ ...a, [`${day}:${mode}`]: eventId }));
+  }
+
+  function handleRemove(day, mode) {
+    setAssignments(a => {
+      const next = { ...a };
+      delete next[`${day}:${mode}`];
+      return next;
+    });
+  }
+
+  function getEventForSlot(day, mode) {
+    const id = assignments[`${day}:${mode}`];
+    return id ? allEvents.find(e => e.id === id) ?? null : null;
+  }
+
+  async function handlePublish() {
+    setPublishing(true); setPublishError(null);
     try {
+      // Build the batch from assignments
+      const eventIds = Object.values(assignments);
+      if (eventIds.length === 0) throw new Error('No events assigned');
+
+      // Create publish batch
       const res = await fetch('/api/publish/batch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, batchId }),
+        body: JSON.stringify({
+          action: 'generate',
+          assignments, // pass the day:mode → eventId mapping
+        }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? 'Action failed');
-      await loadData();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setActing(null);
-    }
-  }
+      if (!res.ok) throw new Error((await res.json()).error ?? 'Publish failed');
 
-  const latest = data?.latest;
-  const currentPublished = data?.currentPublished;
-  const hasDraft = latest?.status === 'draft';
-  const hasPublished = !!currentPublished;
+      const data = await res.json();
+
+      // Confirm publish
+      if (data.batch?.id) {
+        const confirmRes = await fetch('/api/publish/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'confirm', batchId: data.batch.id }),
+        });
+        if (!confirmRes.ok) throw new Error((await confirmRes.json()).error ?? 'Confirm failed');
+      }
+
+      await loadEvents();
+      setAssignments({});
+      alert('Published successfully! Homepage updated.');
+    } catch (err) { setPublishError(err.message); }
+    finally { setPublishing(false); }
+  }
 
   return (
     <main className="admin-shell">
       <div className="admin-wrap">
-
-        {/* Header */}
         <header className="adash-header">
-          <div className="adash-brand">
-            <span className="adash-brand-ok">OK</span><br />LET&apos;S GO<br />/ ADMIN
-          </div>
+          <div className="adash-brand"><span className="adash-brand-ok">OK</span><br />LET&apos;S GO<br />/ ADMIN</div>
           <div className="adash-header-right">
-            <span className="admin-pill">publish</span>
-            <form method="POST" action="/api/admin/logout">
-              <button type="submit" className="logout-btn">Logout</button>
-            </form>
+            <span className="admin-pill">publish calendar</span>
+            <form method="POST" action="/api/admin/logout"><button type="submit" className="logout-btn">Logout</button></form>
           </div>
         </header>
-
-        {/* Nav */}
         <AdminNav />
 
-        {loading && <div className="pub-empty"><div className="pub-empty-icon">⏳</div><div className="pub-empty-text">Loading…</div></div>}
-        {error && <div className="pub-error">⚠ {error}</div>}
+        {loading && <div className="pub-empty">⏳ Loading…</div>}
+        {error && <div className="pub-empty">⚠️ {error}</div>}
 
-        {!loading && (
+        {!loading && !error && (
           <>
-            {/* ── Currently Live ── */}
-            <section className="pub-section">
-              <h2 className="pub-section-title">
-                Currently live
-                {hasPublished && <StatusBadge status="published" />}
-              </h2>
-              {hasPublished ? (
-                <>
-                  <div className="pub-meta">
-                    <span>Batch: <strong>{currentPublished.id}</strong></span>
-                    <span>Week: <strong>{currentPublished.weekLabel}</strong></span>
-                    <span>Published: <strong>{currentPublished.publishedAt ? new Date(currentPublished.publishedAt).toLocaleString('en-CA') : '—'}</strong></span>
-                    <span>Events: <strong>{currentPublished.events?.length ?? 0}</strong></span>
-                  </div>
-                  <div className="pub-table">
-                    <div className="pub-table-header">
-                      <span>Event</span><span>Date</span><span>Mode</span><span>City</span>
-                    </div>
-                    {(currentPublished.events ?? []).map((e) => <EventRow key={e.id} event={e} />)}
-                  </div>
-                  <div className="pub-actions">
-                    <button
-                      className="pub-btn pub-btn--danger"
-                      disabled={!!acting}
-                      onClick={() => { if (confirm('Rollback this published batch?')) doAction('rollback', currentPublished.id); }}
-                    >
-                      {acting === 'rollback' ? 'Rolling back…' : '↩ Rollback'}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="pub-empty-inline">No published batch yet. Generate a draft from approved events below.</div>
-              )}
-            </section>
+            <ProgressBar filled={filledCount} total={TOTAL_SLOTS} />
 
-            {/* ── Draft Preview ── */}
-            <section className="pub-section">
-              <h2 className="pub-section-title">
-                Draft batch preview
-                {hasDraft && <StatusBadge status="draft" />}
-              </h2>
-
-              {hasDraft ? (
-                <>
-                  <div className="pub-meta">
-                    <span>Batch: <strong>{latest.id}</strong></span>
-                    <span>Week: <strong>{latest.weekLabel}</strong></span>
-                    <span>Events: <strong>{latest.events?.length ?? 0}</strong></span>
-                  </div>
-                  <div className="pub-table">
-                    <div className="pub-table-header">
-                      <span>Event</span><span>Date</span><span>Mode</span><span>City</span>
-                    </div>
-                    {(latest.events ?? []).map((e) => <EventRow key={e.id} event={e} />)}
-                  </div>
-                  <div className="pub-actions">
-                    <button
-                      className="pub-btn pub-btn--publish"
-                      disabled={!!acting}
-                      onClick={() => { if (confirm('Publish this batch? It will go live on the homepage.')) doAction('publish', latest.id); }}
-                    >
-                      {acting === 'publish' ? 'Publishing…' : '🚀 Confirm publish'}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="pub-empty-inline">No draft batch. Generate one from all approved_2 events.</div>
-                  <div className="pub-actions">
-                    <button
-                      className="pub-btn pub-btn--generate"
-                      disabled={!!acting}
-                      onClick={() => doAction('generate')}
-                    >
-                      {acting === 'generate' ? 'Generating…' : '📦 Generate draft batch'}
-                    </button>
-                  </div>
-                </>
-              )}
-            </section>
-
-            {/* ── All Batches ── */}
-            {data?.batches?.length > 0 && (
-              <section className="pub-section">
-                <h2 className="pub-section-title">Batch history</h2>
-                <div className="pub-batch-list">
-                  {data.batches.map((b) => (
-                    <div key={b.id} className="pub-batch-row">
-                      <span className="pub-batch-id">{b.id}</span>
-                      <span className="pub-batch-week">{b.weekLabel}</span>
-                      <StatusBadge status={b.status} />
-                      <span className="pub-batch-count">{b.eventIds?.length ?? 0} events</span>
-                      <span className="pub-batch-time">{new Date(b.createdAt).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false })}</span>
-                    </div>
-                  ))}
+            <div className="pub-layout">
+              {/* Calendar Grid */}
+              <div className="cal">
+                {/* Day headers */}
+                <div className="cal-header">
+                  <div className="cal-corner" />
+                  {DAYS.map((d, i) => <div key={d} className="cal-day-head">{DAY_SHORT[i]}</div>)}
                 </div>
-              </section>
-            )}
 
-            {/* ── Audit Trail ── */}
-            <AuditTrail actions={data?.auditTrail} />
+                {/* Mode rows */}
+                {MODES.map(mode => (
+                  <div key={mode} className="cal-row">
+                    <div className="cal-mode-head">{MODE_LABELS[mode]}</div>
+                    {DAYS.map(day => (
+                      <CalendarSlot
+                        key={`${day}:${mode}`}
+                        day={day}
+                        mode={mode}
+                        event={getEventForSlot(day, mode)}
+                        onDrop={handleDrop}
+                        onRemove={handleRemove}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              {/* Unassigned events pool */}
+              <div className="pool">
+                <div className="pool-head">Ready to Place ({unassigned.length})</div>
+                {unassigned.length === 0 && approved.length === 0 && (
+                  <div className="pool-empty">No approved events yet. Approve cards in the Assets page first.</div>
+                )}
+                {unassigned.length === 0 && approved.length > 0 && (
+                  <div className="pool-empty">All events placed! 🎉</div>
+                )}
+                {unassigned.map(e => <DraggableEvent key={e.id} event={e} />)}
+              </div>
+            </div>
+
+            {/* Publish button */}
+            <div className="pub-footer">
+              {publishError && <div className="pub-error">⚠ {publishError}</div>}
+              <button
+                className="pub-btn"
+                disabled={publishing || filledCount === 0}
+                onClick={handlePublish}
+              >
+                {publishing ? '⏳ Publishing…' : filledCount >= TOTAL_SLOTS ? '🚀 Publish Week' : `🚀 Publish (${filledCount}/${TOTAL_SLOTS} slots)`}
+              </button>
+              {filledCount > 0 && filledCount < TOTAL_SLOTS && (
+                <div className="pub-warn">⚠ Not all slots filled — you can still publish with gaps</div>
+              )}
+            </div>
           </>
         )}
       </div>
 
       <style>{`
-        .adash-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; }
-        .adash-brand { font-size:36px; line-height:.9; font-weight:800; letter-spacing:-.05em; color:#fff; }
-        .adash-brand-ok { color:var(--accent); }
-        .adash-header-right { display:flex; align-items:flex-start; padding-top:4px; }
-.pub-section { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px 24px; margin-bottom:20px; }
-        .pub-section-title { font-size:18px; font-weight:700; margin:0 0 16px; display:flex; align-items:center; gap:10px; }
-        .pub-meta { display:flex; flex-wrap:wrap; gap:16px; margin-bottom:16px; font-size:13px; color:var(--muted); }
-        .pub-meta strong { color:var(--text); }
+        .adash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+        .adash-brand{font-size:36px;line-height:.9;font-weight:800;letter-spacing:-.05em;color:#fff}
+        .adash-brand-ok{color:var(--accent)}
+        .adash-header-right{display:flex;align-items:flex-start;padding-top:4px}
 
-        .batch-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; border:1px solid; text-transform:uppercase; letter-spacing:.06em; }
-        .batch-badge--draft { color:#f59e0b; border-color:rgba(245,158,11,.3); background:rgba(245,158,11,.08); }
-        .batch-badge--published { color:#a3e635; border-color:rgba(163,230,53,.3); background:rgba(163,230,53,.08); }
-        .batch-badge--superseded { color:#94a3b8; border-color:rgba(148,163,184,.3); background:rgba(148,163,184,.08); }
-        .batch-badge--rolledback { color:#f87171; border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.08); }
+        .pub-empty{text-align:center;padding:60px;font-size:16px;color:var(--muted)}
 
-        .pub-table { border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px; }
-        .pub-table-header { display:grid; grid-template-columns:1fr 100px 80px 100px; gap:12px; padding:10px 16px; background:rgba(255,255,255,.03); border-bottom:1px solid var(--border); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
-        .pub-row { display:grid; grid-template-columns:1fr 100px 80px 100px; gap:12px; padding:12px 16px; align-items:center; border-bottom:1px solid var(--border); }
-        .pub-row:last-child { border-bottom:none; }
-        .pub-row-title { font-size:14px; font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .pub-row-day,.pub-row-mode,.pub-row-city { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+        /* Progress bar */
+        .pb{margin-bottom:16px}
+        .pb-bar{height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+        .pb-fill{height:100%;background:linear-gradient(90deg,var(--accent),#22d3ee);border-radius:999px;transition:width .3s}
+        .pb-text{font-size:12px;color:var(--muted);margin-top:4px;display:block}
 
-        .pub-actions { display:flex; gap:10px; margin-top:12px; }
-        .pub-btn { padding:12px 24px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; border:1px solid; background:transparent; transition:opacity .15s; }
-        .pub-btn:disabled { opacity:.5; cursor:default; }
-        .pub-btn--publish { color:#a3e635; border-color:rgba(163,230,53,.35); }
-        .pub-btn--publish:hover:not(:disabled) { background:rgba(163,230,53,.08); }
-        .pub-btn--generate { color:var(--accent); border-color:rgba(78,205,196,.35); }
-        .pub-btn--generate:hover:not(:disabled) { background:rgba(78,205,196,.08); }
-        .pub-btn--danger { color:#f87171; border-color:rgba(248,113,113,.35); }
-        .pub-btn--danger:hover:not(:disabled) { background:rgba(248,113,113,.08); }
+        /* Layout */
+        .pub-layout{display:flex;gap:16px;margin-bottom:20px}
 
-        .pub-empty { text-align:center; padding:40px 24px; }
-        .pub-empty-icon { font-size:32px; margin-bottom:8px; }
-        .pub-empty-text { font-size:14px; color:var(--muted); }
-        .pub-empty-inline { font-size:14px; color:var(--muted); margin-bottom:12px; }
-        .pub-error { font-size:13px; color:#f87171; background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.2); border-radius:8px; padding:10px 14px; margin-bottom:16px; }
+        /* Calendar */
+        .cal{flex:1;min-width:0;overflow-x:auto}
+        .cal-header{display:grid;grid-template-columns:100px repeat(7,1fr);gap:4px;margin-bottom:4px}
+        .cal-corner{background:transparent}
+        .cal-day-head{text-align:center;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:8px 4px}
+        .cal-row{display:grid;grid-template-columns:100px repeat(7,1fr);gap:4px;margin-bottom:4px}
+        .cal-mode-head{display:flex;align-items:center;font-size:11px;font-weight:600;color:var(--muted);padding:0 8px;white-space:nowrap}
 
-        .pub-batch-list { display:flex; flex-direction:column; gap:6px; }
-        .pub-batch-row { display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(255,255,255,.02); border-radius:8px; font-size:12px; flex-wrap:wrap; }
-        .pub-batch-id { font-weight:600; color:var(--text); }
-        .pub-batch-week,.pub-batch-count,.pub-batch-time { color:var(--muted); }
+        /* Calendar slot */
+        .cs{min-height:100px;background:var(--panel);border:2px dashed rgba(255,255,255,.08);border-radius:10px;transition:all .15s;position:relative;overflow:hidden}
+        .cs--over{border-color:var(--accent);background:rgba(78,205,196,.05)}
+        .cs--filled{border-style:solid;border-color:rgba(255,255,255,.12)}
+        .cs-empty{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,.2)}
+        .cs-card{height:100%;position:relative}
+        .cs-img{width:100%;height:70px;object-fit:cover;border-radius:8px 8px 0 0}
+        .cs-info{padding:6px 8px}
+        .cs-title{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .cs-venue{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .cs-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+        .cs-card:hover .cs-remove{opacity:1}
+        .cs-remove:hover{background:rgba(248,113,113,.5);color:#fff}
 
-        .pub-audit { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:20px 24px; margin-bottom:20px; }
-        .pub-audit-title { font-size:16px; font-weight:600; margin:0 0 12px; }
-        .pub-audit-row { display:flex; align-items:center; gap:8px; padding:6px 8px; font-size:11px; border-bottom:1px solid rgba(255,255,255,.04); flex-wrap:wrap; }
-        .pub-audit-row:last-child { border-bottom:none; }
-        .pub-audit-action { font-weight:700; text-transform:uppercase; padding:2px 6px; border-radius:4px; font-size:10px; }
-        .pub-audit-action--generate_draft { background:rgba(78,205,196,.12); color:#4ecdc4; }
-        .pub-audit-action--publish { background:rgba(163,230,53,.12); color:#a3e635; }
-        .pub-audit-action--rollback { background:rgba(248,113,113,.12); color:#f87171; }
-        .pub-audit-action--superseded,.pub-audit-action--restored { background:rgba(148,163,184,.1); color:#94a3b8; }
-        .pub-audit-detail { color:var(--muted); flex:1; }
-        .pub-audit-by { color:var(--text); font-weight:600; }
-        .pub-audit-time { color:var(--muted); margin-left:auto; }
+        /* Pool sidebar */
+        .pool{width:240px;flex-shrink:0;max-height:70vh;overflow-y:auto;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+        .pool-head{padding:12px 14px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel);z-index:1}
+        .pool-empty{padding:20px 14px;font-size:12px;color:var(--muted);text-align:center}
 
-        @media (max-width:640px) {
-          .adash-brand { font-size:28px; }
-          .pub-table-header,.pub-row { grid-template-columns:1fr 80px; }
-          .pub-table-header span:nth-child(3),.pub-table-header span:nth-child(4),.pub-row>*:nth-child(3),.pub-row>*:nth-child(4) { display:none; }
+        /* Draggable event */
+        .de{padding:10px 14px;border-bottom:1px solid var(--border);cursor:grab;transition:background .12s}
+        .de:hover{background:rgba(255,255,255,.04)}
+        .de:active{cursor:grabbing;background:rgba(78,205,196,.08)}
+        .de-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+        .de-meta{display:flex;gap:4px;align-items:center}
+        .de-city{font-size:10px;color:var(--muted)}
+        .mt{font-size:9px;font-weight:700;padding:2px 5px;border-radius:999px;border:1px solid;text-transform:lowercase}
+        .mt--night{color:#a78bfa;border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)}
+        .mt--day{color:#f59e0b;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.08)}
+
+        /* Publish footer */
+        .pub-footer{text-align:center;padding:16px 0}
+        .pub-error{margin-bottom:10px;font-size:13px;color:#f87171;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:8px;padding:8px 12px;display:inline-block}
+        .pub-btn{padding:14px 40px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;border:2px solid var(--accent);background:rgba(78,205,196,.1);color:var(--accent);transition:all .2s}
+        .pub-btn:hover:not(:disabled){background:rgba(78,205,196,.2)}
+        .pub-btn:disabled{opacity:.4;cursor:default}
+        .pub-warn{margin-top:8px;font-size:12px;color:#f59e0b}
+
+        /* Mobile */
+        @media(max-width:900px){
+          .pub-layout{flex-direction:column}
+          .pool{width:100%;max-height:300px}
+          .cal-header,.cal-row{grid-template-columns:60px repeat(7,1fr)}
+          .cal-mode-head{font-size:9px;padding:0 2px}
+          .cs{min-height:70px}
+          .cs-img{height:40px}
         }
       `}</style>
     </main>
