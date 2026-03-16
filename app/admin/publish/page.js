@@ -154,6 +154,15 @@ export default function PublishPage() {
     if (!res.ok) throw new Error(data.error ?? 'Failed');
     setAllEvents(data.events ?? []);
 
+    // Load saved calendar assignments
+    try {
+      const aRes = await fetch('/api/calendar/assign');
+      const aData = await aRes.json();
+      if (aData.assignments && Object.keys(aData.assignments).length > 0) {
+        setAssignments(aData.assignments);
+      }
+    } catch {}
+
     // Fetch published batch to determine active week
     try {
       const bRes = await fetch('/api/publish/batch');
@@ -173,6 +182,23 @@ export default function PublishPage() {
     document.addEventListener('dragend', onDragEnd);
     return () => document.removeEventListener('dragend', onDragEnd);
   }, []);
+
+  // Auto-save assignments to DB (debounced)
+  const saveTimerRef = useRef(null);
+  const initialLoadRef = useRef(true);
+  useEffect(() => {
+    // Skip auto-save on initial load
+    if (initialLoadRef.current) { initialLoadRef.current = false; return; }
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      fetch('/api/calendar/assign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assignments }),
+      }).catch(() => {});
+    }, 500);
+    return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
+  }, [assignments]);
 
   // Compute dates for each day column of the current week view
   const weekDates = useMemo(() => {
