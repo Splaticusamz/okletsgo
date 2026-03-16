@@ -232,19 +232,11 @@ function EditPanel({ event, onUpdate, onAction }) {
   async function save() {
     setSaving(true); setError(null);
     try {
-      const res = await fetch(`/api/events/${event.id}/review`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update-metadata', ...form, reviewedBy: 'admin' }),
+      const res = await fetch(`/api/events/${event.id}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
       });
-      // If review endpoint doesn't support metadata updates, try a direct patch
-      if (!res.ok) {
-        // Fallback: use the create/update pattern
-        const res2 = await fetch(`/api/events/${event.id}`, {
-          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(form),
-        });
-        if (!res2.ok) throw new Error('Save failed');
-      }
+      if (!res.ok) throw new Error((await res.json()).error ?? 'Save failed');
       onUpdate?.();
     } catch (err) { setError(err.message); }
     finally { setSaving(false); }
