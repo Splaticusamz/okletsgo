@@ -23,8 +23,8 @@ export async function GET(request) {
       return NextResponse.json({ events, batchId: published.id });
     }
 
-    // Fallback: return all events (no batch published yet)
-    const events = getEvents();
+    // No published batch yet — return only published-status events (or empty)
+    const events = getEvents().filter(e => e.status === 'published');
     return NextResponse.json({ events });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
