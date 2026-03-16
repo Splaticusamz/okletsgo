@@ -81,7 +81,7 @@ function Card({ dayData, mode, index, transitionDelayMs }) {
         {MODE_ORDER.map((entryMode) => {
           const entry = dayData.entries[entryMode];
           return (
-            <div key={`${dayData.day}-${entryMode}-img`} className="card-img" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('/${String(entry.fallbackImage).replace(/^\//, '')}')` }}>
+            <div key={`${dayData.day}-${entryMode}-img`} className="card-img" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${String(entry.imageUrl || entry.fallbackImage || '').startsWith('http') ? entry.imageUrl || entry.fallbackImage : '/' + String(entry.fallbackImage || '').replace(/^\//, '')}')` }}>
               <AnimatedCardMedia entry={entry} />
             </div>
           );
