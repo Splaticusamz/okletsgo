@@ -401,14 +401,34 @@ function EditPanel({ event, onUpdate, onAction }) {
         if (!res.ok) throw new Error((await res.json()).error);
         setActionStatus({ action, message: '✓ Card built successfully', type: 'success' });
       } else if (action === 'animate') {
-        setActionStatus({ action, message: '🎬 Sending to fal.ai for animation… this takes 30-60 seconds', type: 'info' });
+        setActionStatus({ action, message: '🎬 Submitting to fal.ai…', type: 'info' });
         const res = await fetch('/api/assets/animate', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ eventId: event.id }),
         });
         if (!res.ok) throw new Error((await res.json()).error);
-        const data = await res.json();
-        setActionStatus({ action, message: `✓ Animation ready (${data.provider})`, type: 'success' });
+        const submitData = await res.json();
+        const reqId = submitData.requestId;
+        if (!reqId) throw new Error('No requestId returned');
+
+        // Poll for completion
+        setActionStatus({ action, message: '🎬 Animation processing… (this takes 30-90 seconds)', type: 'info' });
+        let attempts = 0;
+        while (attempts < 60) {
+          await new Promise(r => setTimeout(r, 3000));
+          attempts++;
+          const pollRes = await fetch(`/api/assets/animate?requestId=${reqId}&eventId=${event.id}`);
+          const pollData = await pollRes.json();
+          if (pollData.status === 'completed') {
+            setActionStatus({ action, message: '✓ Animation ready!', type: 'success' });
+            break;
+          }
+          if (pollData.status === 'failed') {
+            throw new Error(pollData.error || 'Animation failed');
+          }
+          const pos = pollData.queuePosition != null ? ` (queue: ${pollData.queuePosition})` : '';
+          setActionStatus({ action, message: `🎬 Processing${pos}…`, type: 'info' });
+        }
       } else if (action === 'approve') {
         setActionStatus({ action, message: 'Approving…', type: 'info' });
         const res = await fetch(`/api/events/${event.id}/review`, {
