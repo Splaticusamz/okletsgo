@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OK LET'S GO — Documentation</title>
+<style>
+  :root { --bg: #0d1023; --panel: #151729; --text: #e2e8f0; --muted: #94a3b8; --accent: #F7795F; --border: #2a2d45; --link: #60a5fa; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .wrapper { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
+  h1 .ok { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 40px; }
+  h2 { font-size: 28px; font-weight: 700; margin-top: 56px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); color: var(--accent); }
+  h3 { font-size: 20px; font-weight: 700; margin-top: 32px; margin-bottom: 12px; color: var(--text); }
+  h4 { font-size: 16px; font-weight: 600; margin-top: 24px; margin-bottom: 8px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { color: #fff; }
+  em { color: var(--muted); }
+  code { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', Monaco, Consolas, monospace; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; overflow-x: auto; margin: 12px 0 20px; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; border: none; padding: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px; }
+  th { text-align: left; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); font-weight: 700; color: var(--accent); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; }
+  td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  ul, ol { margin: 8px 0 16px 24px; }
+  li { margin-bottom: 4px; }
+  li code { font-size: 0.85em; }
+  blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 12px 0; background: rgba(247,121,95,0.04); border-radius: 0 8px 8px 0; }
+  blockquote p { margin: 0; color: var(--muted); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+  .toc { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin: 24px 0 40px; }
+  .toc-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 12px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 4px; font-size: 14px; }
+  .toc a { color: var(--text); }
+  .toc a:hover { color: var(--accent); }
+  .download-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel); border-top: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: center; gap: 12px; z-index: 100; }
+  .dl-btn { padding: 8px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .dl-btn--primary { background: var(--accent); color: #000; border-color: var(--accent); }
+  .dl-btn--secondary { background: transparent; color: var(--text); border-color: var(--border); }
+  .flow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 16px 0; }
+  .flow-step { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
+  .flow-arrow { color: var(--accent); font-size: 18px; }
+  @media (max-width: 640px) {
+    h1 { font-size: 36px; }
+    h2 { font-size: 22px; }
+    .wrapper { padding: 24px 16px 80px; }
+    pre { font-size: 11px; padding: 12px; }
+  }
+  @media print {
+    body { background: #fff; color: #111; }
+    .download-bar { display: none; }
+    h2 { color: #111; border-bottom-color: #ddd; }
+    pre { background: #f5f5f5; border-color: #ddd; }
+    th { background: #f0f0f0; }
+    td { border-color: #ddd; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper" id="doc-content">
+
+<h1><span class="ok">OK</span> LET'S GO</h1>
+<p class="subtitle">Complete Project Documentation · v1.0.0 · March 2026 · <a href="https://okletsgo.ca">okletsgo.ca</a></p>
+
+<div class="toc">
+<div class="toc-title">Table of Contents</div>
+<ol>
+<li><a href="#summary">Executive Summary</a></li>
+<li><a href="#product">Product Overview</a></li>
+<li><a href="#ux">User Experience</a></li>
+<li><a href="#business">Business Model & Strategy</a></li>
+<li><a href="#pipeline">Content Pipeline</a></li>
+<li><a href="#admin">Admin Panel</a></li>
+<li><a href="#tech">Technical Architecture</a></li>
+<li><a href="#api">API Reference</a></li>
+<li><a href="#data">Data Model</a></li>
+<li><a href="#deploy">Deployment & Infrastructure</a></li>
+<li><a href="#scraping">Event Scraping System</a></li>
+<li><a href="#discord">Discord Integration</a></li>
+<li><a href="#ai">AI & Media Generation</a></li>
+<li><a href="#newsletter">Newsletter System</a></li>
+<li><a href="#security">Security</a></li>
+<li><a href="#roadmap">Roadmap</a></li>
+</ol>
+</div>
+
+<div id="markdown-content"></div>
+
+</div>
+
+<div class="download-bar">
+<a class="dl-btn dl-btn--primary" href="/docs/okletsgo-documentation.md" download>📄 Download Markdown</a>
+<button class="dl-btn dl-btn--secondary" onclick="window.print()">🖨️ Print / Save PDF</button>
+</div>
+
+<script>
+// Fetch and render the markdown
+fetch('/docs/okletsgo-documentation.md')
+  .then(r => r.text())
+  .then(md => {
+    const container = document.getElementById('markdown-content');
+    // Simple markdown to HTML converter
+    let html = md
+      // Remove the title (already in HTML)
+      .replace(/^# OK LET'S GO.*?\n---/s, '')
+      // Remove TOC section
+      .replace(/## Table of Contents[\s\S]*?---/, '')
+      // Headers
+      .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
+      .replace(/^### (\d+\.\d+ .+)$/gm, (_, t) => `<h3>${t}</h3>`)
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (\d+)\. (.+)$/gm, (_, n, t) => {
+        const ids = ['','summary','product','ux','business','pipeline','admin','tech','api','data','deploy','scraping','discord','ai','newsletter','security','roadmap'];
+        return `<h2 id="${ids[n] || ''}">${n}. ${t}</h2>`;
+      })
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      // Code blocks
+      .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`)
+      // Inline code
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // Bold
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      // Italic
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+      // Tables
+      .replace(/^\|(.+)\|$/gm, (line) => {
+        if (line.match(/^\|[\s-|]+\|$/)) return '<!--sep-->';
+        const cells = line.split('|').filter(c => c.trim());
+        return cells.map(c => `<td>${c.trim()}</td>`).join('');
+      })
+      // Links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+      // Horizontal rules
+      .replace(/^---$/gm, '<hr>')
+      // Lists
+      .replace(/^- \[x\] (.+)$/gm, '<li>✅ $1</li>')
+      .replace(/^- \[ \] (.+)$/gm, '<li>⬜ $1</li>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      // Paragraphs
+      .replace(/^(?!<[hluotpd]|<!)((?!^\s*$).+)$/gm, '<p>$1</p>')
+      // Clean up table rows
+      .replace(/(<td>.*<\/td>\n?)+/g, (match) => {
+        const rows = match.trim().split('\n').filter(r => r && !r.includes('<!--sep-->'));
+        if (rows.length === 0) return '';
+        const first = rows[0];
+        const rest = rows.slice(1);
+        let table = '<table><thead><tr>' + first.replace(/<td>/g,'<th>').replace(/<\/td>/g,'</th>') + '</tr></thead><tbody>';
+        rest.forEach(r => { table += '<tr>' + r + '</tr>'; });
+        table += '</tbody></table>';
+        return table;
+      });
+    
+    container.innerHTML = html;
+  });
+</script>
+</body>
+</html>
