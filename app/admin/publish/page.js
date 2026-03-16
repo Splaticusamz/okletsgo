@@ -155,9 +155,9 @@ export default function PublishPage() {
         const confirmRes = await fetch('/api/publish/batch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'confirm', batchId: data.batch.id }),
+          body: JSON.stringify({ action: 'publish', batchId: data.batch.id }),
         });
-        if (!confirmRes.ok) throw new Error((await confirmRes.json()).error ?? 'Confirm failed');
+        if (!confirmRes.ok) throw new Error((await confirmRes.json()).error ?? 'Publish failed');
       }
 
       await loadEvents();
