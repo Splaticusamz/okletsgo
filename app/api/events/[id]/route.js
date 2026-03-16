@@ -38,3 +38,23 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(request, { params }) {
+  try {
+    if (!await isAuthorized()) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    await initDb();
+    const { id } = await params;
+    const event = getEvent(id);
+    if (!event) {
+      return NextResponse.json({ error: `Event not found: ${id}` }, { status: 404 });
+    }
+    const { deleteEvent } = await import('../../../../lib/db.js');
+    deleteEvent(id);
+    await flushDb();
+    return NextResponse.json({ ok: true, deleted: id });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
