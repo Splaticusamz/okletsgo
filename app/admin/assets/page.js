@@ -75,17 +75,35 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
     finally { setFetching(false); }
   }
 
+  function sourceLabel(candidate) {
+    const src = candidate.source || candidate.provenance || '';
+    if (src === 'venue-search') return { tag: '🏢 Venue photo', cls: 'img-tag--venue' };
+    if (src === 'event-page') return { tag: '🎫 Event page', cls: 'img-tag--event' };
+    if (src === 'ai-generated') return { tag: '🤖 AI generated', cls: 'img-tag--ai' };
+    if (src === 'upload' || src === 'manual') return { tag: '📤 Uploaded', cls: 'img-tag--upload' };
+    if (src.startsWith('scraper:') || src.startsWith('tourismkelowna') || src.startsWith('castanet') || src.startsWith('eventbrite')) return { tag: `🔗 ${src.replace('scraper:', '')}`, cls: 'img-tag--scraper' };
+    if (src === 'discord' || src.startsWith('discord:')) return { tag: '💬 Discord import', cls: 'img-tag--discord' };
+    if (candidate.category === 'venue') return { tag: '🏢 Venue', cls: 'img-tag--venue' };
+    if (candidate.category === 'event') return { tag: '🎫 Event', cls: 'img-tag--event' };
+    if (candidate.category === 'activity') return { tag: '🎨 Activity', cls: 'img-tag--ai' };
+    return { tag: '📷 Image', cls: '' };
+  }
+
   function renderRow(label, emoji, images) {
     return (
       <div className="img-cat">
         <div className="img-cat-label">{emoji} {label} ({images.length})</div>
         <div className="img-cat-row">
-          {images.length > 0 ? images.map(c => (
-            <div key={c.id} className={`img-thumb ${c.selected ? 'img-thumb--sel' : ''}`} onClick={() => onSelectImage?.(c)}>
-              <img src={c.url} alt="" loading="lazy" />
-              {c.selected && <div className="img-check">✓</div>}
-            </div>
-          )) : <span className="img-cat-empty">—</span>}
+          {images.length > 0 ? images.map(c => {
+            const { tag, cls } = sourceLabel(c);
+            return (
+              <div key={c.id} className={`img-thumb ${c.selected ? 'img-thumb--sel' : ''}`} onClick={() => onSelectImage?.(c)}>
+                <img src={c.url} alt="" loading="lazy" />
+                <span className={`img-tag ${cls}`}>{tag}</span>
+                {c.selected && <div className="img-check">✓</div>}
+              </div>
+            );
+          }) : <span className="img-cat-empty">—</span>}
         </div>
       </div>
     );
@@ -110,12 +128,16 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
         </div>
       ) : candidates.length > 0 ? (
         <div className="img-gal-scroll">
-          {candidates.map(c => (
-            <div key={c.id} className={`img-thumb ${c.selected ? 'img-thumb--sel' : ''}`} onClick={() => onSelectImage?.(c)}>
-              <img src={c.url} alt="" loading="lazy" />
-              {c.selected && <div className="img-check">✓</div>}
-            </div>
-          ))}
+          {candidates.map(c => {
+            const { tag, cls } = sourceLabel(c);
+            return (
+              <div key={c.id} className={`img-thumb ${c.selected ? 'img-thumb--sel' : ''}`} onClick={() => onSelectImage?.(c)}>
+                <img src={c.url} alt="" loading="lazy" />
+                <span className={`img-tag ${cls}`}>{tag}</span>
+                {c.selected && <div className="img-check">✓</div>}
+              </div>
+            );
+          })}
         </div>
       ) : <div className="img-gal-empty">No images — click Fetch Images to load venue, event, and AI-generated options</div>}
     </div>
@@ -503,10 +525,17 @@ export default function AssetsPage() {
         .img-gal-btn:hover{background:rgba(255,255,255,.08)}
         .img-gal-btn:disabled{opacity:.4}
         .img-gal-scroll{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin}
-        .img-thumb{position:relative;flex-shrink:0;width:52px;height:104px;border-radius:6px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .12s}
+        .img-thumb{position:relative;flex-shrink:0;width:80px;height:120px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .12s}
         .img-thumb:hover{border-color:rgba(78,205,196,.4)}
         .img-thumb--sel{border-color:var(--accent);box-shadow:0 0 6px rgba(78,205,196,.3)}
         .img-thumb img{width:100%;height:100%;object-fit:cover}
+        .img-tag{position:absolute;bottom:2px;left:2px;right:2px;font-size:8px;font-weight:600;text-align:center;padding:2px 4px;border-radius:4px;background:rgba(0,0,0,.7);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.02em}
+        .img-tag--venue{background:rgba(59,130,246,.8)}
+        .img-tag--event{background:rgba(168,85,247,.8)}
+        .img-tag--ai{background:rgba(236,72,153,.8)}
+        .img-tag--upload{background:rgba(34,197,94,.8)}
+        .img-tag--scraper{background:rgba(251,146,60,.8)}
+        .img-tag--discord{background:rgba(88,101,242,.8)}
         .img-check{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--accent);color:#000;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
         .img-gal-empty{font-size:11px;color:var(--muted);padding:10px;text-align:center;border:1px dashed rgba(255,255,255,.1);border-radius:6px}
         .img-gal-btn--fetch{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:#60a5fa}
