@@ -31,9 +31,12 @@ export async function POST(request, { params }) {
     let newCandidates;
     let categories = null;
 
+    let meta = null;
+
     if (categorized) {
       const result = await fetchCategorizedImages(event);
       categories = result;
+      meta = result.meta || null;
       newCandidates = [...result.venue, ...result.event, ...result.activity];
     } else {
       newCandidates = await findImagesForEvent(event, { offset: body.offset ?? 0, limit: body.limit ?? 5 });
@@ -47,7 +50,7 @@ export async function POST(request, { params }) {
     const updated = updateEvent(id, { imageCandidates: merged });
     await flushDb();
 
-    return NextResponse.json({ ok: true, candidates: updated.imageCandidates, categories });
+    return NextResponse.json({ ok: true, candidates: updated.imageCandidates, categories, meta });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

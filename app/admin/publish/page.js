@@ -83,6 +83,39 @@ function ProgressBar({ filled, total }) {
   );
 }
 
+/* ── Week helpers ── */
+function getMonday(d) {
+  const date = new Date(d);
+  const day = date.getUTCDay();
+  date.setUTCDate(date.getUTCDate() - ((day + 6) % 7));
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+}
+
+function addWeeks(d, n) {
+  const date = new Date(d);
+  date.setUTCDate(date.getUTCDate() + n * 7);
+  return date;
+}
+
+function formatDateRange(monday) {
+  const sun = new Date(monday);
+  sun.setUTCDate(sun.getUTCDate() + 6);
+  const opts = { month: 'short', day: 'numeric', timeZone: 'UTC' };
+  const mStr = monday.toLocaleDateString('en-US', opts);
+  const sStr = sun.toLocaleDateString('en-US', { ...opts, year: 'numeric' });
+  return `${mStr} – ${sStr}`;
+}
+
+function weekLabel(monday) {
+  return monday.toISOString().slice(0, 10);
+}
+
+function isCurrentWeek(monday) {
+  const now = getMonday(new Date());
+  return weekLabel(monday) === weekLabel(now);
+}
+
 /* ── Main Page ── */
 export default function PublishPage() {
   const [allEvents, setAllEvents] = useState([]);
@@ -91,6 +124,11 @@ export default function PublishPage() {
   const [assignments, setAssignments] = useState({}); // { "MONDAY:family": eventId }
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState(null);
+  const [weekMonday, setWeekMonday] = useState(() => getMonday(new Date()));
+
+  function prevWeek() { setWeekMonday(m => addWeeks(m, -1)); }
+  function nextWeek() { setWeekMonday(m => addWeeks(m, 1)); }
+  function goToday() { setWeekMonday(getMonday(new Date())); }
 
   async function loadEvents() {
     const res = await fetch('/api/events?all=1');
@@ -103,8 +141,30 @@ export default function PublishPage() {
     loadEvents().catch(e => setError(e.message)).finally(() => setLoading(false));
   }, []);
 
-  // Events eligible for the calendar (approved_2)
-  const approved = useMemo(() => allEvents.filter(e => e.status === 'approved_2'), [allEvents]);
+  // Compute dates for each day column of the current week view
+  const weekDates = useMemo(() => {
+    return DAYS.map((_, i) => {
+      const d = new Date(weekMonday);
+      d.setUTCDate(d.getUTCDate() + i);
+      return d.toISOString().slice(0, 10);
+    });
+  }, [weekMonday]);
+
+  // Events eligible for the calendar: approved_2 for current week, published for past weeks
+  const isCurrent = isCurrentWeek(weekMonday);
+  const approved = useMemo(() => {
+    if (isCurrent) {
+      return allEvents.filter(e => e.status === 'approved_2');
+    }
+    // For non-current weeks, show published events whose dates fall in this week range
+    return allEvents.filter(e => {
+      if (!['published', 'approved_2'].includes(e.status)) return false;
+      // Check if event date falls in this week
+      const eDate = e.date;
+      if (DAYS.includes(eDate)) return true; // legacy day-name dates
+      return weekDates.includes(eDate);
+    });
+  }, [allEvents, isCurrent, weekDates]);
 
   // Events already assigned to slots
   const assignedIds = new Set(Object.values(assignments));
@@ -184,6 +244,16 @@ export default function PublishPage() {
 
         {!loading && !error && (
           <>
+            <div className="week-nav">
+              <button className="week-nav-arrow week-nav-arrow--left" onClick={prevWeek}>‹</button>
+              <div className="week-nav-center">
+                <div className="week-nav-range">{formatDateRange(weekMonday)}</div>
+                {!isCurrent && <button className="week-nav-today" onClick={goToday}>Today</button>}
+                {isCurrent && <span className="week-nav-badge">This Week</span>}
+              </div>
+              <button className="week-nav-arrow week-nav-arrow--right" onClick={nextWeek}>›</button>
+            </div>
+
             <ProgressBar filled={filledCount} total={TOTAL_SLOTS} />
 
             <div className="pub-layout">
@@ -192,7 +262,11 @@ export default function PublishPage() {
                 {/* Day headers */}
                 <div className="cal-header">
                   <div className="cal-corner" />
-                  {DAYS.map((d, i) => <div key={d} className="cal-day-head">{DAY_SHORT[i]}</div>)}
+                  {DAYS.map((d, i) => {
+                    const dateStr = weekDates[i];
+                    const dayNum = new Date(dateStr + 'T12:00:00Z').getUTCDate();
+                    return <div key={d} className="cal-day-head">{DAY_SHORT[i]}<span className="cal-day-num">{dayNum}</span></div>;
+                  })}
                 </div>
 
                 {/* Mode rows */}
@@ -250,6 +324,15 @@ export default function PublishPage() {
         .adash-brand-ok{color:var(--accent)}
         .adash-header-right{display:flex;align-items:flex-start;padding-top:4px}
 
+        .week-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+        .week-nav-arrow{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--text);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .week-nav-arrow:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+        .week-nav-center{text-align:center;min-width:200px}
+        .week-nav-range{font-size:18px;font-weight:700;color:var(--text)}
+        .week-nav-today{font-size:11px;font-weight:600;color:var(--accent);background:none;border:1px solid rgba(78,205,196,.3);border-radius:999px;padding:2px 10px;cursor:pointer;margin-top:4px}
+        .week-nav-today:hover{background:rgba(78,205,196,.1)}
+        .week-nav-badge{font-size:11px;font-weight:600;color:var(--accent);display:inline-block;margin-top:4px}
+        .cal-day-num{display:block;font-size:10px;color:rgba(255,255,255,.3);font-weight:400;margin-top:2px}
         .pub-empty{text-align:center;padding:60px;font-size:16px;color:var(--muted)}
 
         /* Progress bar */
