@@ -72,6 +72,8 @@ function AnimatedCardMedia({ entry }) {
   );
 }
 
+const EMPTY_ENTRY = { venue: '', city: '', fallbackImage: null, imageUrl: null, video: null };
+
 function Card({ dayData, mode, index, transitionDelayMs }) {
   const transforms = MODES[mode];
 
@@ -79,10 +81,14 @@ function Card({ dayData, mode, index, transitionDelayMs }) {
     <div className="card tooltip-anchor" data-tooltip data-index={index}>
       <div className="card-img-strip" style={{ transform: transforms.img, transitionDelay: `${transitionDelayMs}ms` }}>
         {MODE_ORDER.map((entryMode) => {
-          const entry = dayData.entries[entryMode];
+          const entry = dayData.entries[entryMode] || EMPTY_ENTRY;
+          const imgSrc = entry.imageUrl || entry.fallbackImage || '';
+          const bgUrl = imgSrc
+            ? (imgSrc.startsWith('http') ? imgSrc : '/' + imgSrc.replace(/^\//, ''))
+            : '';
           return (
-            <div key={`${dayData.day}-${entryMode}-img`} className="card-img" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${String(entry.imageUrl || entry.fallbackImage || '').startsWith('http') ? entry.imageUrl || entry.fallbackImage : '/' + String(entry.fallbackImage || '').replace(/^\//, '')}')` }}>
-              <AnimatedCardMedia entry={entry} />
+            <div key={`${dayData.day}-${entryMode}-img`} className={`card-img ${!bgUrl ? 'card-img--empty' : ''}`} style={bgUrl ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${bgUrl}')` } : {}}>
+              {entry.video && <AnimatedCardMedia entry={entry} />}
             </div>
           );
         })}
@@ -90,12 +96,12 @@ function Card({ dayData, mode, index, transitionDelayMs }) {
 
       <div className="card-content-strip" style={{ transform: transforms.content, transitionDelay: `${transitionDelayMs + 100}ms` }}>
         {MODE_ORDER.map((entryMode) => {
-          const entry = dayData.entries[entryMode];
+          const entry = dayData.entries[entryMode] || EMPTY_ENTRY;
           return (
             <a key={`${dayData.day}-${entryMode}-content`} href="#" className="card-content">
               <span className="card-day">{dayData.day}</span>
-              <span className="card-venue">{entry.venue}</span>
-              <span className="card-city">{entry.city}</span>
+              <span className="card-venue">{entry.venue || ''}</span>
+              <span className="card-city">{entry.city || ''}</span>
             </a>
           );
         })}
@@ -278,7 +284,7 @@ export default function HomepageClient({ currentWeek }) {
       <div className={`bottom-sheet-overlay ${sheet.visible ? 'visible' : ''}`} onClick={() => setSheet({ visible: false, day: null, index: -1 })} />
       <div className={`bottom-sheet ${sheet.visible ? 'visible' : ''}`}>
         {sheet.day && (() => {
-          const entry = sheet.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'];
+          const entry = sheet.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'] || EMPTY_ENTRY;
           const eventInfo = !dayMode ? EVENT_DATA[sheet.index]?.night : familyMode ? EVENT_DATA[sheet.index]?.family : EVENT_DATA[sheet.index]?.day;
           return (
             <>

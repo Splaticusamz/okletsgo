@@ -272,6 +272,9 @@ body.dark-mode .tooltip {
   position: relative;
   overflow: hidden;
 }
+.card-img--empty {
+  background: linear-gradient(135deg, #1a1b2e 0%, #0d1023 100%);
+}
 .card-img::after {
   content: '';
   position: absolute;
