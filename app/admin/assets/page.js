@@ -339,6 +339,7 @@ function EditPanel({ event, onUpdate, onAction }) {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [acting, setActing] = useState(null);
+  const [actionStatus, setActionStatus] = useState(null); // { action, message, type: 'info'|'success'|'error' }
   const [error, setError] = useState(null);
   const [cropCandidate, setCropCandidate] = useState(null);
 
@@ -389,35 +390,46 @@ function EditPanel({ event, onUpdate, onAction }) {
   }
 
   async function doAction(action) {
-    setActing(action); setError(null);
+    setActing(action); setError(null); setActionStatus(null);
     try {
       if (action === 'build-card') {
+        setActionStatus({ action, message: 'Building card asset…', type: 'info' });
         const res = await fetch('/api/assets/generate', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ eventId: event.id }),
         });
         if (!res.ok) throw new Error((await res.json()).error);
+        setActionStatus({ action, message: '✓ Card built successfully', type: 'success' });
       } else if (action === 'animate') {
-        const res = await fetch('/api/assets/generate', {
+        setActionStatus({ action, message: '🎬 Sending to fal.ai for animation… this takes 30-60 seconds', type: 'info' });
+        const res = await fetch('/api/assets/animate', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ eventId: event.id, regenerate: true }),
+          body: JSON.stringify({ eventId: event.id }),
         });
         if (!res.ok) throw new Error((await res.json()).error);
+        const data = await res.json();
+        setActionStatus({ action, message: `✓ Animation ready (${data.provider})`, type: 'success' });
       } else if (action === 'approve') {
+        setActionStatus({ action, message: 'Approving…', type: 'info' });
         const res = await fetch(`/api/events/${event.id}/review`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'approve', stage: 2, reviewedBy: 'admin' }),
         });
         if (!res.ok) throw new Error((await res.json()).error);
+        setActionStatus({ action, message: '✓ Approved', type: 'success' });
       } else if (action === 'reject') {
         const res = await fetch(`/api/events/${event.id}/review`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'reject', stage: 2, reviewedBy: 'admin' }),
         });
         if (!res.ok) throw new Error((await res.json()).error);
+        setActionStatus({ action, message: '✗ Rejected', type: 'info' });
       }
       onUpdate?.();
-    } catch (err) { setError(err.message); }
+    } catch (err) {
+      setError(err.message);
+      setActionStatus({ action, message: `Failed: ${err.message}`, type: 'error' });
+    }
     finally { setActing(null); }
   }
 

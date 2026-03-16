@@ -16,26 +16,38 @@ function ModeTag({ mode }) {
 }
 
 /* ── Calendar Slot ── */
-function CalendarSlot({ day, mode, event, onDrop, onRemove }) {
+function CalendarSlot({ day, mode, event, onDrop, onRemove, disabled, onDragStart: onDragStartCb }) {
   const [over, setOver] = useState(false);
 
-  function handleDragOver(e) { e.preventDefault(); setOver(true); }
+  function handleDragOver(e) {
+    if (disabled) return;
+    e.preventDefault();
+    setOver(true);
+  }
   function handleDragLeave() { setOver(false); }
   function handleDrop(e) {
     e.preventDefault(); setOver(false);
+    if (disabled) return;
     const eventId = e.dataTransfer.getData('text/plain');
-    if (eventId) onDrop(day, mode, eventId);
+    const fromSlot = e.dataTransfer.getData('application/x-from-slot') || null;
+    if (eventId) onDrop(day, mode, eventId, fromSlot);
   }
 
   return (
     <div
-      className={`cs ${over ? 'cs--over' : ''} ${event ? 'cs--filled' : ''}`}
+      className={`cs ${over ? 'cs--over' : ''} ${event ? 'cs--filled' : ''} ${disabled ? 'cs--disabled' : ''}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       {event ? (
-        <div className="cs-card">
+        <div className="cs-card" draggable onDragStart={(e) => {
+          e.dataTransfer.setData('text/plain', event.id);
+          e.dataTransfer.setData('application/x-event-mode', event.mode);
+          e.dataTransfer.setData('application/x-from-slot', `${day}:${mode}`);
+          e.dataTransfer.effectAllowed = 'move';
+          onDragStartCb?.(event.mode);
+        }}>
           {event.selectedImageCandidate?.url || event.imageCandidates?.[0]?.url ? (
             <img className="cs-img" src={event.selectedImageCandidate?.url || event.imageCandidates[0].url} alt="" />
           ) : event.latestAsset?.portraitUrl ? (
@@ -55,10 +67,12 @@ function CalendarSlot({ day, mode, event, onDrop, onRemove }) {
 }
 
 /* ── Draggable Event Card ── */
-function DraggableEvent({ event }) {
+function DraggableEvent({ event, onDragStart: onDragStartCb }) {
   function handleDragStart(e) {
     e.dataTransfer.setData('text/plain', event.id);
+    e.dataTransfer.setData('application/x-event-mode', event.mode);
     e.dataTransfer.effectAllowed = 'move';
+    onDragStartCb?.(event.mode);
   }
 
   return (
@@ -125,20 +139,39 @@ export default function PublishPage() {
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState(null);
   const [weekMonday, setWeekMonday] = useState(() => getMonday(new Date()));
+  const [draggingMode, setDraggingMode] = useState(null);
+  const draggingModeRef = useRef(null);
 
   function prevWeek() { setWeekMonday(m => addWeeks(m, -1)); }
   function nextWeek() { setWeekMonday(m => addWeeks(m, 1)); }
   function goToday() { setWeekMonday(getMonday(new Date())); }
+
+  const [activeWeekLabel, setActiveWeekLabel] = useState(null);
 
   async function loadEvents() {
     const res = await fetch('/api/events?all=1');
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? 'Failed');
     setAllEvents(data.events ?? []);
+
+    // Fetch published batch to determine active week
+    try {
+      const bRes = await fetch('/api/publish/batch');
+      const bData = await bRes.json();
+      if (bData.currentPublished?.weekLabel) {
+        setActiveWeekLabel(bData.currentPublished.weekLabel);
+      }
+    } catch {}
   }
 
   useEffect(() => {
     loadEvents().catch(e => setError(e.message)).finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    function onDragEnd() { setDraggingMode(null); }
+    document.addEventListener('dragend', onDragEnd);
+    return () => document.removeEventListener('dragend', onDragEnd);
   }, []);
 
   // Compute dates for each day column of the current week view
@@ -173,8 +206,20 @@ export default function PublishPage() {
   // Count filled slots
   const filledCount = Object.keys(assignments).length;
 
-  function handleDrop(day, mode, eventId) {
-    setAssignments(a => ({ ...a, [`${day}:${mode}`]: eventId }));
+  function handleDrop(day, mode, eventId, fromSlot) {
+    // Mode restriction: night events only in night slots
+    const evt = allEvents.find(e => e.id === eventId);
+    if (evt?.mode === 'night' && mode !== 'night') return;
+    if (mode === 'night' && evt?.mode && evt.mode !== 'night') return;
+
+    setAssignments(a => {
+      const next = { ...a };
+      // If dragged from another slot, clear that slot
+      if (fromSlot) delete next[fromSlot];
+      next[`${day}:${mode}`] = eventId;
+      return next;
+    });
+    setDraggingMode(null);
   }
 
   function handleRemove(day, mode) {
@@ -221,7 +266,6 @@ export default function PublishPage() {
       }
 
       await loadEvents();
-      setAssignments({});
       alert('Published successfully! Homepage updated.');
     } catch (err) { setPublishError(err.message); }
     finally { setPublishing(false); }
@@ -250,6 +294,7 @@ export default function PublishPage() {
                 <div className="week-nav-range">{formatDateRange(weekMonday)}</div>
                 {!isCurrent && <button className="week-nav-today" onClick={goToday}>Today</button>}
                 {isCurrent && <span className="week-nav-badge">This Week</span>}
+                {activeWeekLabel === weekLabel(weekMonday) && <span className="week-nav-active">● Active</span>}
               </div>
               <button className="week-nav-arrow week-nav-arrow--right" onClick={nextWeek}>›</button>
             </div>
@@ -273,16 +318,24 @@ export default function PublishPage() {
                 {MODES.map(mode => (
                   <div key={mode} className="cal-row">
                     <div className="cal-mode-head">{MODE_LABELS[mode]}</div>
-                    {DAYS.map(day => (
-                      <CalendarSlot
-                        key={`${day}:${mode}`}
-                        day={day}
-                        mode={mode}
-                        event={getEventForSlot(day, mode)}
-                        onDrop={handleDrop}
-                        onRemove={handleRemove}
-                      />
-                    ))}
+                    {DAYS.map(day => {
+                      // Night events can only go in night slots; non-night events can't go in night slots
+                      const slotDisabled = draggingMode
+                        ? (draggingMode === 'night' && mode !== 'night') || (draggingMode !== 'night' && mode === 'night')
+                        : false;
+                      return (
+                        <CalendarSlot
+                          key={`${day}:${mode}`}
+                          day={day}
+                          mode={mode}
+                          event={getEventForSlot(day, mode)}
+                          onDrop={handleDrop}
+                          onRemove={handleRemove}
+                          disabled={slotDisabled}
+                          onDragStart={(m) => setDraggingMode(m)}
+                        />
+                      );
+                    })}
                   </div>
                 ))}
               </div>
@@ -296,7 +349,7 @@ export default function PublishPage() {
                 {unassigned.length === 0 && approved.length > 0 && (
                   <div className="pool-empty">All events placed! 🎉</div>
                 )}
-                {unassigned.map(e => <DraggableEvent key={e.id} event={e} />)}
+                {unassigned.map(e => <DraggableEvent key={e.id} event={e} onDragStart={(m) => setDraggingMode(m)} />)}
               </div>
             </div>
 
@@ -332,6 +385,7 @@ export default function PublishPage() {
         .week-nav-today{font-size:11px;font-weight:600;color:var(--accent);background:none;border:1px solid rgba(78,205,196,.3);border-radius:999px;padding:2px 10px;cursor:pointer;margin-top:4px}
         .week-nav-today:hover{background:rgba(78,205,196,.1)}
         .week-nav-badge{font-size:11px;font-weight:600;color:var(--accent);display:inline-block;margin-top:4px}
+        .week-nav-active{font-size:11px;font-weight:700;color:#a3e635;display:inline-block;margin-top:4px;margin-left:8px}
         .cal-day-num{display:block;font-size:10px;color:rgba(255,255,255,.3);font-weight:400;margin-top:2px}
         .pub-empty{text-align:center;padding:60px;font-size:16px;color:var(--muted)}
 
@@ -355,6 +409,7 @@ export default function PublishPage() {
         /* Calendar slot */
         .cs{min-height:100px;background:var(--panel);border:2px dashed rgba(255,255,255,.08);border-radius:10px;transition:all .15s;position:relative;overflow:hidden}
         .cs--over{border-color:var(--accent);background:rgba(78,205,196,.05)}
+        .cs--disabled{opacity:.3;pointer-events:none}
         .cs--filled{border-style:solid;border-color:rgba(255,255,255,.12)}
         .cs-empty{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,.2)}
         .cs-card{height:100%;position:relative}
