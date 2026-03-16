@@ -488,12 +488,20 @@ function EditPanel({ event, onUpdate, onAction }) {
 
           <div className="ep-actions">
             <button className="ep-btn ep-btn--build" disabled={!!acting} onClick={() => doAction('build-card')}>{acting === 'build-card' ? '…' : '🎨 Build Card'}</button>
-            <button className="ep-btn ep-btn--animate" disabled={!!acting || !asset} onClick={() => doAction('animate')}>{acting === 'animate' ? '…' : '🎬 Animate'}</button>
+            <button className="ep-btn ep-btn--animate" disabled={!!acting} onClick={() => doAction('animate')}>{acting === 'animate' ? '⏳ Generating…' : '🎬 Animate'}</button>
           </div>
           <div className="ep-actions">
             <button className="ep-btn ep-btn--approve" disabled={!!acting || isDone} onClick={() => doAction('approve')}>{acting === 'approve' ? '…' : '✓ Approve'}</button>
             <button className="ep-btn ep-btn--reject" disabled={!!acting || isDone} onClick={() => doAction('reject')}>{acting === 'reject' ? '…' : '✗ Reject'}</button>
           </div>
+
+          {/* Action progress/status */}
+          {(acting || actionStatus) && (
+            <div className={`ep-status ${acting ? 'ep-status--active' : ''} ${actionStatus?.type === 'success' ? 'ep-status--success' : actionStatus?.type === 'error' ? 'ep-status--error' : ''}`}>
+              {acting && <span className="ep-status-spinner" />}
+              <span className="ep-status-msg">{actionStatus?.message || 'Processing…'}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -630,6 +638,13 @@ export default function AssetsPage() {
         .ep-btn--approve:hover:not(:disabled){background:rgba(78,205,196,.1)}
         .ep-btn--reject{color:#f87171;border-color:rgba(248,113,113,.35)}
         .ep-btn--reject:hover:not(:disabled){background:rgba(248,113,113,.1)}
+
+        .ep-status{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;font-size:12px;font-weight:500;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);margin-bottom:8px;transition:all .2s}
+        .ep-status--active{border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.06);color:#60a5fa}
+        .ep-status--success{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);color:#22c55e}
+        .ep-status--error{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.06);color:#f87171}
+        .ep-status-spinner{width:14px;height:14px;border:2px solid rgba(96,165,250,.3);border-top-color:#60a5fa;border-radius:50%;animation:gal-spin .6s linear infinite;flex-shrink:0}
+        .ep-status-msg{line-height:1.3}
 
         /* ── Gallery (redesigned) ── */
         .gal{border:1px solid var(--border);border-radius:14px;background:var(--panel);overflow:hidden}
