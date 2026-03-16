@@ -158,8 +158,9 @@ export default function PublishPage() {
     try {
       const aRes = await fetch('/api/calendar/assign');
       const aData = await aRes.json();
-      if (aData.assignments && Object.keys(aData.assignments).length > 0) {
+      if (aData.assignments) {
         setAssignments(aData.assignments);
+        setSavedAssignments(aData.assignments);
       }
     } catch {}
 
@@ -183,22 +184,15 @@ export default function PublishPage() {
     return () => document.removeEventListener('dragend', onDragEnd);
   }, []);
 
-  // Auto-save assignments to DB (debounced)
-  const saveTimerRef = useRef(null);
-  const initialLoadRef = useRef(true);
-  useEffect(() => {
-    // Skip auto-save on initial load
-    if (initialLoadRef.current) { initialLoadRef.current = false; return; }
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => {
-      fetch('/api/calendar/assign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assignments }),
-      }).catch(() => {});
-    }, 500);
-    return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
-  }, [assignments]);
+  // Track whether local assignments differ from saved (published) state
+  const [savedAssignments, setSavedAssignments] = useState({});
+  const hasUnsavedChanges = useMemo(() => {
+    const keys = new Set([...Object.keys(assignments), ...Object.keys(savedAssignments)]);
+    for (const k of keys) {
+      if (assignments[k] !== savedAssignments[k]) return true;
+    }
+    return false;
+  }, [assignments, savedAssignments]);
 
   // Compute dates for each day column of the current week view
   const weekDates = useMemo(() => {
@@ -262,37 +256,24 @@ export default function PublishPage() {
   }
 
   async function handlePublish() {
+    const slotCount = Object.keys(assignments).length;
+    const confirmed = window.confirm(
+      `Publish ${slotCount} event${slotCount !== 1 ? 's' : ''} to the homepage?\n\nThis will update okletsgo.ca immediately.`
+    );
+    if (!confirmed) return;
+
     setPublishing(true); setPublishError(null);
     try {
-      // Build the batch from assignments
-      const eventIds = Object.values(assignments);
-      if (eventIds.length === 0) throw new Error('No events assigned');
-
-      // Create publish batch
-      const res = await fetch('/api/publish/batch', {
+      // Save calendar assignments to DB — this is what the homepage reads
+      const res = await fetch('/api/calendar/assign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'generate',
-          assignments, // pass the day:mode → eventId mapping
-        }),
+        body: JSON.stringify({ assignments }),
       });
       if (!res.ok) throw new Error((await res.json()).error ?? 'Publish failed');
 
-      const data = await res.json();
-
-      // Confirm publish
-      if (data.batch?.id) {
-        const confirmRes = await fetch('/api/publish/batch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'publish', batchId: data.batch.id }),
-        });
-        if (!confirmRes.ok) throw new Error((await confirmRes.json()).error ?? 'Publish failed');
-      }
-
+      setSavedAssignments({ ...assignments });
       await loadEvents();
-      alert('Published successfully! Homepage updated.');
     } catch (err) { setPublishError(err.message); }
     finally { setPublishing(false); }
   }
@@ -382,12 +363,15 @@ export default function PublishPage() {
             {/* Publish button */}
             <div className="pub-footer">
               {publishError && <div className="pub-error">⚠ {publishError}</div>}
+              {hasUnsavedChanges && (
+                <div className="pub-unsaved">● You have unpublished changes — click Publish to update the homepage</div>
+              )}
               <button
-                className="pub-btn"
-                disabled={publishing || filledCount === 0}
+                className={`pub-btn ${hasUnsavedChanges ? 'pub-btn--pending' : ''}`}
+                disabled={publishing || (!hasUnsavedChanges && filledCount === 0)}
                 onClick={handlePublish}
               >
-                {publishing ? '⏳ Publishing…' : filledCount >= TOTAL_SLOTS ? '🚀 Publish Week' : `🚀 Publish (${filledCount}/${TOTAL_SLOTS} slots)`}
+                {publishing ? '⏳ Publishing…' : hasUnsavedChanges ? `🚀 Publish Changes (${filledCount} slots)` : filledCount >= TOTAL_SLOTS ? '✓ Published' : `🚀 Publish (${filledCount}/${TOTAL_SLOTS} slots)`}
               </button>
               {filledCount > 0 && filledCount < TOTAL_SLOTS && (
                 <div className="pub-warn">⚠ Not all slots filled — you can still publish with gaps</div>
@@ -470,6 +454,9 @@ export default function PublishPage() {
         .pub-btn:hover:not(:disabled){background:rgba(78,205,196,.2)}
         .pub-btn:disabled{opacity:.4;cursor:default}
         .pub-warn{margin-top:8px;font-size:12px;color:#f59e0b}
+        .pub-unsaved{margin-bottom:10px;font-size:13px;color:#f59e0b;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:8px 12px;animation:pub-pulse 2s ease-in-out infinite}
+        .pub-btn--pending{background:var(--accent);color:#000;border-color:var(--accent);animation:pub-pulse 2s ease-in-out infinite}
+        @keyframes pub-pulse{0%,100%{opacity:1}50%{opacity:.7}}
 
         /* Mobile */
         @media(max-width:900px){
