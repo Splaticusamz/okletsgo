@@ -126,6 +126,7 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
       });
       if (!res.ok) throw new Error((await res.json()).error);
       onUpdate?.();
+      onSelectImage?.(null); // clear any crop state
     } catch (err) { alert('Failed: ' + err.message); }
   }
 

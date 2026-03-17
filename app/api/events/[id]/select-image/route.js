@@ -41,7 +41,11 @@ export async function POST(request, { params }) {
     // TODO: When sharp is available, actually crop the image to 1:2 ratio here
     // For now we just mark it as selected with crop metadata
 
-    const updated = updateEvent(id, { imageCandidates: updatedCandidates });
+    const selectedCandidate = updatedCandidates.find(c => c.selected);
+    const updated = updateEvent(id, {
+      imageCandidates: updatedCandidates,
+      selectedImageCandidate: selectedCandidate ? { url: selectedCandidate.url, id: selectedCandidate.id } : null,
+    });
     await flushDb();
 
     const selected = updated.imageCandidates?.find((c) => c.selected);
