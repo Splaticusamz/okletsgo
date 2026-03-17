@@ -433,6 +433,10 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const [cropCandidate, setCropCandidate] = useState(null);
+  const [dropImage, setDropImage] = useState(null);
+  const [dropOver, setDropOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const dropRef = useRef(null);
 
   useEffect(() => {
     if (event) setForm({
@@ -440,6 +444,28 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
       date: event.date || '', startTime: event.startTime || '', endTime: event.endTime || '',
       mode: event.mode || 'day', description: event.description || '',
     });
+  }, [event?.id]);
+
+  // Global paste listener
+  useEffect(() => {
+    function onPaste(e) {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = () => setDropImage(reader.result);
+            reader.readAsDataURL(file);
+          }
+          return;
+        }
+      }
+    }
+    document.addEventListener('paste', onPaste);
+    return () => document.removeEventListener('paste', onPaste);
   }, [event?.id]);
 
   if (!event) return <div className="ep-empty">← Select an event from the queue</div>;
@@ -512,30 +538,6 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
       onUpdate?.();
     } catch (err) { alert('Select failed: ' + err.message); }
   }
-
-  // Image drop/paste zone
-  const [dropImage, setDropImage] = useState(null);
-  const [dropOver, setDropOver] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const dropRef = useRef(null);
-
-  // Global paste listener
-  useEffect(() => {
-    function onPaste(e) {
-      const items = e.clipboardData?.items;
-      if (!items) return;
-      for (const item of items) {
-        if (item.type.startsWith('image/')) {
-          e.preventDefault();
-          const file = item.getAsFile();
-          if (file) handleDropFile(file);
-          return;
-        }
-      }
-    }
-    document.addEventListener('paste', onPaste);
-    return () => document.removeEventListener('paste', onPaste);
-  }, [event?.id]);
 
   function handleDropFile(file) {
     const reader = new FileReader();
