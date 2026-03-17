@@ -386,7 +386,7 @@ function CardPreview({ event }) {
             </div>
           </div>
           <div className="card-content-strip" style={{ height: '100%', position: 'absolute', inset: 0 }}>
-            <a href="#" className="card-content" onClick={e => e.preventDefault()} style={{ height: '100%', justifyContent: 'flex-end' }}>
+            <a href="#" className="card-content" onClick={e => e.preventDefault()} style={{ height: '100%', justifyContent: 'flex-start' }}>
               <span className="card-day">{dayName}</span>
               <span className="card-venue">{event.title || event.venue || ''}</span>
               <span className="card-city">{event.city || ''}</span>
