@@ -331,13 +331,69 @@ function QueueItem({ event, active, onClick, onDelete }) {
   );
 }
 
+/* ── Homepage Card Preview (exact replica) ── */
+
+function CardPreview({ event }) {
+  const videoRef = useRef(null);
+  const [videoReady, setVideoReady] = useState(false);
+  const selectedImage = event.selectedImageCandidate?.url || event.imageCandidates?.find(c => c.selected)?.url;
+  const asset = event.latestAsset;
+  const imgSrc = selectedImage || asset?.portraitUrl || '';
+  const videoSrc = asset?.animationUrl || null;
+  const bgUrl = imgSrc ? (imgSrc.startsWith('http') ? imgSrc : '/' + imgSrc.replace(/^\//, '')) : '';
+
+  // Compute day name from event date
+  const dayName = (() => {
+    if (!event.date) return 'MONDAY';
+    const DAYS = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+    if (DAYS.includes(event.date)) return event.date;
+    try {
+      const d = new Date(event.date + 'T12:00:00Z');
+      return DAYS[d.getUTCDay()] || 'MONDAY';
+    } catch { return 'MONDAY'; }
+  })();
+
+  useEffect(() => {
+    if (!videoSrc || !videoRef.current) return;
+    const v = videoRef.current;
+    const onReady = () => setVideoReady(true);
+    v.addEventListener('canplay', onReady, { once: true });
+    v.preload = 'auto';
+    v.load();
+    return () => v.removeEventListener('canplay', onReady);
+  }, [videoSrc]);
+
+  function handleMouseEnter() {
+    if (videoReady && videoRef.current) videoRef.current.play().catch(() => {});
+  }
+  function handleMouseLeave() {
+    if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
+  }
+
+  if (!bgUrl) {
+    return <div className="hp-card hp-card--empty"><div className="hp-card-empty-text">Select an image below</div></div>;
+  }
+
+  return (
+    <div className="hp-card" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className="hp-card-bg" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${bgUrl}')` }}>
+        {videoSrc && <video ref={videoRef} className={`hp-card-video ${videoReady ? 'is-ready' : ''}`} src={videoSrc} muted loop playsInline preload="none" />}
+      </div>
+      <div className="hp-card-content">
+        <span className="hp-card-day">{dayName}</span>
+        <span className="hp-card-venue">{event.title || event.venue || ''}</span>
+        <span className="hp-card-city">{event.city || ''}</span>
+      </div>
+    </div>
+  );
+}
+
 /* ── Edit Panel ── */
 
-function EditPanel({ event, onUpdate, onAction }) {
+function EditPanel({ event, onUpdate, onSendToPublish }) {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
-  const [acting, setActing] = useState(null);
-  const [actionStatus, setActionStatus] = useState(null); // { action, message, type: 'info'|'success'|'error' }
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const [cropCandidate, setCropCandidate] = useState(null);
 
@@ -350,9 +406,6 @@ function EditPanel({ event, onUpdate, onAction }) {
   }, [event?.id]);
 
   if (!event) return <div className="ep-empty">← Select an event from the queue</div>;
-
-  const asset = event.latestAsset;
-  const selectedImage = event.selectedImageCandidate?.url || event.imageCandidates?.find(c => c.selected)?.url;
 
   function field(key, label, opts = {}) {
     return (
@@ -387,68 +440,24 @@ function EditPanel({ event, onUpdate, onAction }) {
     finally { setSaving(false); }
   }
 
-  async function doAction(action) {
-    setActing(action); setError(null); setActionStatus(null);
+  async function handleSendToPublish() {
+    setSending(true); setError(null);
     try {
-      if (action === 'build-card') {
-        setActionStatus({ action, message: 'Building card asset…', type: 'info' });
-        const res = await fetch('/api/assets/generate', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ eventId: event.id }),
-        });
-        if (!res.ok) throw new Error((await res.json()).error);
-        setActionStatus({ action, message: '✓ Card built successfully', type: 'success' });
-      } else if (action === 'animate') {
-        setActionStatus({ action, message: '🎬 Submitting to fal.ai…', type: 'info' });
-        const res = await fetch('/api/assets/animate', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ eventId: event.id }),
-        });
-        if (!res.ok) throw new Error((await res.json()).error);
-        const submitData = await res.json();
-        const reqId = submitData.requestId;
-        if (!reqId) throw new Error('No requestId returned');
-
-        // Poll for completion
-        setActionStatus({ action, message: '🎬 Animation processing… (this takes 30-90 seconds)', type: 'info' });
-        let attempts = 0;
-        while (attempts < 60) {
-          await new Promise(r => setTimeout(r, 3000));
-          attempts++;
-          const pollRes = await fetch(`/api/assets/animate?requestId=${reqId}&eventId=${event.id}`);
-          const pollData = await pollRes.json();
-          if (pollData.status === 'completed') {
-            setActionStatus({ action, message: '✓ Animation ready!', type: 'success' });
-            break;
-          }
-          if (pollData.status === 'failed') {
-            throw new Error(pollData.error || 'Animation failed');
-          }
-          const pos = pollData.queuePosition != null ? ` (queue: ${pollData.queuePosition})` : '';
-          setActionStatus({ action, message: `🎬 Processing${pos}…`, type: 'info' });
-        }
-      } else if (action === 'approve') {
-        setActionStatus({ action, message: 'Approving…', type: 'info' });
-        const res = await fetch(`/api/events/${event.id}/review`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'approve', stage: 2, reviewedBy: 'admin' }),
-        });
-        if (!res.ok) throw new Error((await res.json()).error);
-        setActionStatus({ action, message: '✓ Approved', type: 'success' });
-      } else if (action === 'reject') {
-        const res = await fetch(`/api/events/${event.id}/review`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'reject', stage: 2, reviewedBy: 'admin' }),
-        });
-        if (!res.ok) throw new Error((await res.json()).error);
-        setActionStatus({ action, message: '✗ Rejected', type: 'info' });
-      }
+      // Save metadata first
+      await fetch(`/api/events/${event.id}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      // Approve to approved_2 (ready for publish calendar)
+      const res = await fetch(`/api/events/${event.id}/review`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'approve', stage: 2, reviewedBy: 'admin' }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onSendToPublish?.(event.id);
       onUpdate?.();
-    } catch (err) {
-      setError(err.message);
-      setActionStatus({ action, message: `Failed: ${err.message}`, type: 'error' });
-    }
-    finally { setActing(null); }
+    } catch (err) { setError(err.message); }
+    finally { setSending(false); }
   }
 
   async function handleSelectImage(candidate) {
@@ -467,24 +476,10 @@ function EditPanel({ event, onUpdate, onAction }) {
     } catch (err) { alert('Select failed: ' + err.message); }
   }
 
-  const isDone = event.status === 'approved_2' || event.status === 'rejected';
-
   return (
     <div className="ep">
-      {/* Top bar: preview + metadata side by side */}
       <div className="ep-top">
-        <div className="ep-preview">
-          {asset?.animationUrl ? (
-            <video className="ep-preview-media" src={asset.animationUrl} poster={asset.portraitUrl} muted playsInline loop controls />
-          ) : selectedImage ? (
-            <img className="ep-preview-media" src={selectedImage} alt="" />
-          ) : asset?.portraitUrl ? (
-            <img className="ep-preview-media" src={asset.portraitUrl} alt="" />
-          ) : (
-            <div className="ep-preview-empty">No image selected</div>
-          )}
-        </div>
-
+        <CardPreview event={event} />
         <div className="ep-meta">
           <div className="ep-form">
             {field('title', 'Title')}
@@ -501,31 +496,16 @@ function EditPanel({ event, onUpdate, onAction }) {
             {field('description', 'Description', { textarea: true })}
           </div>
 
-          <button className="ep-save" onClick={save} disabled={saving}>{saving ? 'Saving…' : '💾 Save Metadata'}</button>
+          <button className="ep-save" onClick={save} disabled={saving}>{saving ? 'Saving…' : '💾 Save'}</button>
           {error && <div className="ep-error">⚠ {error}</div>}
 
-          <div className="ep-actions">
-            <button className="ep-btn ep-btn--build" disabled={!!acting} onClick={() => doAction('build-card')}>{acting === 'build-card' ? '…' : '🎨 Build Card'}</button>
-            <button className="ep-btn ep-btn--animate" disabled={!!acting} onClick={() => doAction('animate')}>{acting === 'animate' ? '⏳ Generating…' : '🎬 Animate'}</button>
-          </div>
-          <div className="ep-actions">
-            <button className="ep-btn ep-btn--approve" disabled={!!acting || isDone} onClick={() => doAction('approve')}>{acting === 'approve' ? '…' : '✓ Approve'}</button>
-            <button className="ep-btn ep-btn--reject" disabled={!!acting || isDone} onClick={() => doAction('reject')}>{acting === 'reject' ? '…' : '✗ Reject'}</button>
-          </div>
-
-          {/* Action progress/status */}
-          {(acting || actionStatus) && (
-            <div className={`ep-status ${acting ? 'ep-status--active' : ''} ${actionStatus?.type === 'success' ? 'ep-status--success' : actionStatus?.type === 'error' ? 'ep-status--error' : ''}`}>
-              {acting && <span className="ep-status-spinner" />}
-              <span className="ep-status-msg">{actionStatus?.message || 'Processing…'}</span>
-            </div>
-          )}
+          <button className="ep-publish" onClick={handleSendToPublish} disabled={sending}>
+            {sending ? '⏳ Sending…' : '📅 Send to Publish Calendar'}
+          </button>
         </div>
       </div>
 
-      {/* Full-width gallery below */}
       <ImageGallery event={event} onUpdate={onUpdate} onSelectImage={handleSelectImage} />
-
       {cropCandidate && <CropModal candidate={cropCandidate} onSelect={confirmSelectImage} onClose={() => setCropCandidate(null)} />}
     </div>
   );
@@ -598,7 +578,7 @@ export default function AssetsPage() {
                 <QueueItem key={e.id} event={e} active={e.id === activeId} onClick={() => setActiveId(e.id)} onDelete={deleteFromQueue} />
               ))}
             </div>
-            <EditPanel event={activeEvent} onUpdate={loadEvents} />
+            <EditPanel event={activeEvent} onUpdate={loadEvents} onSendToPublish={(id) => { if (activeId === id) setActiveId(null); }} />
           </div>
         )}
       </div>
@@ -647,9 +627,20 @@ export default function AssetsPage() {
         .ep-empty{flex:1;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);min-height:400px}
 
         .ep-top{display:flex;gap:20px;margin-bottom:20px}
-        .ep-preview{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:12px;overflow:hidden;background:#0f1323;border:1px solid var(--border)}
-        .ep-preview-media{width:100%;height:100%;object-fit:cover}
-        .ep-preview-empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3);font-size:14px}
+        /* Homepage card replica */
+        .hp-card{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;transition:transform .2s}
+        .hp-card:hover{transform:scale(1.02)}
+        .hp-card--empty{background:#0f1323;border:2px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center}
+        .hp-card-empty-text{color:rgba(255,255,255,.3);font-size:13px}
+        .hp-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .3s}
+        .hp-card:hover .hp-card-bg{transform:scale(1.05)}
+        .hp-card-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
+        .hp-card-video.is-ready{opacity:0}
+        .hp-card:hover .hp-card-video.is-ready{opacity:1}
+        .hp-card-content{position:absolute;bottom:0;left:0;right:0;padding:16px 12px;display:flex;flex-direction:column;gap:2px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+        .hp-card-day{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.6)}
+        .hp-card-venue{font-size:16px;font-weight:800;color:#fff;line-height:1.1}
+        .hp-card-city{font-size:11px;color:rgba(255,255,255,.5)}
         .ep-meta{flex:1;min-width:0}
 
         .ep-form{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
@@ -665,24 +656,9 @@ export default function AssetsPage() {
         .ep-save:disabled{opacity:.5;cursor:default}
         .ep-error{margin-bottom:8px;font-size:12px;color:#f87171;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:6px;padding:6px 8px}
 
-        .ep-actions{display:flex;gap:8px;margin-bottom:8px}
-        .ep-btn{flex:1;padding:8px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid;background:transparent;transition:background .15s}
-        .ep-btn:disabled{opacity:.35;cursor:default}
-        .ep-btn--build{color:#4ecdc4;border-color:rgba(78,205,196,.35)}
-        .ep-btn--build:hover:not(:disabled){background:rgba(78,205,196,.1)}
-        .ep-btn--animate{color:#c084fc;border-color:rgba(192,132,252,.35)}
-        .ep-btn--animate:hover:not(:disabled){background:rgba(192,132,252,.1)}
-        .ep-btn--approve{color:var(--accent);border-color:rgba(78,205,196,.35)}
-        .ep-btn--approve:hover:not(:disabled){background:rgba(78,205,196,.1)}
-        .ep-btn--reject{color:#f87171;border-color:rgba(248,113,113,.35)}
-        .ep-btn--reject:hover:not(:disabled){background:rgba(248,113,113,.1)}
-
-        .ep-status{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;font-size:12px;font-weight:500;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);margin-bottom:8px;transition:all .2s}
-        .ep-status--active{border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.06);color:#60a5fa}
-        .ep-status--success{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);color:#22c55e}
-        .ep-status--error{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.06);color:#f87171}
-        .ep-status-spinner{width:14px;height:14px;border:2px solid rgba(96,165,250,.3);border-top-color:#60a5fa;border-radius:50%;animation:gal-spin .6s linear infinite;flex-shrink:0}
-        .ep-status-msg{line-height:1.3}
+        .ep-publish{width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;border:2px solid var(--accent);background:rgba(78,205,196,.1);color:var(--accent);transition:all .2s;margin-top:8px}
+        .ep-publish:hover:not(:disabled){background:rgba(78,205,196,.2)}
+        .ep-publish:disabled{opacity:.4;cursor:default}
 
         /* ── Gallery (redesigned) ── */
         .gal{border:1px solid var(--border);border-radius:14px;background:var(--panel);overflow:hidden}
