@@ -25,7 +25,7 @@ export async function PATCH(request, { params }) {
     }
 
     const body = await request.json();
-    const allowed = ['title', 'venue', 'city', 'date', 'startTime', 'endTime', 'mode', 'description', 'address'];
+    const allowed = ['title', 'venue', 'city', 'date', 'startTime', 'endTime', 'mode', 'description', 'address', 'imageCandidates'];
     const patch = {};
     for (const key of allowed) {
       if (body[key] !== undefined) patch[key] = body[key];
