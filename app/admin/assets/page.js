@@ -77,6 +77,30 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
     finally { setUploading(false); }
   }
 
+  async function handleRemoveImage(candidateId) {
+    try {
+      const updated = candidates.filter(c => c.id !== candidateId);
+      const res = await fetch(`/api/events/${event.id}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageCandidates: updated }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) { alert('Remove failed: ' + err.message); }
+  }
+
+  async function handleClearAll() {
+    if (!confirm('Remove all images?')) return;
+    try {
+      const res = await fetch(`/api/events/${event.id}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageCandidates: [] }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) { alert('Clear failed: ' + err.message); }
+  }
+
   async function handleFetchImages() {
     setFetching(true);
     setFetchMeta(null);
@@ -101,6 +125,7 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
         className={`gal-card ${isSelected ? 'gal-card--selected' : ''} ${size === 'large' ? 'gal-card--lg' : ''}`}
         onClick={() => setLightbox(c)}
       >
+        <button className="gal-card-remove" onClick={(e) => { e.stopPropagation(); handleRemoveImage(c.id); }} title="Remove">×</button>
         <div className="gal-card-img">
           <img src={c.url} alt="" loading="lazy" />
           {isSelected && <div className="gal-card-check">✓ Selected</div>}
@@ -156,6 +181,7 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
             {uploading ? '⏳' : '📤'} Upload
             <input type="file" accept="image/*" onChange={handleUpload} hidden />
           </label>
+          {candidates.length > 0 && <button className="gal-btn gal-btn--clear" onClick={handleClearAll}>🗑 Clear All</button>}
           <button className="gal-btn gal-btn--fetch" onClick={handleFetchImages} disabled={fetching}>
             {fetching ? (
               <>
@@ -673,6 +699,8 @@ export default function AssetsPage() {
         .gal-btn:disabled{opacity:.4;cursor:default}
         .gal-btn--fetch{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:#60a5fa}
         .gal-btn--fetch:hover:not(:disabled){background:rgba(96,165,250,.2)}
+        .gal-btn--clear{color:#f87171;border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06)}
+        .gal-btn--clear:hover{background:rgba(248,113,113,.15)}
         .gal-btn--upload{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:#22c55e}
         .gal-spinner{width:12px;height:12px;border:2px solid rgba(96,165,250,.3);border-top-color:#60a5fa;border-radius:50%;animation:gal-spin .6s linear infinite}
         @keyframes gal-spin{to{transform:rotate(360deg)}}
@@ -702,6 +730,9 @@ export default function AssetsPage() {
 
         .gal-card{position:relative;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .15s;background:#0f1323}
         .gal-card:hover{border-color:rgba(78,205,196,.4);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+        .gal-card-remove{position:absolute;top:4px;right:4px;z-index:2;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+        .gal-card:hover .gal-card-remove{opacity:1}
+        .gal-card-remove:hover{background:rgba(248,113,113,.5);color:#fff}
         .gal-card--selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
         .gal-card--lg .gal-card-img{aspect-ratio:3/4}
         .gal-card-img{aspect-ratio:1/1.4;overflow:hidden;position:relative}
