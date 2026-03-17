@@ -513,10 +513,105 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
     } catch (err) { alert('Select failed: ' + err.message); }
   }
 
+  // Image drop/paste zone
+  const [dropImage, setDropImage] = useState(null);
+  const [dropOver, setDropOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const dropRef = useRef(null);
+
+  // Global paste listener
+  useEffect(() => {
+    function onPaste(e) {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) handleDropFile(file);
+          return;
+        }
+      }
+    }
+    document.addEventListener('paste', onPaste);
+    return () => document.removeEventListener('paste', onPaste);
+  }, [event?.id]);
+
+  function handleDropFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => setDropImage(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  function onDragOver(e) { e.preventDefault(); setDropOver(true); }
+  function onDragLeave() { setDropOver(false); }
+  function onDrop(e) {
+    e.preventDefault(); setDropOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file?.type.startsWith('image/')) handleDropFile(file);
+  }
+
+  async function confirmDropImage(cropOffsetX) {
+    if (!dropImage) return;
+    setUploading(true);
+    try {
+      // Upload as base64
+      const blob = await fetch(dropImage).then(r => r.blob());
+      const form = new FormData();
+      form.append('image', blob, 'pasted-image.png');
+      const uploadRes = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
+      if (!uploadRes.ok) throw new Error((await uploadRes.json()).error);
+      const uploadData = await uploadRes.json();
+
+      // Select it immediately
+      const newId = uploadData.candidate?.id;
+      if (newId) {
+        await fetch(`/api/events/${event.id}/select-image`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ candidateId: newId, cropOffsetX }),
+        });
+      }
+      setDropImage(null);
+      onUpdate?.();
+    } catch (err) { alert('Upload failed: ' + err.message); }
+    finally { setUploading(false); }
+  }
+
   return (
     <div className="ep">
       <div className="ep-top">
         <CardPreview event={event} />
+
+        {/* Drop / Paste / Crop zone */}
+        <div className="ep-dropzone-col">
+          {dropImage ? (
+            <div className="ep-crop">
+              <div className="ep-crop-label">Crop & Set Image</div>
+              <div className="ep-crop-box">
+                <img src={dropImage} alt="" />
+              </div>
+              <div className="ep-crop-actions">
+                <button className="ep-crop-btn ep-crop-btn--cancel" onClick={() => setDropImage(null)}>Cancel</button>
+                <button className="ep-crop-btn ep-crop-btn--confirm" onClick={() => confirmDropImage(50)} disabled={uploading}>
+                  {uploading ? '⏳' : '✓ Set as Image'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              ref={dropRef}
+              className={`ep-drop ${dropOver ? 'ep-drop--over' : ''}`}
+              onDragOver={onDragOver}
+              onDragLeave={onDragLeave}
+              onDrop={onDrop}
+            >
+              <div className="ep-drop-icon">📋</div>
+              <div className="ep-drop-text">Paste or drop<br/>image here</div>
+              <div className="ep-drop-hint">Ctrl+V / ⌘V</div>
+            </div>
+          )}
+        </div>
+
         <div className="ep-meta">
           <div className="ep-form">
             {field('title', 'Title')}
@@ -671,6 +766,23 @@ export default function AssetsPage() {
         .ep-top{display:flex;gap:20px;margin-bottom:20px}
         /* Card preview — uses real homepage .card classes from globals.css */
         .card-preview-wrap{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:10px;overflow:hidden;position:relative;background:var(--color-card-bg, #0D1023)}
+
+        /* Drop / Paste zone */
+        .ep-dropzone-col{width:180px;flex-shrink:0;display:flex;flex-direction:column}
+        .ep-drop{flex:1;border:2px dashed rgba(255,255,255,.12);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:default;transition:all .2s;min-height:200px}
+        .ep-drop--over{border-color:var(--accent);background:rgba(78,205,196,.06)}
+        .ep-drop-icon{font-size:32px;opacity:.5}
+        .ep-drop-text{font-size:13px;font-weight:600;color:var(--muted);text-align:center;line-height:1.3}
+        .ep-drop-hint{font-size:11px;color:rgba(255,255,255,.2);font-weight:500}
+        .ep-crop{display:flex;flex-direction:column;gap:10px}
+        .ep-crop-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+        .ep-crop-box{aspect-ratio:1/2;border-radius:10px;overflow:hidden;border:2px solid var(--accent)}
+        .ep-crop-box img{width:100%;height:100%;object-fit:cover}
+        .ep-crop-actions{display:flex;gap:6px}
+        .ep-crop-btn{flex:1;padding:8px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid}
+        .ep-crop-btn--cancel{color:var(--muted);border-color:rgba(255,255,255,.12);background:transparent}
+        .ep-crop-btn--confirm{color:#000;border-color:var(--accent);background:var(--accent)}
+        .ep-crop-btn:disabled{opacity:.4;cursor:default}
         .ep-meta{flex:1;min-width:0}
 
         .ep-form{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
