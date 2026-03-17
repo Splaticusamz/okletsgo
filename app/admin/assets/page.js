@@ -117,6 +117,18 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
     finally { setFetching(false); }
   }
 
+  async function handleSetPrimary(e, candidate) {
+    e.stopPropagation();
+    try {
+      const res = await fetch(`/api/events/${event.id}/select-image`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidateId: candidate.id, cropOffsetX: 50 }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) { alert('Failed: ' + err.message); }
+  }
+
   function ImageCard({ c, size = 'normal' }) {
     const info = sourceInfo(c);
     const isSelected = c.selected;
@@ -128,7 +140,10 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
         <button className="gal-card-remove" onClick={(e) => { e.stopPropagation(); handleRemoveImage(c.id); }} title="Remove">×</button>
         <div className="gal-card-img">
           <img src={c.url} alt="" loading="lazy" />
-          {isSelected && <div className="gal-card-check">✓ Selected</div>}
+          {isSelected && <div className="gal-card-check">✓ Primary</div>}
+        </div>
+        <div className="gal-card-overlay">
+          {!isSelected && <button className="gal-card-primary" onClick={(e) => handleSetPrimary(e, c)}>⭐ Set as Primary</button>}
         </div>
         <div className="gal-card-footer">
           <span className={`gal-tag ${info.cls}`}>{info.icon} {info.tag}</span>
@@ -200,7 +215,7 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
           <div className="gal-drop-crop-actions">
             <button className="ep-crop-btn ep-crop-btn--cancel" onClick={() => setDropImage(null)}>Cancel</button>
             <button className="ep-crop-btn ep-crop-btn--confirm" onClick={onConfirmDrop} disabled={dropUploading}>
-              {dropUploading ? '⏳' : '✓ Set as Image'}
+              {dropUploading ? '⏳' : '✓ Add to Gallery'}
             </button>
           </div>
         </div>
@@ -295,10 +310,10 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
               })()}
               <div className="gal-lightbox-actions">
                 <button className="gal-lightbox-btn gal-lightbox-btn--select" onClick={() => { onSelectImage?.(lightbox); setLightbox(null); }}>
-                  ✓ Select & Crop
+                  ✂️ Crop
                 </button>
                 <button className="gal-lightbox-btn gal-lightbox-btn--cancel" onClick={() => setLightbox(null)}>
-                  Cancel
+                  Close
                 </button>
               </div>
             </div>
@@ -596,16 +611,6 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
       form.append('image', blob, 'pasted-image.jpg');
       const uploadRes = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
       if (!uploadRes.ok) throw new Error((await uploadRes.json()).error);
-      const uploadData = await uploadRes.json();
-
-      // Select it immediately
-      const newId = uploadData.candidate?.id;
-      if (newId) {
-        await fetch(`/api/events/${event.id}/select-image`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ candidateId: newId, cropOffsetX }),
-        });
-      }
       setDropImage(null);
       onUpdate?.();
     } catch (err) { alert('Upload failed: ' + err.message); }
@@ -858,6 +863,10 @@ export default function AssetsPage() {
         .gal-card-remove{position:absolute;top:4px;right:4px;z-index:2;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
         .gal-card:hover .gal-card-remove{opacity:1}
         .gal-card-remove:hover{background:rgba(248,113,113,.5);color:#fff}
+        .gal-card-overlay{position:absolute;bottom:24px;left:0;right:0;display:flex;justify-content:center;opacity:0;transition:opacity .15s;z-index:2}
+        .gal-card:hover .gal-card-overlay{opacity:1}
+        .gal-card-primary{padding:5px 10px;border-radius:6px;border:none;background:rgba(78,205,196,.9);color:#000;font-size:11px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px)}
+        .gal-card-primary:hover{background:var(--accent)}
         .gal-card--selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
         .gal-card--lg .gal-card-img{aspect-ratio:3/4}
         .gal-card-img{aspect-ratio:1/1.4;overflow:hidden;position:relative}
