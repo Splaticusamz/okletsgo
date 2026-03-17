@@ -536,9 +536,14 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
           <button className="ep-save" onClick={save} disabled={saving}>{saving ? 'Saving…' : '💾 Save'}</button>
           {error && <div className="ep-error">⚠ {error}</div>}
 
-          <button className="ep-publish" onClick={handleSendToPublish} disabled={sending}>
-            {sending ? '⏳ Sending…' : '📅 Send to Publish Calendar'}
-          </button>
+          {(() => {
+            const hasImage = event.imageCandidates?.some(c => c.selected) || event.selectedImageCandidate?.url;
+            return (
+              <button className="ep-publish" onClick={handleSendToPublish} disabled={sending || !hasImage}>
+                {sending ? '⏳ Sending…' : !hasImage ? '⚠ Select an image first' : '📅 Send to Publish Calendar'}
+              </button>
+            );
+          })()}
         </div>
       </div>
 
