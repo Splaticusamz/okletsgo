@@ -50,7 +50,7 @@ function sourceInfo(candidate) {
 
 /* ── Image Gallery (redesigned) ── */
 
-function ImageGallery({ event, onUpdate, onSelectImage }) {
+function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage, dropOver, onDragOver, onDragLeave, onDropFile, onConfirmDrop, uploading: dropUploading }) {
   const [uploading, setUploading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [fetchMeta, setFetchMeta] = useState(null);
@@ -192,6 +192,26 @@ function ImageGallery({ event, onUpdate, onSelectImage }) {
           </button>
         </div>
       </div>
+
+      {/* Drop / Paste zone */}
+      {dropImage ? (
+        <div className="gal-drop-crop">
+          <div className="ep-crop-box"><img src={dropImage} alt="" /></div>
+          <div className="gal-drop-crop-actions">
+            <button className="ep-crop-btn ep-crop-btn--cancel" onClick={() => setDropImage(null)}>Cancel</button>
+            <button className="ep-crop-btn ep-crop-btn--confirm" onClick={onConfirmDrop} disabled={dropUploading}>
+              {dropUploading ? '⏳' : '✓ Set as Image'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`gal-drop ${dropOver ? 'gal-drop--over' : ''}`}
+          onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDropFile}
+        >
+          <span className="gal-drop-text">📋 Paste (Ctrl+V) or drop image here</span>
+        </div>
+      )}
 
       {/* Fetch metadata — what queries were used */}
       {fetchMeta && (
@@ -583,37 +603,6 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
     <div className="ep">
       <div className="ep-top">
         <CardPreview event={event} />
-
-        {/* Drop / Paste / Crop zone */}
-        <div className="ep-dropzone-col">
-          {dropImage ? (
-            <div className="ep-crop">
-              <div className="ep-crop-label">Crop & Set Image</div>
-              <div className="ep-crop-box">
-                <img src={dropImage} alt="" />
-              </div>
-              <div className="ep-crop-actions">
-                <button className="ep-crop-btn ep-crop-btn--cancel" onClick={() => setDropImage(null)}>Cancel</button>
-                <button className="ep-crop-btn ep-crop-btn--confirm" onClick={() => confirmDropImage(50)} disabled={uploading}>
-                  {uploading ? '⏳' : '✓ Set as Image'}
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div
-              ref={dropRef}
-              className={`ep-drop ${dropOver ? 'ep-drop--over' : ''}`}
-              onDragOver={onDragOver}
-              onDragLeave={onDragLeave}
-              onDrop={onDrop}
-            >
-              <div className="ep-drop-icon">📋</div>
-              <div className="ep-drop-text">Paste or drop<br/>image here</div>
-              <div className="ep-drop-hint">Ctrl+V / ⌘V</div>
-            </div>
-          )}
-        </div>
-
         <div className="ep-meta">
           <div className="ep-form">
             {field('title', 'Title')}
@@ -644,7 +633,11 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
         </div>
       </div>
 
-      <ImageGallery event={event} onUpdate={onUpdate} onSelectImage={handleSelectImage} />
+      <ImageGallery event={event} onUpdate={onUpdate} onSelectImage={handleSelectImage}
+        dropImage={dropImage} setDropImage={setDropImage} dropOver={dropOver}
+        onDragOver={onDragOver} onDragLeave={onDragLeave} onDropFile={onDrop}
+        onConfirmDrop={() => confirmDropImage(50)} uploading={uploading}
+      />
       {cropCandidate && <CropModal candidate={cropCandidate} onSelect={confirmSelectImage} onClose={() => setCropCandidate(null)} />}
     </div>
   );
@@ -769,13 +762,7 @@ export default function AssetsPage() {
         /* Card preview — uses real homepage .card classes from globals.css */
         .card-preview-wrap{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:10px;overflow:hidden;position:relative;background:var(--color-card-bg, #0D1023)}
 
-        /* Drop / Paste zone */
-        .ep-dropzone-col{width:180px;flex-shrink:0;display:flex;flex-direction:column}
-        .ep-drop{flex:1;border:2px dashed rgba(255,255,255,.12);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:default;transition:all .2s;min-height:200px}
-        .ep-drop--over{border-color:var(--accent);background:rgba(78,205,196,.06)}
-        .ep-drop-icon{font-size:32px;opacity:.5}
-        .ep-drop-text{font-size:13px;font-weight:600;color:var(--muted);text-align:center;line-height:1.3}
-        .ep-drop-hint{font-size:11px;color:rgba(255,255,255,.2);font-weight:500}
+
         .ep-crop{display:flex;flex-direction:column;gap:10px}
         .ep-crop-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
         .ep-crop-box{aspect-ratio:1/2;border-radius:10px;overflow:hidden;border:2px solid var(--accent)}
@@ -818,6 +805,12 @@ export default function AssetsPage() {
         .gal-btn:disabled{opacity:.4;cursor:default}
         .gal-btn--fetch{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:#60a5fa}
         .gal-btn--fetch:hover:not(:disabled){background:rgba(96,165,250,.2)}
+        .gal-drop{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:default;transition:background .2s}
+        .gal-drop--over{background:rgba(78,205,196,.06)}
+        .gal-drop-text{font-size:12px;color:var(--muted);font-weight:500}
+        .gal-drop-crop{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+        .gal-drop-crop .ep-crop-box{width:100px;aspect-ratio:1/2;flex-shrink:0}
+        .gal-drop-crop-actions{display:flex;flex-direction:column;gap:6px}
         .gal-btn--clear{color:#f87171;border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06)}
         .gal-btn--clear:hover{background:rgba(248,113,113,.15)}
         .gal-btn--upload{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:#22c55e}
