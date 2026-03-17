@@ -5,13 +5,10 @@ import { usePathname } from 'next/navigation';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/sources', label: 'Sources' },
   { href: '/admin/candidates', label: 'From Discord' },
   { href: '/admin/manual', label: 'Manual' },
   { href: '/admin/assets', label: 'Assets' },
   { href: '/admin/publish', label: 'Publish' },
-  { href: '/admin/newsletter', label: 'Newsletter' },
-  { href: '/admin/archives', label: 'Archives' },
   { href: '/admin/guide', label: 'Guide' },
 ];
 
