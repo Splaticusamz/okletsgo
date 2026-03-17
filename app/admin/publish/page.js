@@ -16,7 +16,7 @@ function ModeTag({ mode }) {
 }
 
 /* ── Calendar Slot ── */
-function CalendarSlot({ day, mode, event, onDrop, onRemove, disabled, onDragStart: onDragStartCb }) {
+function CalendarSlot({ day, mode, event, onDrop, onRemove, disabled, onDragStart: onDragStartCb, onRequeue }) {
   const [over, setOver] = useState(false);
 
   function handleDragOver(e) {
@@ -57,6 +57,7 @@ function CalendarSlot({ day, mode, event, onDrop, onRemove, disabled, onDragStar
             <div className="cs-title">{event.title}</div>
             <div className="cs-venue">{event.venue}</div>
           </div>
+          <button className="cs-requeue" onClick={(e) => { e.stopPropagation(); onRequeue?.(event.id); onRemove(day, mode); }} title="Send back to Assets">↩</button>
           <button className="cs-remove" onClick={() => onRemove(day, mode)} title="Remove">×</button>
         </div>
       ) : (
@@ -67,7 +68,7 @@ function CalendarSlot({ day, mode, event, onDrop, onRemove, disabled, onDragStar
 }
 
 /* ── Draggable Event Card ── */
-function DraggableEvent({ event, onDragStart: onDragStartCb }) {
+function DraggableEvent({ event, onDragStart: onDragStartCb, onRequeue }) {
   function handleDragStart(e) {
     e.dataTransfer.setData('text/plain', event.id);
     e.dataTransfer.setData('application/x-event-mode', event.mode);
@@ -77,7 +78,10 @@ function DraggableEvent({ event, onDragStart: onDragStartCb }) {
 
   return (
     <div className="de" draggable onDragStart={handleDragStart}>
-      <div className="de-title">{event.title}</div>
+      <div className="de-top">
+        <div className="de-title">{event.title}</div>
+        <button className="de-requeue" onClick={(e) => { e.stopPropagation(); onRequeue?.(event.id); }} title="Send back to Assets">↩</button>
+      </div>
       <div className="de-meta">
         <ModeTag mode={event.mode} />
         <span className="de-city">{event.city}</span>
@@ -226,6 +230,18 @@ export default function PublishPage() {
   // Count filled slots
   const filledCount = Object.keys(assignments).length;
 
+  async function handleRequeue(eventId) {
+    try {
+      const res = await fetch(`/api/events/${eventId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'rollback', reviewedBy: 'admin', notes: 'Sent back to assets' }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      await loadEvents();
+    } catch (err) { alert('Requeue failed: ' + err.message); }
+  }
+
   function handleDrop(day, mode, eventId, fromSlot) {
     // Mode restriction: night events only in night slots
     const evt = allEvents.find(e => e.id === eventId);
@@ -340,6 +356,7 @@ export default function PublishPage() {
                           onRemove={handleRemove}
                           disabled={slotDisabled}
                           onDragStart={(m) => setDraggingMode(m)}
+                          onRequeue={handleRequeue}
                         />
                       );
                     })}
@@ -356,7 +373,7 @@ export default function PublishPage() {
                 {unassigned.length === 0 && approved.length > 0 && (
                   <div className="pool-empty">All events placed! 🎉</div>
                 )}
-                {unassigned.map(e => <DraggableEvent key={e.id} event={e} onDragStart={(m) => setDraggingMode(m)} />)}
+                {unassigned.map(e => <DraggableEvent key={e.id} event={e} onDragStart={(m) => setDraggingMode(m)} onRequeue={handleRequeue} />)}
               </div>
             </div>
 
@@ -429,6 +446,9 @@ export default function PublishPage() {
         .cs-venue{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .cs-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
         .cs-card:hover .cs-remove{opacity:1}
+        .cs-requeue{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+        .cs-card:hover .cs-requeue{opacity:1}
+        .cs-requeue:hover{background:rgba(96,165,250,.5);color:#fff}
         .cs-remove:hover{background:rgba(248,113,113,.5);color:#fff}
 
         /* Pool sidebar */
@@ -440,7 +460,10 @@ export default function PublishPage() {
         .de{padding:10px 14px;border-bottom:1px solid var(--border);cursor:grab;transition:background .12s}
         .de:hover{background:rgba(255,255,255,.04)}
         .de:active{cursor:grabbing;background:rgba(78,205,196,.08)}
-        .de-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+        .de-top{display:flex;align-items:center;gap:4px;margin-bottom:3px}
+        .de-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+        .de-requeue{width:20px;height:20px;border-radius:50%;border:none;background:transparent;color:rgba(255,255,255,.25);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+        .de-requeue:hover{background:rgba(96,165,250,.15);color:#60a5fa}
         .de-meta{display:flex;gap:4px;align-items:center}
         .de-city{font-size:10px;color:var(--muted)}
         .mt{font-size:9px;font-weight:700;padding:2px 5px;border-radius:999px;border:1px solid;text-transform:lowercase}
