@@ -2,8 +2,6 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, initDb, flushDb } from '../../../../../lib/db.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
-import fs from 'fs/promises';
-import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,20 +30,15 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: 'No image file provided' }, { status: 400 });
     }
 
+    // Convert to base64 data URL (Vercel serverless has read-only filesystem)
     const buffer = Buffer.from(await file.arrayBuffer());
-    const ext = (file.name || 'upload.jpg').split('.').pop() || 'jpg';
+    const mimeType = file.type || 'image/jpeg';
+    const dataUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+
     const candidateId = `${id}-upload-${Date.now()}`;
-    const filename = `${candidateId}.${ext}`;
-
-    const candidateDir = path.join(process.cwd(), 'public', 'assets', 'candidates', id);
-    await fs.mkdir(candidateDir, { recursive: true });
-    const filePath = path.join(candidateDir, filename);
-    await fs.writeFile(filePath, buffer);
-
-    const url = `/assets/candidates/${id}/${filename}`;
     const newCandidate = {
       id: candidateId,
-      url,
+      url: dataUrl,
       source: 'upload',
       provenance: 'upload',
       extractorId: 'manual-upload',
@@ -56,7 +49,7 @@ export async function POST(request, { params }) {
     const updated = updateEvent(id, { imageCandidates: [...existing, newCandidate] });
     await flushDb();
 
-    return NextResponse.json({ ok: true, candidate: newCandidate, candidates: updated.imageCandidates });
+    return NextResponse.json({ ok: true, candidate: { ...newCandidate, url: '(stored)' }, candidates: updated.imageCandidates });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
