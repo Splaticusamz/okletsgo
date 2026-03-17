@@ -331,60 +331,71 @@ function QueueItem({ event, active, onClick, onDelete }) {
   );
 }
 
-/* ── Homepage Card Preview (exact replica) ── */
+/* ── Homepage Card Preview (uses real homepage CSS classes) ── */
 
 function CardPreview({ event }) {
   const videoRef = useRef(null);
   const [videoReady, setVideoReady] = useState(false);
+  const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
   const selectedImage = event.selectedImageCandidate?.url || event.imageCandidates?.find(c => c.selected)?.url;
   const asset = event.latestAsset;
   const imgSrc = selectedImage || asset?.portraitUrl || '';
   const videoSrc = asset?.animationUrl || null;
   const bgUrl = imgSrc ? (imgSrc.startsWith('http') ? imgSrc : '/' + imgSrc.replace(/^\//, '')) : '';
 
-  // Compute day name from event date
   const dayName = (() => {
     if (!event.date) return 'MONDAY';
     const DAYS = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     if (DAYS.includes(event.date)) return event.date;
-    try {
-      const d = new Date(event.date + 'T12:00:00Z');
-      return DAYS[d.getUTCDay()] || 'MONDAY';
-    } catch { return 'MONDAY'; }
+    try { const d = new Date(event.date + 'T12:00:00Z'); return DAYS[d.getUTCDay()] || 'MONDAY'; } catch { return 'MONDAY'; }
   })();
+
+  const mode = event.mode || 'day';
+  const tooltipText = mode === 'night'
+    ? `🌙 ${event.startTime || ''} · ${event.venue || ''}`
+    : `☀️ ${event.startTime || ''} · ${event.venue || ''}`;
 
   useEffect(() => {
     if (!videoSrc || !videoRef.current) return;
     const v = videoRef.current;
     const onReady = () => setVideoReady(true);
     v.addEventListener('canplay', onReady, { once: true });
-    v.preload = 'auto';
-    v.load();
+    v.preload = 'auto'; v.load();
     return () => v.removeEventListener('canplay', onReady);
   }, [videoSrc]);
 
-  function handleMouseEnter() {
+  function handleMouseEnter(e) {
     if (videoReady && videoRef.current) videoRef.current.play().catch(() => {});
+    setTooltip({ visible: true, text: tooltipText, x: e.clientX + 12, y: e.clientY + 12 });
+  }
+  function handleMouseMove(e) {
+    setTooltip(prev => ({ ...prev, x: e.clientX + 12, y: e.clientY + 12 }));
   }
   function handleMouseLeave() {
     if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
-  }
-
-  if (!bgUrl) {
-    return <div className="hp-card hp-card--empty"><div className="hp-card-empty-text">Select an image below</div></div>;
+    setTooltip(prev => ({ ...prev, visible: false }));
   }
 
   return (
-    <div className="hp-card" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <div className="hp-card-bg" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${bgUrl}')` }}>
-        {videoSrc && <video ref={videoRef} className={`hp-card-video ${videoReady ? 'is-ready' : ''}`} src={videoSrc} muted loop playsInline preload="none" />}
+    <>
+      <div className="card-preview-wrap" onMouseEnter={handleMouseEnter} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+        <div className="card" style={{ height: '100%' }}>
+          <div className="card-img-strip" style={{ height: '100%', position: 'absolute', inset: 0 }}>
+            <div className="card-img" style={bgUrl ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${bgUrl}')`, height: '100%' } : { height: '100%' }}>
+              {videoSrc && <video ref={videoRef} className={`card-video ${videoReady ? 'is-ready' : ''}`} src={videoSrc} muted loop playsInline preload="none" />}
+            </div>
+          </div>
+          <div className="card-content-strip" style={{ height: '100%', position: 'absolute', inset: 0 }}>
+            <a href="#" className="card-content" onClick={e => e.preventDefault()} style={{ height: '100%', justifyContent: 'flex-end' }}>
+              <span className="card-day">{dayName}</span>
+              <span className="card-venue">{event.title || event.venue || ''}</span>
+              <span className="card-city">{event.city || ''}</span>
+            </a>
+          </div>
+        </div>
       </div>
-      <div className="hp-card-content">
-        <span className="hp-card-day">{dayName}</span>
-        <span className="hp-card-venue">{event.title || event.venue || ''}</span>
-        <span className="hp-card-city">{event.city || ''}</span>
-      </div>
-    </div>
+      <div className={`tooltip ${tooltip.visible ? 'visible' : ''}`} style={{ left: tooltip.x, top: tooltip.y, position: 'fixed', zIndex: 9999 }}>{tooltip.text}</div>
+    </>
   );
 }
 
@@ -627,20 +638,8 @@ export default function AssetsPage() {
         .ep-empty{flex:1;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);min-height:400px}
 
         .ep-top{display:flex;gap:20px;margin-bottom:20px}
-        /* Homepage card replica */
-        .hp-card{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;transition:transform .2s}
-        .hp-card:hover{transform:scale(1.02)}
-        .hp-card--empty{background:#0f1323;border:2px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center}
-        .hp-card-empty-text{color:rgba(255,255,255,.3);font-size:13px}
-        .hp-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .3s}
-        .hp-card:hover .hp-card-bg{transform:scale(1.05)}
-        .hp-card-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
-        .hp-card-video.is-ready{opacity:0}
-        .hp-card:hover .hp-card-video.is-ready{opacity:1}
-        .hp-card-content{position:absolute;bottom:0;left:0;right:0;padding:16px 12px;display:flex;flex-direction:column;gap:2px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
-        .hp-card-day{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.6)}
-        .hp-card-venue{font-size:16px;font-weight:800;color:#fff;line-height:1.1}
-        .hp-card-city{font-size:11px;color:rgba(255,255,255,.5)}
+        /* Card preview — uses real homepage .card classes from globals.css */
+        .card-preview-wrap{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:10px;overflow:hidden;position:relative;background:var(--color-card-bg, #0D1023)}
         .ep-meta{flex:1;min-width:0}
 
         .ep-form{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
