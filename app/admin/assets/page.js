@@ -111,18 +111,22 @@ function ScrapePanel({ event, onUpdate }) {
 function UploadPanel({ event, onUpdate }) {
   const [uploading, setUploading] = useState(false);
   const [dropOver, setDropOver] = useState(false);
+  const eventIdRef = useRef(event?.id);
+  const onUpdateRef = useRef(onUpdate);
+  eventIdRef.current = event?.id;
+  onUpdateRef.current = onUpdate;
 
-  async function uploadFile(file) {
+  const uploadFile = useCallback(async (file) => {
     setUploading(true);
     try {
       const form = new FormData();
       form.append('image', file);
-      const res = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
+      const res = await fetch(`/api/events/${eventIdRef.current}/upload-image`, { method: 'POST', body: form });
       if (!res.ok) throw new Error((await res.json()).error);
-      onUpdate?.();
+      onUpdateRef.current?.();
     } catch (err) { alert('Upload failed: ' + err.message); }
     finally { setUploading(false); }
-  }
+  }, []);
 
   function onDrop(e) {
     e.preventDefault();
@@ -153,7 +157,7 @@ function UploadPanel({ event, onUpdate }) {
     }
     document.addEventListener('paste', onPaste);
     return () => document.removeEventListener('paste', onPaste);
-  }, [event?.id]);
+  }, [uploadFile]);
 
   return (
     <div className="src-panel">
@@ -657,24 +661,42 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
     setSourceTab(null);
   }, [event?.id]);
 
+  // Refs for keyboard handler (to avoid stale closures)
+  const selectedCandidateRef = useRef(null);
+  selectedCandidateRef.current = selectedCandidate;
+  const checkedIdsRef = useRef(checkedIds);
+  checkedIdsRef.current = checkedIds;
+
   // Keyboard shortcuts
   useEffect(() => {
     if (!event) return;
     function onKey(e) {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
-      if (e.key === 'u' || e.key === 'U') { if (selectedCandidate) document.querySelector('[data-action="upscale"]')?.click(); }
-      if (e.key === 'c' || e.key === 'C') { if (selectedCandidate) setCropCandidate(selectedCandidate); }
-      if (e.key === 'a' || e.key === 'A') { if (selectedCandidate) document.querySelector('[data-action="animate"]')?.click(); }
-      if (e.key === ' ') { e.preventDefault(); if (selectedCandidate) setLightbox(selectedCandidate); }
+      const sc = selectedCandidateRef.current;
+      if (e.key === 'u' || e.key === 'U') { if (sc) document.querySelector('[data-action="upscale"]')?.click(); }
+      if (e.key === 'c' || e.key === 'C') { if (sc) setCropCandidate(sc); }
+      if (e.key === 'a' || e.key === 'A') { if (sc) document.querySelector('[data-action="animate"]')?.click(); }
+      if (e.key === ' ') { e.preventDefault(); if (sc) setLightbox(sc); }
       if (e.key === 'Delete' || e.key === 'Backspace') {
-        if (checkedIds.size > 0) handleBatchDelete();
-        else if (selectedCandidate) handleRemoveImage(selectedCandidate.id);
+        // Handled via refs below
       }
       if (e.key === 'Escape') { setSelectedId(null); setCheckedIds(new Set()); setLightbox(null); setCropCandidate(null); }
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [event?.id, selectedCandidate, checkedIds]);
+  }, [event?.id]);
+
+  // Handle crop click from action panel
+  useEffect(() => {
+    function handleCropClick(e) {
+      const sc = selectedCandidateRef.current;
+      if (e.target.closest('[data-action="crop"]') && sc) {
+        setCropCandidate(sc);
+      }
+    }
+    document.addEventListener('click', handleCropClick);
+    return () => document.removeEventListener('click', handleCropClick);
+  }, []);
 
   if (!event) return <div className="ep-empty">← Select an event from the queue</div>;
 
@@ -809,17 +831,6 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
       onUpdate?.();
     } catch (err) { alert('Crop failed: ' + err.message); }
   }
-
-  // Handle crop click from action panel
-  useEffect(() => {
-    function handleCropClick(e) {
-      if (e.target.closest('[data-action="crop"]') && selectedCandidate) {
-        setCropCandidate(selectedCandidate);
-      }
-    }
-    document.addEventListener('click', handleCropClick);
-    return () => document.removeEventListener('click', handleCropClick);
-  }, [selectedCandidate]);
 
   const hasImage = event.imageCandidates?.some(c => c.selected) || event.selectedImageCandidate?.url;
   const showCheckboxes = checkedIds.size > 0;
