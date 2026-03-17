@@ -48,14 +48,57 @@ function sourceInfo(candidate) {
   return { tag: 'Image', icon: '📷', cls: '', desc: 'Unknown source' };
 }
 
-/* ── Image Gallery (redesigned) ── */
+/* ── Generate panel presets ── */
 
-function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage, dropOver, onDragOver, onDragLeave, onDropFile, onConfirmDrop, uploading: dropUploading }) {
+const GENERATE_PRESETS = [
+  { id: 'event-promo', label: 'Event Promo', template: (e) => `Create a vibrant promotional image for "${e.title || 'an event'}" at ${e.venue || 'a venue'}${e.city ? ` in ${e.city}` : ''}. Eye-catching, modern event poster style with bold colors and dynamic composition. No text overlay.` },
+  { id: 'venue-atmosphere', label: 'Venue Atmosphere', template: (e) => `Atmospheric photo of ${e.venue || 'a social venue'}${e.city ? ` in ${e.city}` : ''}. Interior ambiance, warm lighting, inviting social space. Professional photography style, editorial quality.` },
+  { id: 'abstract-artistic', label: 'Abstract / Artistic', template: (e) => `Abstract artistic composition inspired by "${e.title || 'a social event'}". Modern, colorful, creative visual art. No text, pure visual design. Suitable as event card background.` },
+  { id: 'custom', label: 'Custom', template: () => '' },
+];
+
+/* ── Pipeline status dots ── */
+
+function PipelineDots({ candidate, event }) {
+  const hasOriginal = true;
+  const hasUpscaled = !!(candidate.upscaled || candidate.upscaledId);
+  const hasCropped = !!candidate.cropped;
+  const hasAnimated = !!(candidate.selected && (event?.latestAsset?.animationUrl || event?.latestAsset?.animationStatus === 'ready'));
+  const dots = [
+    { label: 'Original', done: hasOriginal },
+    { label: 'Upscaled', done: hasUpscaled },
+    { label: 'Cropped', done: hasCropped },
+    { label: 'Animated', done: hasAnimated },
+  ];
+  return (
+    <div className="pipeline-dots">
+      {dots.map((d, i) => (
+        <span key={i} className={`pipeline-dot ${d.done ? 'pipeline-dot--done' : ''}`} title={d.label} />
+      ))}
+    </div>
+  );
+}
+
+/* ── Image Gallery (redesigned with source tabs) ── */
+
+function ImageGallery({ event, onUpdate, onSelectImage, onFocusImage, focusedImage, dropImage, setDropImage, dropOver, onDragOver, onDragLeave, onDropFile, onConfirmDrop, uploading: dropUploading }) {
   const [uploading, setUploading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [fetchMeta, setFetchMeta] = useState(null);
   const [lightbox, setLightbox] = useState(null);
+  const [sourceTab, setSourceTab] = useState(null); // null | 'scrape' | 'upload' | 'generate'
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [lastClickedIdx, setLastClickedIdx] = useState(null);
+  const [batchDeleting, setBatchDeleting] = useState(false);
+  const [batchUpscaling, setBatchUpscaling] = useState(false);
+
+  // Generate panel state
+  const [genPrompt, setGenPrompt] = useState('');
+  const [genPreset, setGenPreset] = useState('event-promo');
+  const [generating, setGenerating] = useState(false);
+
   const candidates = event.imageCandidates ?? [];
+  const flatList = candidates; // for shift+click indexing
 
   const venueImgs = candidates.filter(c => c.category === 'venue');
   const eventImgs = candidates.filter(c => c.category === 'event');
@@ -63,18 +106,28 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
   const otherImgs = candidates.filter(c => !c.category);
   const hasCategorized = venueImgs.length > 0 || eventImgs.length > 0 || activityImgs.length > 0;
 
+  // Prefill generate prompt when preset or event changes
+  useEffect(() => {
+    if (genPreset !== 'custom') {
+      const preset = GENERATE_PRESETS.find(p => p.id === genPreset);
+      if (preset) setGenPrompt(preset.template(event));
+    }
+  }, [genPreset, event?.id]);
+
   async function handleUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
     setUploading(true);
     try {
-      const form = new FormData();
-      form.append('image', file);
-      const res = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
-      if (!res.ok) throw new Error((await res.json()).error);
+      for (const file of files) {
+        const form = new FormData();
+        form.append('image', file);
+        const res = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
+        if (!res.ok) throw new Error((await res.json()).error);
+      }
       onUpdate?.();
     } catch (err) { alert('Upload failed: ' + err.message); }
-    finally { setUploading(false); }
+    finally { setUploading(false); e.target.value = ''; }
   }
 
   async function handleRemoveImage(candidateId) {
@@ -85,8 +138,46 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
         body: JSON.stringify({ imageCandidates: updated }),
       });
       if (!res.ok) throw new Error((await res.json()).error);
+      setSelectedIds(prev => { const n = new Set(prev); n.delete(candidateId); return n; });
+      if (focusedImage?.id === candidateId) onFocusImage?.(null);
       onUpdate?.();
     } catch (err) { alert('Remove failed: ' + err.message); }
+  }
+
+  async function handleBatchDelete() {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Delete ${selectedIds.size} selected image(s)?`)) return;
+    setBatchDeleting(true);
+    try {
+      const updated = candidates.filter(c => !selectedIds.has(c.id));
+      const res = await fetch(`/api/events/${event.id}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageCandidates: updated }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      setSelectedIds(new Set());
+      if (focusedImage && selectedIds.has(focusedImage.id)) onFocusImage?.(null);
+      onUpdate?.();
+    } catch (err) { alert('Batch delete failed: ' + err.message); }
+    finally { setBatchDeleting(false); }
+  }
+
+  async function handleBatchUpscale() {
+    if (selectedIds.size === 0) return;
+    setBatchUpscaling(true);
+    try {
+      for (const cid of selectedIds) {
+        const c = candidates.find(x => x.id === cid);
+        if (!c || c.upscaled) continue;
+        await fetch('/api/assets/upscale', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageUrl: c.url, scale: 2, eventId: event.id, candidateId: c.id }),
+        });
+      }
+      setSelectedIds(new Set());
+      onUpdate?.();
+    } catch (err) { alert('Batch upscale failed: ' + err.message); }
+    finally { setBatchUpscaling(false); }
   }
 
   async function handleClearAll() {
@@ -97,6 +188,8 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
         body: JSON.stringify({ imageCandidates: [] }),
       });
       if (!res.ok) throw new Error((await res.json()).error);
+      setSelectedIds(new Set());
+      onFocusImage?.(null);
       onUpdate?.();
     } catch (err) { alert('Clear failed: ' + err.message); }
   }
@@ -117,6 +210,20 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
     finally { setFetching(false); }
   }
 
+  async function handleGenerate() {
+    if (!genPrompt.trim()) return;
+    setGenerating(true);
+    try {
+      const res = await fetch('/api/assets/generate-image', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: genPrompt.trim(), presetId: genPreset, eventId: event.id }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) { alert('Generate failed: ' + err.message); }
+    finally { setGenerating(false); }
+  }
+
   async function handleSetPrimary(e, candidate) {
     e.stopPropagation();
     try {
@@ -126,18 +233,59 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
       });
       if (!res.ok) throw new Error((await res.json()).error);
       onUpdate?.();
-      onSelectImage?.(null); // clear any crop state
+      onSelectImage?.(null);
     } catch (err) { alert('Failed: ' + err.message); }
+  }
+
+  function handleCardClick(e, c) {
+    const idx = flatList.findIndex(x => x.id === c.id);
+
+    // Checkbox click or ctrl/cmd click = toggle multi-select
+    if (e.target.closest('.gal-card-checkbox') || e.ctrlKey || e.metaKey) {
+      e.stopPropagation();
+      setSelectedIds(prev => {
+        const next = new Set(prev);
+        if (next.has(c.id)) next.delete(c.id);
+        else next.add(c.id);
+        return next;
+      });
+      setLastClickedIdx(idx);
+      return;
+    }
+
+    // Shift+click = range select
+    if (e.shiftKey && lastClickedIdx !== null) {
+      e.stopPropagation();
+      const start = Math.min(lastClickedIdx, idx);
+      const end = Math.max(lastClickedIdx, idx);
+      setSelectedIds(prev => {
+        const next = new Set(prev);
+        for (let i = start; i <= end; i++) {
+          next.add(flatList[i].id);
+        }
+        return next;
+      });
+      return;
+    }
+
+    // Regular click = focus single image (for action panel)
+    setLastClickedIdx(idx);
+    onFocusImage?.(c);
   }
 
   function ImageCard({ c, size = 'normal' }) {
     const info = sourceInfo(c);
     const isSelected = c.selected;
+    const isChecked = selectedIds.has(c.id);
+    const isFocused = focusedImage?.id === c.id;
     return (
       <div
-        className={`gal-card ${isSelected ? 'gal-card--selected' : ''} ${size === 'large' ? 'gal-card--lg' : ''}`}
-        onClick={() => setLightbox(c)}
+        className={`gal-card ${isSelected ? 'gal-card--selected' : ''} ${isFocused ? 'gal-card--focused' : ''} ${isChecked ? 'gal-card--checked' : ''} ${size === 'large' ? 'gal-card--lg' : ''}`}
+        onClick={(e) => handleCardClick(e, c)}
       >
+        <div className="gal-card-checkbox" onClick={(e) => { e.stopPropagation(); handleCardClick({ ...e, target: { closest: () => true }, ctrlKey: false, metaKey: false, shiftKey: false, stopPropagation: () => {} }, c); }}>
+          <span className={`gal-checkbox ${isChecked ? 'gal-checkbox--on' : ''}`}>{isChecked ? '✓' : ''}</span>
+        </div>
         <button className="gal-card-remove" onClick={(e) => { e.stopPropagation(); handleRemoveImage(c.id); }} title="Remove">×</button>
         <div className="gal-card-img">
           <img src={c.url} alt="" loading="lazy" />
@@ -149,11 +297,12 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
         <div className="gal-card-footer">
           <span className={`gal-tag ${info.cls}`}>{info.icon} {info.tag}</span>
         </div>
+        <PipelineDots candidate={c} event={event} />
       </div>
     );
   }
 
-  function CategorySection({ label, icon, description, images, accentColor }) {
+  function CategorySection({ label, icon, description, images }) {
     if (images.length === 0) return null;
     return (
       <div className="gal-section">
@@ -186,71 +335,153 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
 
   return (
     <div className="gal">
-      {/* Header */}
-      <div className="gal-header">
-        <div className="gal-header-left">
+      {/* Source Tabs */}
+      <div className="gal-tabs">
+        <div className="gal-tabs-left">
           <span className="gal-header-title">Image Gallery</span>
           <span className="gal-header-count">{candidates.length} image{candidates.length !== 1 ? 's' : ''}</span>
         </div>
-        <div className="gal-header-actions">
-          <label className="gal-btn gal-btn--upload">
-            {uploading ? '⏳' : '📤'} Upload
-            <input type="file" accept="image/*" onChange={handleUpload} hidden />
-          </label>
-          {candidates.length > 0 && <button className="gal-btn gal-btn--clear" onClick={handleClearAll}>🗑 Clear All</button>}
-          <button className="gal-btn gal-btn--fetch" onClick={handleFetchImages} disabled={fetching}>
-            {fetching ? (
-              <>
-                <span className="gal-spinner" />
-                Searching…
-              </>
-            ) : '🔎 Find Images'}
+        <div className="gal-tabs-btns">
+          <button className={`gal-tab ${sourceTab === 'scrape' ? 'gal-tab--active' : ''}`} onClick={() => setSourceTab(sourceTab === 'scrape' ? null : 'scrape')}>
+            🔎 Scrape
           </button>
+          <button className={`gal-tab ${sourceTab === 'upload' ? 'gal-tab--active' : ''}`} onClick={() => setSourceTab(sourceTab === 'upload' ? null : 'upload')}>
+            📤 Upload
+          </button>
+          <button className={`gal-tab ${sourceTab === 'generate' ? 'gal-tab--active' : ''}`} onClick={() => setSourceTab(sourceTab === 'generate' ? null : 'generate')}>
+            🤖 Generate
+          </button>
+          {candidates.length > 0 && <button className="gal-btn gal-btn--clear" onClick={handleClearAll}>🗑 Clear All</button>}
         </div>
       </div>
 
-      {/* Drop / Paste zone */}
-      {dropImage ? (
-        <div className="gal-drop-crop">
-          <div className="ep-crop-box"><img src={dropImage} alt="" /></div>
-          <div className="gal-drop-crop-actions">
-            <button className="ep-crop-btn ep-crop-btn--cancel" onClick={() => setDropImage(null)}>Cancel</button>
-            <button className="ep-crop-btn ep-crop-btn--confirm" onClick={onConfirmDrop} disabled={dropUploading}>
-              {dropUploading ? '⏳' : '✓ Add to Gallery'}
+      {/* Scrape Panel */}
+      {sourceTab === 'scrape' && (
+        <div className="gal-panel">
+          <div className="gal-panel-body">
+            <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 10px' }}>
+              Search for venue photos, event images, and generate AI options based on event details.
+              {event.venue && <span style={{ display: 'block', marginTop: 4, color: 'var(--accent)', fontWeight: 600, fontSize: 12 }}>Will search for: {event.venue}{event.city ? `, ${event.city}` : ''}</span>}
+            </p>
+            <button className="gal-btn gal-btn--fetch" onClick={handleFetchImages} disabled={fetching} style={{ width: '100%', justifyContent: 'center', padding: '10px 16px' }}>
+              {fetching ? (<><span className="gal-spinner" /> Searching…</>) : '🔎 Find Images'}
             </button>
           </div>
-        </div>
-      ) : (
-        <div
-          className={`gal-drop ${dropOver ? 'gal-drop--over' : ''}`}
-          onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDropFile}
-        >
-          <span className="gal-drop-text">📋 Paste (Ctrl+V) or drop image here</span>
+          {fetchMeta && (
+            <div className="gal-meta">
+              <div className="gal-meta-title">Search strategy used:</div>
+              {fetchMeta.venueQueries?.length > 0 && (
+                <div className="gal-meta-row">
+                  <span className="gal-meta-label">🏢 Venue:</span>
+                  {fetchMeta.venueQueries.map((q, i) => <span key={i} className="gal-meta-query">{q}</span>)}
+                </div>
+              )}
+              {fetchMeta.eventQueries?.length > 0 && (
+                <div className="gal-meta-row">
+                  <span className="gal-meta-label">🎫 Event:</span>
+                  {fetchMeta.eventQueries.map((q, i) => <span key={i} className="gal-meta-query">{q}</span>)}
+                </div>
+              )}
+              {fetchMeta.aiPrompt && (
+                <div className="gal-meta-row">
+                  <span className="gal-meta-label">🤖 AI:</span>
+                  <span className="gal-meta-prompt">{fetchMeta.aiPrompt.slice(0, 120)}…</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Fetch metadata — what queries were used */}
-      {fetchMeta && (
-        <div className="gal-meta">
-          <div className="gal-meta-title">Search strategy used:</div>
-          {fetchMeta.venueQueries?.length > 0 && (
-            <div className="gal-meta-row">
-              <span className="gal-meta-label">🏢 Venue:</span>
-              {fetchMeta.venueQueries.map((q, i) => <span key={i} className="gal-meta-query">{q}</span>)}
+      {/* Upload Panel */}
+      {sourceTab === 'upload' && (
+        <div className="gal-panel">
+          <div className="gal-panel-body">
+            {dropImage ? (
+              <div className="gal-drop-crop">
+                <div className="ep-crop-box"><img src={dropImage} alt="" /></div>
+                <div className="gal-drop-crop-actions">
+                  <button className="ep-crop-btn ep-crop-btn--cancel" onClick={() => setDropImage(null)}>Cancel</button>
+                  <button className="ep-crop-btn ep-crop-btn--confirm" onClick={onConfirmDrop} disabled={dropUploading}>
+                    {dropUploading ? '⏳' : '✓ Add to Gallery'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div
+                  className={`gal-drop ${dropOver ? 'gal-drop--over' : ''}`}
+                  onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDropFile}
+                >
+                  <span className="gal-drop-text">📋 Paste (Ctrl+V) or drag & drop images here</span>
+                </div>
+                <label className="gal-btn gal-btn--upload" style={{ width: '100%', justifyContent: 'center', padding: '10px 16px', marginTop: 8, cursor: 'pointer' }}>
+                  {uploading ? '⏳ Uploading…' : '📤 Choose Files'}
+                  <input type="file" accept="image/*" multiple onChange={handleUpload} hidden />
+                </label>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Generate Panel */}
+      {sourceTab === 'generate' && (
+        <div className="gal-panel">
+          <div className="gal-panel-body">
+            <div style={{ marginBottom: 10 }}>
+              <label style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--muted)', fontWeight: 600, display: 'block', marginBottom: 4 }}>Preset</label>
+              <select
+                value={genPreset}
+                onChange={e => setGenPreset(e.target.value)}
+                style={{ width: '100%', background: '#1e1e2e', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: 8, padding: '7px 10px', fontSize: 13, fontFamily: 'inherit' }}
+              >
+                {GENERATE_PRESETS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
+              </select>
             </div>
-          )}
-          {fetchMeta.eventQueries?.length > 0 && (
-            <div className="gal-meta-row">
-              <span className="gal-meta-label">🎫 Event:</span>
-              {fetchMeta.eventQueries.map((q, i) => <span key={i} className="gal-meta-query">{q}</span>)}
+            <div style={{ marginBottom: 10 }}>
+              <label style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--muted)', fontWeight: 600, display: 'block', marginBottom: 4 }}>Prompt</label>
+              <textarea
+                value={genPrompt}
+                onChange={e => setGenPrompt(e.target.value)}
+                rows={4}
+                style={{ width: '100%', background: '#1e1e2e', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: 8, padding: '7px 10px', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                placeholder="Describe the image you want to generate..."
+              />
             </div>
-          )}
-          {fetchMeta.aiPrompt && (
-            <div className="gal-meta-row">
-              <span className="gal-meta-label">🤖 AI:</span>
-              <span className="gal-meta-prompt">{fetchMeta.aiPrompt.slice(0, 120)}…</span>
-            </div>
-          )}
+            {genPreset === 'custom' && (
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--muted)', fontWeight: 600, display: 'block', marginBottom: 4 }}>Additional Parameters</label>
+                <textarea
+                  rows={2}
+                  style={{ width: '100%', background: '#1e1e2e', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: 8, padding: '7px 10px', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                  placeholder="Extra style notes, negative prompts, etc."
+                />
+              </div>
+            )}
+            <button
+              className="gal-btn gal-btn--generate"
+              onClick={handleGenerate}
+              disabled={generating || !genPrompt.trim()}
+              style={{ width: '100%', justifyContent: 'center', padding: '10px 16px' }}
+            >
+              {generating ? (<><span className="gal-spinner" /> Generating…</>) : '🤖 Generate Image'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Batch Action Bar */}
+      {selectedIds.size >= 2 && (
+        <div className="gal-batch">
+          <span className="gal-batch-label">{selectedIds.size} selected</span>
+          <button className="gal-btn gal-btn--batch" onClick={handleBatchUpscale} disabled={batchUpscaling}>
+            {batchUpscaling ? (<><span className="gal-spinner" /> Upscaling…</>) : '⬆ Upscale All'}
+          </button>
+          <button className="gal-btn gal-btn--clear" onClick={handleBatchDelete} disabled={batchDeleting}>
+            {batchDeleting ? '⏳' : '🗑 Delete Selected'}
+          </button>
+          <button className="gal-btn" onClick={() => setSelectedIds(new Set())} style={{ marginLeft: 'auto' }}>✕ Clear Selection</button>
         </div>
       )}
 
@@ -271,7 +502,7 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
           <div className="gal-empty-icon">🖼️</div>
           <div className="gal-empty-title">No images yet</div>
           <div className="gal-empty-desc">
-            Click <strong>Find Images</strong> to search for venue photos, event images, and generate AI options based on the event details.
+            Use the <strong>Scrape</strong>, <strong>Upload</strong>, or <strong>Generate</strong> tabs above to add images.
           </div>
           {event.venue && <div className="gal-empty-hint">Will search for: {event.venue}{event.city ? `, ${event.city}` : ''}</div>}
         </div>
@@ -325,13 +556,164 @@ function ImageGallery({ event, onUpdate, onSelectImage, dropImage, setDropImage,
   );
 }
 
-/* ── Crop Modal ── */
+/* ── Action Panel (shown when a single image is focused) ── */
+
+function ActionPanel({ candidate, event, onUpdate, onCrop }) {
+  const [upscaling, setUpscaling] = useState(false);
+  const [upscaleScale, setUpscaleScale] = useState(2);
+  const [animating, setAnimating] = useState(false);
+  const [animPrompt, setAnimPrompt] = useState('');
+  const [animDuration, setAnimDuration] = useState(5);
+  const [animStatus, setAnimStatus] = useState(null); // null | 'submitted' | 'polling' | 'done' | 'failed'
+  const [animRequestId, setAnimRequestId] = useState(null);
+  const pollRef = useRef(null);
+
+  if (!candidate) return null;
+
+  const info = sourceInfo(candidate);
+  const versions = [];
+  if (candidate.parentId) versions.push('Derived version');
+  if (candidate.upscaledFrom) versions.push(`Upscaled ${candidate.upscaleScale || 2}x`);
+
+  async function handleUpscale() {
+    setUpscaling(true);
+    try {
+      const res = await fetch('/api/assets/upscale', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: candidate.url, scale: upscaleScale, eventId: event.id, candidateId: candidate.id }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      onUpdate?.();
+    } catch (err) { alert('Upscale failed: ' + err.message); }
+    finally { setUpscaling(false); }
+  }
+
+  async function handleAnimate() {
+    setAnimating(true);
+    setAnimStatus('submitted');
+    try {
+      const res = await fetch('/api/assets/animate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId: event.id }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      const data = await res.json();
+      setAnimRequestId(data.requestId);
+      setAnimStatus('polling');
+      // Start polling
+      startPolling(data.requestId);
+    } catch (err) {
+      alert('Animate failed: ' + err.message);
+      setAnimStatus('failed');
+    }
+    finally { setAnimating(false); }
+  }
+
+  function startPolling(reqId) {
+    if (pollRef.current) clearInterval(pollRef.current);
+    pollRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/assets/animate?eventId=${event.id}&requestId=${reqId}`);
+        const data = await res.json();
+        if (data.status === 'completed') {
+          clearInterval(pollRef.current);
+          setAnimStatus('done');
+          onUpdate?.();
+        } else if (data.status === 'failed') {
+          clearInterval(pollRef.current);
+          setAnimStatus('failed');
+        }
+      } catch {
+        // keep polling
+      }
+    }, 5000);
+  }
+
+  // Cleanup polling on unmount
+  useEffect(() => () => { if (pollRef.current) clearInterval(pollRef.current); }, []);
+
+  return (
+    <div className="action-panel">
+      <div className="action-panel-preview">
+        <img src={candidate.url} alt="" />
+      </div>
+      <div className="action-panel-controls">
+        <div className="action-panel-info">
+          <span className={`gal-tag gal-tag--lg ${info.cls}`}>{info.icon} {info.tag}</span>
+          {candidate.aiPrompt && <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, lineHeight: 1.3 }}>{candidate.aiPrompt.slice(0, 150)}</div>}
+          {versions.length > 0 && <div style={{ fontSize: 11, color: 'var(--accent)', marginTop: 4 }}>{versions.join(' · ')}</div>}
+        </div>
+
+        {/* Upscale */}
+        <div className="action-group">
+          <div className="action-group-title">Upscale</div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <button className={`action-toggle ${upscaleScale === 2 ? 'action-toggle--on' : ''}`} onClick={() => setUpscaleScale(2)}>2x</button>
+            <button className={`action-toggle ${upscaleScale === 4 ? 'action-toggle--on' : ''}`} onClick={() => setUpscaleScale(4)}>4x</button>
+            <button className="action-btn action-btn--primary" onClick={handleUpscale} disabled={upscaling}>
+              {upscaling ? (<><span className="gal-spinner" /> Upscaling…</>) : '⬆ Upscale'}
+            </button>
+          </div>
+        </div>
+
+        {/* Crop */}
+        <div className="action-group">
+          <div className="action-group-title">Crop</div>
+          <button className="action-btn" onClick={() => onCrop?.(candidate)}>✂️ Open Crop Tool</button>
+        </div>
+
+        {/* Animate */}
+        <div className="action-group">
+          <div className="action-group-title">Animate</div>
+          {animStatus === 'polling' ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--muted)' }}>
+              <span className="gal-spinner" /> Generating animation… this may take a few minutes
+            </div>
+          ) : animStatus === 'done' ? (
+            <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600 }}>✓ Animation ready!</div>
+          ) : animStatus === 'failed' ? (
+            <div style={{ fontSize: 12, color: '#f87171' }}>Animation failed. Try again.</div>
+          ) : (
+            <button className="action-btn" onClick={handleAnimate} disabled={animating}>
+              🎬 Animate this image
+            </button>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="action-group">
+          <div className="action-group-title">Info</div>
+          <div className="action-info-grid">
+            <span className="action-info-label">Source</span>
+            <span className="action-info-value">{info.desc}</span>
+            {candidate.addedAt && <><span className="action-info-label">Added</span><span className="action-info-value">{new Date(candidate.addedAt).toLocaleDateString()}</span></>}
+            {candidate.upscaleScale && <><span className="action-info-label">Upscale</span><span className="action-info-value">{candidate.upscaleScale}x from parent</span></>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Crop Modal (enhanced with aspect ratio presets) ── */
+
+const ASPECT_RATIOS = [
+  { id: '1:2', label: '1:2 Portrait', ratio: 0.5 },
+  { id: '1:1', label: '1:1 Square', ratio: 1 },
+  { id: '9:16', label: '9:16 Stories', ratio: 9 / 16 },
+  { id: '16:9', label: '16:9 Landscape', ratio: 16 / 9 },
+  { id: 'free', label: 'Freeform', ratio: null },
+];
 
 function CropModal({ candidate, onSelect, onClose }) {
   const [dragState, setDragState] = useState(null);
   const [offsetX, setOffsetX] = useState(50);
+  const [aspectId, setAspectId] = useState('1:2');
   const imgRef = useRef(null);
   const boxRef = useRef(null);
+
+  const currentAspect = ASPECT_RATIOS.find(a => a.id === aspectId);
+  const aspectBox = currentAspect?.ratio || 0.5;
 
   function handlePointerDown(e) {
     e.preventDefault();
@@ -344,9 +726,8 @@ function CropModal({ candidate, onSelect, onClose }) {
     if (!dragState) return;
     const img = imgRef.current;
     if (!img || !img.naturalWidth) return;
-    const aspectBox = 0.5;
     const imgAspect = img.naturalWidth / img.naturalHeight;
-    if (imgAspect <= aspectBox) return;
+    if (aspectId === 'free' || imgAspect <= aspectBox) return;
     const visibleFraction = aspectBox / imgAspect;
     const maxPan = ((1 - visibleFraction) / 2) * 100;
     const dx = e.clientX - dragState.startX;
@@ -355,14 +736,30 @@ function CropModal({ candidate, onSelect, onClose }) {
   }
   function handlePointerUp() { setDragState(null); }
 
+  const boxStyle = aspectId === 'free'
+    ? { width: 280, maxHeight: 400, borderRadius: 10, overflow: 'hidden', border: '2px solid var(--accent)' }
+    : { width: aspectBox >= 1 ? 280 : 200, aspectRatio: `${aspectBox}`, borderRadius: 10, overflow: 'hidden', border: '2px solid var(--accent)' };
+
   return (
     <div className="crop-backdrop" onClick={onClose}>
       <div className="crop-modal" onClick={e => e.stopPropagation()}>
         <button className="crop-close" onClick={onClose}>×</button>
-        <div className="crop-title">Position Image (1:2 Portrait)</div>
+        <div className="crop-title">Crop Image</div>
         <div className="crop-hint">Drag left/right to set crop center</div>
+
+        {/* Aspect ratio presets */}
+        <div className="crop-ratios">
+          {ASPECT_RATIOS.map(a => (
+            <button key={a.id} className={`crop-ratio-btn ${aspectId === a.id ? 'crop-ratio-btn--active' : ''}`} onClick={() => setAspectId(a.id)}>
+              {a.label}
+            </button>
+          ))}
+        </div>
+
         <div className="crop-preview-wrap" ref={boxRef} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp} style={{ cursor: dragState ? 'grabbing' : 'grab' }}>
-          <div className="crop-aspect-box"><img ref={imgRef} src={candidate.url} alt="" draggable={false} style={{ objectPosition: `${offsetX}% 50%` }} /></div>
+          <div style={boxStyle}>
+            <img ref={imgRef} src={candidate.url} alt="" draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${offsetX}% 50%` }} />
+          </div>
         </div>
         <div className="crop-actions">
           <button className="crop-btn crop-btn--cancel" onClick={onClose}>Cancel</button>
@@ -472,6 +869,7 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
   const [dropImage, setDropImage] = useState(null);
   const [dropOver, setDropOver] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [focusedImage, setFocusedImage] = useState(null);
   const dropRef = useRef(null);
 
   useEffect(() => {
@@ -480,6 +878,7 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
       date: event.date || '', startTime: event.startTime || '', endTime: event.endTime || '',
       mode: event.mode || 'day', description: event.description || '',
     });
+    setFocusedImage(null);
   }, [event?.id]);
 
   // Global paste listener
@@ -503,6 +902,44 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
     document.addEventListener('paste', onPaste);
     return () => document.removeEventListener('paste', onPaste);
   }, [event?.id]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    function onKey(e) {
+      // Don't trigger when typing in inputs
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (!focusedImage) return;
+
+      switch (e.key.toLowerCase()) {
+        case 'u': // Upscale
+          e.preventDefault();
+          // trigger upscale via action panel (handled there)
+          break;
+        case 'c': // Crop
+          e.preventDefault();
+          setCropCandidate(focusedImage);
+          break;
+        case ' ': // Space = fullscreen preview (lightbox)
+          e.preventDefault();
+          // We'll set a lightbox state — but lightbox is in gallery, so we use crop modal as large preview
+          break;
+        case 'delete':
+        case 'backspace':
+          e.preventDefault();
+          if (confirm('Remove this image?')) {
+            const candidates = event.imageCandidates ?? [];
+            const updated = candidates.filter(c => c.id !== focusedImage.id);
+            fetch(`/api/events/${event.id}`, {
+              method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ imageCandidates: updated }),
+            }).then(() => { setFocusedImage(null); onUpdate?.(); }).catch(err => alert(err.message));
+          }
+          break;
+      }
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [focusedImage, event?.id]);
 
   if (!event) return <div className="ep-empty">← Select an event from the queue</div>;
 
@@ -542,12 +979,10 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
   async function handleSendToPublish() {
     setSending(true); setError(null);
     try {
-      // Save metadata first
       await fetch(`/api/events/${event.id}`, {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      // Approve to approved_2 (ready for publish calendar)
       const res = await fetch(`/api/events/${event.id}/review`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'approve', stage: 2, reviewedBy: 'admin' }),
@@ -593,7 +1028,6 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
     if (!dropImage) return;
     setUploading(true);
     try {
-      // Resize client-side before upload (max 1200px wide, JPEG 85%)
       const blob = await new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
@@ -653,11 +1087,31 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
       </div>
 
       <ImageGallery event={event} onUpdate={onUpdate} onSelectImage={handleSelectImage}
+        onFocusImage={setFocusedImage} focusedImage={focusedImage}
         dropImage={dropImage} setDropImage={setDropImage} dropOver={dropOver}
         onDragOver={onDragOver} onDragLeave={onDragLeave} onDropFile={onDrop}
         onConfirmDrop={() => confirmDropImage(50)} uploading={uploading}
       />
+
+      {/* Action Panel — shown when a single image is focused */}
+      {focusedImage && (
+        <ActionPanel
+          candidate={focusedImage}
+          event={event}
+          onUpdate={onUpdate}
+          onCrop={(c) => setCropCandidate(c)}
+        />
+      )}
+
       {cropCandidate && <CropModal candidate={cropCandidate} onSelect={confirmSelectImage} onClose={() => setCropCandidate(null)} />}
+
+      {/* Keyboard shortcut hints */}
+      {focusedImage && (
+        <div className="kb-hints">
+          <span className="kb-hint"><kbd>C</kbd> Crop</span>
+          <span className="kb-hint"><kbd>Del</kbd> Remove</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -681,7 +1135,6 @@ export default function AssetsPage() {
     loadEvents().catch(e => setError(e.message)).finally(() => setLoading(false));
   }, []);
 
-  // Queue = only events that still need work (approved_1). Once approved_2/published/rejected, they're done.
   const queue = useMemo(() => allEvents.filter(e => e.status === 'approved_1'), [allEvents]);
   const activeEvent = queue.find(e => e.id === activeId) || null;
 
@@ -778,9 +1231,7 @@ export default function AssetsPage() {
         .ep-empty{flex:1;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);min-height:400px}
 
         .ep-top{display:flex;gap:20px;margin-bottom:20px}
-        /* Card preview — uses real homepage .card classes from globals.css */
         .card-preview-wrap{width:200px;flex-shrink:0;aspect-ratio:1/2;border-radius:10px;overflow:hidden;position:relative;background:var(--color-card-bg, #0D1023)}
-
 
         .ep-crop{display:flex;flex-direction:column;gap:10px}
         .ep-crop-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
@@ -813,31 +1264,47 @@ export default function AssetsPage() {
         /* ── Gallery (redesigned) ── */
         .gal{border:1px solid var(--border);border-radius:14px;background:var(--panel);overflow:hidden}
 
-        .gal-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
-        .gal-header-left{display:flex;align-items:baseline;gap:8px}
+        /* Source tabs */
+        .gal-tabs{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
+        .gal-tabs-left{display:flex;align-items:baseline;gap:8px}
         .gal-header-title{font-size:15px;font-weight:700;color:var(--text)}
         .gal-header-count{font-size:12px;color:var(--muted)}
-        .gal-header-actions{display:flex;gap:6px}
+        .gal-tabs-btns{display:flex;gap:4px;flex-wrap:wrap}
+        .gal-tab{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;transition:all .15s}
+        .gal-tab:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .gal-tab--active{background:rgba(78,205,196,.1);border-color:rgba(78,205,196,.4);color:var(--accent)}
+
+        /* Source panels */
+        .gal-panel{border-bottom:1px solid var(--border)}
+        .gal-panel-body{padding:14px 16px}
 
         .gal-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:all .15s}
         .gal-btn:hover{background:rgba(255,255,255,.08)}
         .gal-btn:disabled{opacity:.4;cursor:default}
         .gal-btn--fetch{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:#60a5fa}
         .gal-btn--fetch:hover:not(:disabled){background:rgba(96,165,250,.2)}
-        .gal-drop{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:default;transition:background .2s}
-        .gal-drop--over{background:rgba(78,205,196,.06)}
+        .gal-btn--generate{background:rgba(236,72,153,.1);border-color:rgba(236,72,153,.3);color:#f472b6}
+        .gal-btn--generate:hover:not(:disabled){background:rgba(236,72,153,.2)}
+        .gal-btn--batch{background:rgba(78,205,196,.1);border-color:rgba(78,205,196,.3);color:var(--accent)}
+        .gal-btn--batch:hover:not(:disabled){background:rgba(78,205,196,.2)}
+        .gal-drop{padding:24px 16px;display:flex;align-items:center;justify-content:center;cursor:default;transition:background .2s;border:2px dashed var(--border);border-radius:10px;min-height:60px}
+        .gal-drop--over{background:rgba(78,205,196,.06);border-color:var(--accent)}
         .gal-drop-text{font-size:12px;color:var(--muted);font-weight:500}
-        .gal-drop-crop{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+        .gal-drop-crop{display:flex;align-items:center;gap:14px}
         .gal-drop-crop .ep-crop-box{width:100px;aspect-ratio:1/2;flex-shrink:0}
         .gal-drop-crop-actions{display:flex;flex-direction:column;gap:6px}
         .gal-btn--clear{color:#f87171;border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.06)}
         .gal-btn--clear:hover{background:rgba(248,113,113,.15)}
         .gal-btn--upload{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:#22c55e}
-        .gal-spinner{width:12px;height:12px;border:2px solid rgba(96,165,250,.3);border-top-color:#60a5fa;border-radius:50%;animation:gal-spin .6s linear infinite}
+        .gal-spinner{width:12px;height:12px;border:2px solid rgba(96,165,250,.3);border-top-color:#60a5fa;border-radius:50%;animation:gal-spin .6s linear infinite;display:inline-block}
         @keyframes gal-spin{to{transform:rotate(360deg)}}
 
+        /* Batch action bar */
+        .gal-batch{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(78,205,196,.04)}
+        .gal-batch-label{font-size:12px;font-weight:700;color:var(--accent);margin-right:4px}
+
         /* Fetch metadata */
-        .gal-meta{padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(96,165,250,.04)}
+        .gal-meta{padding:10px 16px;border-top:1px solid var(--border);background:rgba(96,165,250,.04)}
         .gal-meta-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
         .gal-meta-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;font-size:12px}
         .gal-meta-label{color:var(--muted);flex-shrink:0;font-weight:600}
@@ -861,9 +1328,18 @@ export default function AssetsPage() {
 
         .gal-card{position:relative;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .15s;background:#0f1323}
         .gal-card:hover{border-color:rgba(78,205,196,.4);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+        .gal-card--focused{border-color:var(--accent);box-shadow:0 0 0 2px rgba(78,205,196,.3)}
+        .gal-card--checked{border-color:rgba(96,165,250,.6);box-shadow:0 0 0 1px rgba(96,165,250,.3)}
         .gal-card-remove{position:absolute;top:4px;right:4px;z-index:2;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
         .gal-card:hover .gal-card-remove{opacity:1}
         .gal-card-remove:hover{background:rgba(248,113,113,.5);color:#fff}
+
+        /* Multi-select checkbox */
+        .gal-card-checkbox{position:absolute;top:4px;left:4px;z-index:3;opacity:0;transition:opacity .15s}
+        .gal-card:hover .gal-card-checkbox,.gal-card--checked .gal-card-checkbox{opacity:1}
+        .gal-checkbox{width:18px;height:18px;border-radius:4px;border:2px solid rgba(255,255,255,.5);background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;cursor:pointer;transition:all .1s}
+        .gal-checkbox--on{background:rgba(96,165,250,.9);border-color:rgba(96,165,250,1)}
+
         .gal-card-overlay{position:absolute;bottom:24px;left:0;right:0;display:flex;justify-content:center;opacity:0;transition:opacity .15s;z-index:2}
         .gal-card:hover .gal-card-overlay{opacity:1}
         .gal-card-primary{padding:5px 10px;border-radius:6px;border:none;background:rgba(78,205,196,.9);color:#000;font-size:11px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px)}
@@ -874,7 +1350,12 @@ export default function AssetsPage() {
         .gal-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .2s}
         .gal-card:hover .gal-card-img img{transform:scale(1.05)}
         .gal-card-check{position:absolute;top:6px;right:6px;background:var(--accent);color:#000;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px}
-        .gal-card-footer{padding:6px 8px;display:flex;align-items:center;gap:4px}
+        .gal-card-footer{padding:4px 8px;display:flex;align-items:center;gap:4px}
+
+        /* Pipeline dots */
+        .pipeline-dots{display:flex;gap:4px;justify-content:center;padding:4px 8px 6px}
+        .pipeline-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.12);transition:background .2s}
+        .pipeline-dot--done{background:var(--accent)}
 
         .gal-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);color:var(--muted)}
         .gal-tag--lg{font-size:12px;padding:4px 10px}
@@ -912,16 +1393,42 @@ export default function AssetsPage() {
         .gal-lightbox-btn--cancel{background:transparent;color:var(--muted);border-color:var(--border)}
         .gal-lightbox-btn--cancel:hover{background:rgba(255,255,255,.04)}
 
+        /* Action Panel */
+        .action-panel{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:var(--panel);display:flex;overflow:hidden}
+        .action-panel-preview{width:220px;flex-shrink:0;background:#0f1323;display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .action-panel-preview img{width:100%;height:100%;object-fit:cover;max-height:360px}
+        .action-panel-controls{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+        .action-panel-info{padding-bottom:10px;border-bottom:1px solid var(--border)}
+        .action-group{display:flex;flex-direction:column;gap:6px}
+        .action-group-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+        .action-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:all .15s}
+        .action-btn:hover:not(:disabled){background:rgba(255,255,255,.08)}
+        .action-btn:disabled{opacity:.4;cursor:default}
+        .action-btn--primary{background:rgba(78,205,196,.1);border-color:rgba(78,205,196,.35);color:var(--accent)}
+        .action-btn--primary:hover:not(:disabled){background:rgba(78,205,196,.2)}
+        .action-toggle{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:all .12s}
+        .action-toggle--on{background:rgba(78,205,196,.15);border-color:rgba(78,205,196,.4);color:var(--accent)}
+        .action-info-grid{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:11px}
+        .action-info-label{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+        .action-info-value{color:var(--text)}
+
+        /* Keyboard shortcut hints */
+        .kb-hints{display:flex;gap:12px;justify-content:center;padding:8px 16px;margin-top:8px}
+        .kb-hint{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+        .kb-hint kbd{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:1px 6px;font-size:10px;font-family:inherit;font-weight:700;color:var(--text)}
+
         /* Crop modal */
         .crop-backdrop{position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center}
-        .crop-modal{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:420px;width:90%;position:relative}
+        .crop-modal{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:480px;width:90%;position:relative}
         .crop-close{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
         .crop-close:hover{color:#fff;background:rgba(255,255,255,.15)}
         .crop-title{font-size:16px;font-weight:700;margin-bottom:4px}
-        .crop-hint{font-size:12px;color:var(--muted);margin-bottom:14px}
+        .crop-hint{font-size:12px;color:var(--muted);margin-bottom:10px}
+        .crop-ratios{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+        .crop-ratio-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all .12s}
+        .crop-ratio-btn:hover{background:rgba(255,255,255,.08)}
+        .crop-ratio-btn--active{background:rgba(78,205,196,.15);border-color:rgba(78,205,196,.4);color:var(--accent)}
         .crop-preview-wrap{display:flex;justify-content:center;margin-bottom:14px}
-        .crop-aspect-box{width:200px;aspect-ratio:1/2;border-radius:10px;overflow:hidden;border:2px solid var(--accent)}
-        .crop-aspect-box img{width:100%;height:100%;object-fit:cover}
         .crop-actions{display:flex;gap:8px}
         .crop-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid}
         .crop-btn--cancel{color:var(--muted);border-color:rgba(255,255,255,.12);background:transparent}
@@ -935,6 +1442,9 @@ export default function AssetsPage() {
           .adash-brand{font-size:26px}
           .gal-grid{grid-template-columns:repeat(auto-fill, minmax(100px, 1fr))}
           .gal-lightbox-inner{max-width:95vw}
+          .gal-tabs{flex-direction:column;gap:8px}
+          .action-panel{flex-direction:column}
+          .action-panel-preview{width:100%;height:200px}
         }
       `}</style>
     </main>
