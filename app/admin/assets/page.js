@@ -313,22 +313,20 @@ function CropModal({ candidate, onSelect, onClose }) {
 
 /* ── Queue Item ── */
 
-function QueueItem({ event, active, onClick }) {
-  const asset = event.latestAsset;
+function QueueItem({ event, active, onClick, onDelete }) {
   const imgCount = event.imageCandidates?.length || 0;
   const hasSelected = event.imageCandidates?.some(c => c.selected);
   return (
     <div className={`qi ${active ? 'qi--active' : ''}`} onClick={onClick}>
-      <div className="qi-title">{event.title}</div>
+      <div className="qi-top">
+        <div className="qi-title">{event.title}</div>
+        <button className="qi-delete" onClick={(e) => { e.stopPropagation(); onDelete?.(event.id); }} title="Remove from queue">×</button>
+      </div>
       <div className="qi-meta">
         <ModeTag mode={event.mode} />
-        <StatusBadge status={event.status} />
-        {asset && <AssetStateBadge asset={asset} />}
-      </div>
-      <div className="qi-sub">
-        {[event.venue, event.city].filter(Boolean).join(' · ')}
         {imgCount > 0 && <span className="qi-imgs">{hasSelected ? '✓' : ''} {imgCount} img{imgCount !== 1 ? 's' : ''}</span>}
       </div>
+      <div className="qi-sub">{[event.venue, event.city].filter(Boolean).join(' · ')}</div>
     </div>
   );
 }
@@ -552,12 +550,29 @@ export default function AssetsPage() {
     loadEvents().catch(e => setError(e.message)).finally(() => setLoading(false));
   }, []);
 
-  const queue = useMemo(() => allEvents.filter(e => ['approved_1', 'approved_2', 'published'].includes(e.status)), [allEvents]);
+  // Queue = only events that still need work (approved_1). Once approved_2/published/rejected, they're done.
+  const queue = useMemo(() => allEvents.filter(e => e.status === 'approved_1'), [allEvents]);
   const activeEvent = queue.find(e => e.id === activeId) || null;
 
   useEffect(() => {
     if (!activeId && queue.length > 0) setActiveId(queue[0].id);
   }, [queue.length]);
+
+  async function deleteFromQueue(eventId) {
+    if (!confirm('Remove this event from the queue?')) return;
+    try {
+      const res = await fetch(`/api/events/${eventId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reject', stage: 1, reviewedBy: 'admin', notes: 'Removed from asset queue' }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      if (activeId === eventId) setActiveId(null);
+      await loadEvents();
+    } catch (err) {
+      alert('Delete failed: ' + err.message);
+    }
+  }
 
   return (
     <main className="admin-shell">
@@ -580,7 +595,7 @@ export default function AssetsPage() {
               <div className="queue-head">Queue ({queue.length})</div>
               {queue.length === 0 && <div className="queue-empty">No events in asset lane</div>}
               {queue.map(e => (
-                <QueueItem key={e.id} event={e} active={e.id === activeId} onClick={() => setActiveId(e.id)} />
+                <QueueItem key={e.id} event={e} active={e.id === activeId} onClick={() => setActiveId(e.id)} onDelete={deleteFromQueue} />
               ))}
             </div>
             <EditPanel event={activeEvent} onUpdate={loadEvents} />
@@ -602,7 +617,10 @@ export default function AssetsPage() {
         .qi{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;border-left:3px solid transparent}
         .qi:hover{background:rgba(255,255,255,.04)}
         .qi--active{background:rgba(78,205,196,.06);border-left-color:var(--accent)}
-        .qi-title{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+        .qi-top{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+        .qi-title{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+        .qi-delete{width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:rgba(255,255,255,.25);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+        .qi-delete:hover{background:rgba(248,113,113,.15);color:#f87171}
         .qi-meta{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:2px}
         .qi-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;gap:6px;align-items:center}
         .qi-imgs{color:var(--accent);font-weight:600}
