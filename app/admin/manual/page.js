@@ -34,7 +34,7 @@ export default function ManualPage() {
       const res = await fetch('/api/events/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, status: 'approved_1' }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Create failed');
@@ -58,13 +58,13 @@ export default function ManualPage() {
         <AdminNav />
 
         <section className="manual-panel">
-          <div className="eyebrow">Candidate intake</div>
+          <div className="eyebrow">Event intake</div>
           <h1 className="page-title">Manual event entry</h1>
-          <div className="panel-sub">Add a candidate event directly into the review queue with source preset to manual.</div>
+          <div className="panel-sub">Create an event and send it directly to the Assets queue for image selection and publishing.</div>
 
           {error && <div className="error-banner">⚠ {error}</div>}
           {created && (
-            <div className="success-banner">✓ {created.title} saved as a candidate. <Link href="/admin/candidates">Open candidates →</Link></div>
+            <div className="success-banner">✓ {created.title} sent to Assets. <Link href="/admin/assets">Open Assets →</Link></div>
           )}
 
           <form className="manual-form" onSubmit={onSubmit}>
@@ -85,8 +85,8 @@ export default function ManualPage() {
             </div>
             <label className="full"><span>Description</span><textarea rows={6} value={form.description} onChange={(e) => update('description', e.target.value)} /></label>
             <div className="actions">
-              <button className="primary-btn" disabled={submitting}>{submitting ? 'Saving…' : 'Create candidate'}</button>
-              <Link href="/admin/candidates" className="ghost-btn">View candidates</Link>
+              <button className="primary-btn" disabled={submitting}>{submitting ? 'Saving…' : '→ Send to Assets'}</button>
+              <Link href="/admin/assets" className="ghost-btn">View Assets</Link>
             </div>
           </form>
         </section>

@@ -37,7 +37,7 @@ export async function POST(request) {
       mode: String(body.mode).trim(),
       sourceId: 'manual',
       source: 'manual',
-      status: 'candidate',
+      status: body.status === 'approved_1' ? 'approved_1' : 'candidate',
       confidenceScore: 90,
       confidenceReasons: ['Manual entry', 'Required fields present'],
     });
