@@ -577,10 +577,23 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
     if (!dropImage) return;
     setUploading(true);
     try {
-      // Upload as base64
-      const blob = await fetch(dropImage).then(r => r.blob());
+      // Resize client-side before upload (max 1200px wide, JPEG 85%)
+      const blob = await new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxW = 1200;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(resolve, 'image/jpeg', 0.85);
+        };
+        img.src = dropImage;
+      });
       const form = new FormData();
-      form.append('image', blob, 'pasted-image.png');
+      form.append('image', blob, 'pasted-image.jpg');
       const uploadRes = await fetch(`/api/events/${event.id}/upload-image`, { method: 'POST', body: form });
       if (!uploadRes.ok) throw new Error((await uploadRes.json()).error);
       const uploadData = await uploadRes.json();

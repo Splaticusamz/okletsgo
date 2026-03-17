@@ -4,6 +4,7 @@ import { getEvent, updateEvent, initDb, flushDb } from '../../../../../lib/db.js
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../../lib/admin-auth.js';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 async function isAuthorized() {
   const cookieStore = await cookies();
