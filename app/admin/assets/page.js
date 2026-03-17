@@ -403,7 +403,7 @@ function CardPreview({ event }) {
   const asset = event.latestAsset;
   const imgSrc = selectedImage || asset?.portraitUrl || '';
   const videoSrc = asset?.animationUrl || null;
-  const bgUrl = imgSrc ? (imgSrc.startsWith('http') ? imgSrc : '/' + imgSrc.replace(/^\//, '')) : '';
+  const bgUrl = imgSrc ? (imgSrc.startsWith('http') || imgSrc.startsWith('data:') ? imgSrc : '/' + imgSrc.replace(/^\//, '')) : '';
 
   const dayName = (() => {
     if (!event.date) return 'MONDAY';
