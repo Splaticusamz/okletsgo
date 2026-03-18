@@ -278,7 +278,7 @@ function ImageCard({ c, isSelected, isChecked, onCheck, onClick, onSetPrimary, o
       <button className="gal-card-remove" onClick={(e) => { e.stopPropagation(); onRemove?.(c.id); }} title="Remove">×</button>
       {/* Image */}
       <div className="gal-card-img">
-        <img src={c.url} alt="" loading="lazy" />
+        <img src={c.url} alt="" loading="lazy" style={c.cropData?.offsetX != null ? { objectPosition: `${c.cropData.offsetX}% 50%` } : undefined} />
         {isPrimary && <div className="gal-card-primary-badge">✓ Primary</div>}
         {c.upscaled && <div className="gal-card-upscale-badge">⬆ {c.upscaleScale || 2}x</div>}
       </div>
@@ -398,7 +398,7 @@ function ActionPanel({ candidate, event, onUpdate, onClose }) {
       <div className="action-panel-body">
         {/* Preview */}
         <div className="action-preview">
-          <img src={candidate.url} alt="" />
+          <img src={candidate.url} alt="" style={candidate.cropData?.offsetX != null ? { objectPosition: `${candidate.cropData.offsetX}% 50%` } : undefined} />
         </div>
 
         {/* Info */}
@@ -563,11 +563,14 @@ function Lightbox({ candidate, onClose, onSelectForCrop }) {
 function CardPreview({ event }) {
   const videoRef = useRef(null);
   const [videoReady, setVideoReady] = useState(false);
-  const selectedImage = event.selectedImageCandidate?.url || event.imageCandidates?.find(c => c.selected)?.url;
+  const selectedCandidate = event.imageCandidates?.find(c => c.selected);
+  const selectedImage = event.selectedImageCandidate?.url || selectedCandidate?.url;
+  const cropOffset = selectedCandidate?.cropData?.offsetX;
   const asset = event.latestAsset;
   const imgSrc = selectedImage || asset?.portraitUrl || '';
   const videoSrc = asset?.animationUrl || null;
   const bgUrl = imgSrc ? (imgSrc.startsWith('http') || imgSrc.startsWith('data:') ? imgSrc : '/' + imgSrc.replace(/^\//, '')) : '';
+  const bgPosition = cropOffset != null ? `${cropOffset}% 50%` : 'center center';
 
   const dayName = (() => {
     if (!event.date) return 'MONDAY';
@@ -592,7 +595,7 @@ function CardPreview({ event }) {
     <div className="card-preview-wrap" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <div className="card" style={{ height: '100%' }}>
         <div className="card-img-strip" style={{ height: '100%', position: 'absolute', inset: 0 }}>
-          <div className="card-img" style={bgUrl ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${bgUrl}')`, height: '100%' } : { height: '100%' }}>
+          <div className="card-img" style={bgUrl ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 59%), url('${bgUrl}')`, backgroundPosition: bgPosition, height: '100%' } : { height: '100%' }}>
             {videoSrc && <video ref={videoRef} className={`card-video ${videoReady ? 'is-ready' : ''}`} src={videoSrc} muted loop playsInline preload="none" />}
           </div>
         </div>
@@ -821,12 +824,25 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
 
   async function confirmCrop(candidateId, cropOffsetX, aspectRatioStr) {
     try {
+      const cropData = { offsetX: cropOffsetX, aspectRatio: aspectRatioStr };
+      // Save crop data on the candidate AND mark as selected
       const res = await fetch(`/api/events/${event.id}/select-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ candidateId, cropOffsetX, cropAspectRatio: aspectRatioStr }),
+        body: JSON.stringify({ candidateId, cropData }),
       });
       if (!res.ok) throw new Error((await res.json()).error);
+      // Also update the candidate's crop data locally via PATCH
+      const cands = [...(event.imageCandidates ?? [])];
+      const idx = cands.findIndex(c => c.id === candidateId);
+      if (idx >= 0) {
+        cands[idx] = { ...cands[idx], cropData, cropped: true };
+        await fetch(`/api/events/${event.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageCandidates: cands }),
+        });
+      }
       setCropCandidate(null);
       onUpdate?.();
     } catch (err) { alert('Crop failed: ' + err.message); }
