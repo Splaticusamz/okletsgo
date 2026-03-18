@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, initDb, flushDb } from '../../../../lib/db.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 import { generateImage, isFalConfigured } from '../../../../lib/fal-video.js';
+import { checkBudget, recordSpend } from '../../../../lib/fal-budget.js';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -59,9 +60,17 @@ export async function POST(request) {
       prompt += ' ' + body.customParams;
     }
 
+    // Budget check
+    const budget = checkBudget('fal-ai/flux/schnell');
+    if (!budget.allowed) {
+      return NextResponse.json({ error: `Budget limit reached ($${budget.cap.toFixed(2)} cap). Spent: $${budget.totalSpent.toFixed(2)}. This would cost ~$${budget.estimatedCost.toFixed(3)}. Increase FAL_BUDGET_CAP or wait for server restart.` }, { status: 429 });
+    }
+
     const result = await generateImage(prompt, {
       size: body?.size ?? 'portrait_16_9',
     });
+
+    recordSpend('fal-ai/flux/schnell');
 
     // Add as image candidate
     const candidateId = `${eventId}-gen-${Date.now()}`;

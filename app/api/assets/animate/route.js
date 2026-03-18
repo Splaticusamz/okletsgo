@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { initDb, flushDb, getEvent, createOrUpdateAsset } from '../../../../lib/db.js';
 import { isFalConfigured, submitAnimation, pollAnimation } from '../../../../lib/fal-video.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
+import { checkBudget, recordSpend } from '../../../../lib/fal-budget.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,8 +44,15 @@ export async function POST(request) {
       : 'daytime scene, natural light shifting subtly';
     const motionPrompt = `Subtle cinematic camera push-in with gentle parallax. ${scene}. ${atmosphere}. Smooth, professional, editorial quality.`;
 
+    // Budget check — video is expensive!
+    const budget = checkBudget('fal-ai/kling-video/v2/master/image-to-video');
+    if (!budget.allowed) {
+      return NextResponse.json({ error: `Budget limit reached ($${budget.cap.toFixed(2)} cap). Spent: $${budget.totalSpent.toFixed(2)}. Video costs ~$${budget.estimatedCost.toFixed(2)}. Increase FAL_BUDGET_CAP env var.` }, { status: 429 });
+    }
+
     // Submit async job — returns immediately
     const { requestId } = await submitAnimation(selectedImage, { prompt: motionPrompt, duration: 5 });
+    recordSpend('fal-ai/kling-video/v2/master/image-to-video');
 
     createOrUpdateAsset(eventId, {
       animationStatus: 'processing',

@@ -199,6 +199,7 @@ function GeneratePanel({ event, onUpdate }) {
   ];
 
   async function handleGenerate() {
+    if (!confirm('Generate 1 image using fal.ai (~$0.025). Continue?')) return;
     setGenerating(true);
     try {
       const body = { eventId: event.id };
@@ -339,6 +340,7 @@ function ActionPanel({ candidate, event, onUpdate, onClose }) {
   useEffect(() => () => { if (pollRef.current) clearInterval(pollRef.current); }, []);
 
   async function handleUpscale() {
+    if (!confirm(`Upscale ${upscaleScale}x using fal.ai (~$0.05). Continue?`)) return;
     setUpscaling(true);
     try {
       const res = await fetch('/api/assets/upscale', {
@@ -353,6 +355,7 @@ function ActionPanel({ candidate, event, onUpdate, onClose }) {
   }
 
   async function handleAnimate() {
+    if (!confirm('Generate video animation using fal.ai (~$0.50). This is expensive! Continue?')) return;
     setAnimating(true);
     setAnimStatus('submitting');
     try {
@@ -807,9 +810,12 @@ function EditPanel({ event, onUpdate, onSendToPublish }) {
   }
 
   async function handleBatchUpscale() {
+    const toUpscale = candidates.filter(c => checkedIds.has(c.id) && !c.upscaled);
+    if (toUpscale.length === 0) { alert('No un-upscaled images selected.'); return; }
+    const cost = (toUpscale.length * 0.05).toFixed(2);
+    if (!confirm(`Upscale ${toUpscale.length} images using fal.ai (~$${cost} total). Continue?`)) return;
     setBatchUpscaling(true);
     try {
-      const toUpscale = candidates.filter(c => checkedIds.has(c.id) && !c.upscaled);
       for (const c of toUpscale) {
         await fetch('/api/assets/upscale', {
           method: 'POST',

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getEvent, updateEvent, initDb, flushDb } from '../../../../lib/db.js';
 import { getAdminCookieName, verifyAdminSessionValue } from '../../../../lib/admin-auth.js';
 import { createFalClient } from '@fal-ai/client';
+import { checkBudget, recordSpend } from '../../../../lib/fal-budget.js';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
@@ -41,6 +42,12 @@ export async function POST(request) {
     const event = getEvent(eventId);
     if (!event) return NextResponse.json({ error: `Event not found: ${eventId}` }, { status: 404 });
 
+    // Budget check
+    const budget = checkBudget('fal-ai/clarity-upscaler');
+    if (!budget.allowed) {
+      return NextResponse.json({ error: `Budget limit reached ($${budget.cap.toFixed(2)} cap). Spent: $${budget.totalSpent.toFixed(2)}. Increase FAL_BUDGET_CAP env var.` }, { status: 429 });
+    }
+
     const fal = getFalClient();
     const result = await fal.subscribe('fal-ai/clarity-upscaler', {
       input: {
@@ -51,6 +58,7 @@ export async function POST(request) {
       logs: false,
     });
 
+    recordSpend('fal-ai/clarity-upscaler');
     const upscaledUrl = result?.data?.image?.url;
     if (!upscaledUrl) throw new Error('fal.ai did not return an upscaled image URL');
 
