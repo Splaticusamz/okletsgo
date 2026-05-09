@@ -1,146 +1,252 @@
 {
+  "scrapedAt": "2026-05-08T16:02:06.603Z",
   "events": [
     {
-      "title": "Aile\u00e9 Zaga + Bo Jahura",
-      "date": "2026-03-15",
-      "startDate": "2026-03-14",
-      "endDate": "2026-03-15",
-      "venue": "Frequency Sound 528",
+      "title": "Bear Aware Walk",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
+      "venue": "Mission Creek Regional Park",
       "city": "Kelowna",
-      "description": "Join us for an intimate evening of bold art pop and heartfelt folk songwriting at Frequency Sound 528. This concert series night brings together two distinctive voices whose music blends vulnerability, atmosphere, and emotional depth.Aile\u00e9 ZagaAile\u00e9 Zaga is a BC-based art pop songwriter and producer influenced by boundary-pushing artists like Bj\u00f6rk and Imogen Heap. Blending electronic, classical, and alternative elements, she creates immersive soundscapes layered with memorable melodies and cont",
-      "url": "https://www.tourismkelowna.com/event/aile%c3%a9-zaga-%2b-bo-jahura/42922/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-33_18AA2D22-F5A1-E706-C4A1E6D1E43463BC_18b7dff4-fa0a-8bd0-49cd2e77b4c294a2.jpg",
-      "lat": 49.84138,
-      "lng": -119.4101724,
+      "description": "Free Program - Registration Required to secure your spot: https://www.rdco.intellionline.ca/WEBSITE/public/category/browse/BEARWLKEver wondered how to tell if a bear has been in the area? Join us for a guided walk on bear signs, behaviour, and seasonal movement patterns. Learn how to recognize tracks and feeding signs - and what to do if you encounter a bear while enjoying local parks.For more information on other programs offered by the RDCO and registration details, please visit our website: h",
+      "url": "https://www.tourismkelowna.com/event/bear-aware-walk/43349/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/dreamstime_GrizzlyBear_xxl_97187778_B1837DED-EADD-ED00-A8392E678F3F6CDA_b184d141-f855-58f2-6e514adafaed3499.jpg",
+      "lat": 49.8753744,
+      "lng": -119.4273201,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69b101dfec5fe98da2be8113",
-        "location": "Frequency Sound 528",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-14T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
+        "_id": "69f70b79aa2314d6c385892d",
+        "location": "Mission Creek Regional Park",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
         "recurType": 0,
-        "latitude": 49.84138,
-        "longitude": -119.4101724,
+        "latitude": 49.8753744,
+        "longitude": -119.4273201,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-33_18AA2D22-F5A1-E706-C4A1E6D1E43463BC_18b7dff4-fa0a-8bd0-49cd2e77b4c294a2.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/dreamstime_GrizzlyBear_xxl_97187778_B1837DED-EADD-ED00-A8392E678F3F6CDA_b184d141-f855-58f2-6e514adafaed3499.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "42922",
-        "title": "Aile\u00e9 Zaga + Bo Jahura",
-        "url": "/event/aile%c3%a9-zaga-%2b-bo-jahura/42922/",
+        "recid": "43349",
+        "title": "Bear Aware Walk",
+        "url": "/event/bear-aware-walk/43349/",
+        "categories": [
+          {
+            "catName": "Sports & Recreation",
+            "catId": "27"
+          }
+        ],
+        "accountId": 18777,
+        "city": "Kelowna",
+        "admission": "Free",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 181,
+            "subcatname": "Easy",
+            "catname": "Hiking",
+            "catid": 50
+          },
+          "rankname": "Outdoor Listings",
+          "recid": 1598,
+          "acctid": 18777,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Mission Creek Regional Park",
+          "url": "/listing/mission-creek-regional-park/1598/"
+        },
+        "description": "<p>Free Program - Registration Required to secure your spot: https://www.rdco.intellionline.ca/WEBSITE/public/category/browse/BEARWLK<br><br>Ever wondered how to tell if a bear has been in the area? Join us for a guided walk on bear signs, behaviour, and seasonal movement patterns. Learn how to recognize tracks and feeding signs - and what to do if you encounter a bear while enjoying local parks.<br><br>For more information on other programs offered by the RDCO and registration details, please visit our website: https://www.rdco.intellionline.ca/WEBSITE/public.</p>",
+        "address1": "2363 Springfield Rd",
+        "state": "BC",
+        "zip": "V1X 7Z6",
+        "expired": false,
+        "nextDate": "2026-05-09T06:59:59.000Z",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00"
+      }
+    },
+    {
+      "title": "Beethoven's Fifth",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
+      "venue": "Kelowna Community Theatre",
+      "city": "Kelowna",
+      "description": "Experience the symphony that changed music forever. Shocking at the time of its premiere with its emotional intensity, today Beethoven’s 5th is one of the world’s most recognizable works of art. After more than a decade, the OSO returns to this iconic masterpiece to close the season with a monument of musical expression. This concert also features the Okanagan Symphony Chorus in Ola Gjeilo’s Sunrise Mass, a profound and expressive journey, full of soaring melodies and walls of sonic power.",
+      "url": "https://www.tourismkelowna.com/event/beethovens-fifth/42231/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Okanagan-Symphony-Orchestra-at-Kelowna-Community-Theatre-2-_0102F11D-9C14-FEB8-BA80950A1284F564_0107389a-bb33-8093-35bd974f5b88344b.jpg",
+      "lat": 49.88947719999999,
+      "lng": -119.4955449,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69f62a40aa2314d6c368ccb0",
+        "location": "Kelowna Community Theatre",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
+        "recurType": 0,
+        "latitude": 49.88947719999999,
+        "longitude": -119.4955449,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Okanagan-Symphony-Orchestra-at-Kelowna-Community-Theatre-2-_0102F11D-9C14-FEB8-BA80950A1284F564_0107389a-bb33-8093-35bd974f5b88344b.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "42231",
+        "title": "Beethoven's Fifth",
+        "url": "/event/beethovens-fifth/42231/",
         "categories": [
           {
             "catName": "Music",
             "catId": "25"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "$20 Advance, $30 Door",
-        "featured": false,
-        "description": "<p>Join us for an intimate evening of bold art pop and heartfelt folk songwriting at Frequency Sound 528. This concert series night brings together two distinctive voices whose music blends vulnerability, atmosphere, and emotional depth.<br><br><strong>Aile\u00e9 Zaga</strong><br><br>Aile\u00e9 Zaga is a BC-based art pop songwriter and producer influenced by boundary-pushing artists like Bj\u00f6rk and Imogen Heap. Blending electronic, classical, and alternative elements, she creates immersive soundscapes layered with memorable melodies and contemplative lyrics exploring identity, womanhood, and immigration.<br><br>A 2024 Best of Kelowna nominee for \u201cBest Local Musician\u201d and \u201cOverall YouTube Channel,\u201d Zaga\u2019s 2023 single Written in the Earth received national praise. With over 125K YouTube views and performances alongside artists such as Luke Wallace and Locarno, she continues carving out a powerful presence in the Okanagan music scene.<br><br><strong>Bo Jahura</strong><br><br>Originally from BC\u2019s West Coast and now based in the Okanagan, Bo Jahura crafts soulful, original folk music with sincerity and depth. Drawing from lived experience \u2014 from darker chapters to bright, hopeful days \u2014 his songs are honest, reflective, and emotionally resonant. Bo\u2019s performances linger long after the final note fades.</p>",
-        "address1": "3210 Gulley Rd",
-        "state": "BC",
-        "zip": "V1W 4E5",
-        "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "18:30:00",
-        "endTime": "21:00:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 0
-    },
-    {
-      "title": "Comedy for a Cause",
-      "date": "2026-03-15",
-      "startDate": "2026-03-14",
-      "endDate": "2026-03-15",
-      "venue": "Dakotda's Comedy Lounge",
-      "city": "Kelowna",
-      "description": "Get ready for a powerful night of laughter in support of an incredible cause as Comedy for a Cause for CNIWT Camp.\r\nThis special fundraiser supports CNIWT Camp, which brings together families of Deaf, deafblind, and Hard of Hearing children from across the BC Interior for a barrier-free, inclusive camp experience. The camp includes ASL interpreters, Deaf and Hard of Hearing leaders and role models, resource professionals, and parent workshops focused on supporting their children.\r\nThe night will",
-      "url": "https://www.tourismkelowna.com/event/comedy-for-a-cause/42952/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/audience_A5B6E670-9859-2153-332F738C5DE865D4_a5dcff7f-e159-2731-981a7b32d6f89927.jpg",
-      "lat": 49.8824739,
-      "lng": -119.4637975,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69ac1e18ec5fe98da218ac0c",
-        "location": "Dakotda's Comedy Lounge",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-14T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.8824739,
-        "longitude": -119.4637975,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/audience_A5B6E670-9859-2153-332F738C5DE865D4_a5dcff7f-e159-2731-981a7b32d6f89927.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "42952",
-        "title": "Comedy for a Cause",
-        "url": "/event/comedy-for-a-cause/42952/",
-        "categories": [
+          },
           {
             "catName": "Theatre, Comedy & Performing Arts",
             "catId": "38"
           }
         ],
-        "accountId": 0,
+        "accountId": 17594,
         "city": "Kelowna",
-        "admission": "$20",
         "featured": false,
-        "description": "<p>Get ready for a powerful night of laughter in support of an incredible cause as Comedy for a Cause for CNIWT Camp.</p>\r\n<p>This special fundraiser supports CNIWT Camp, which brings together families of Deaf, deafblind, and Hard of Hearing children from across the BC Interior for a barrier-free, inclusive camp experience. The camp includes ASL interpreters, Deaf and Hard of Hearing leaders and role models, resource professionals, and parent workshops focused on supporting their children.</p>\r\n<p>The night will feature a stacked lineup of Kelowna Comedy\u2019s top performers, with a special performance by Joey Commisso.</p>\r\n<p>Join us for a night filled with big laughs and real impact. Every ticket helps send families to camp.</p>",
-        "address1": "1574 Harvey Ave",
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 20,
+            "subcatname": "Performing Arts",
+            "catname": "Arts & Entertainment",
+            "catid": 7
+          },
+          "rankname": "Enhanced Listings",
+          "recid": 33,
+          "acctid": 17594,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Okanagan Symphony Orchestra",
+          "url": "/listing/okanagan-symphony-orchestra/33/"
+        },
+        "description": "<p>Experience the symphony that changed music forever. Shocking at the time of its premiere with its emotional intensity, today Beethoven’s 5th is one of the world’s most recognizable works of art. After more than a decade, the OSO returns to this iconic masterpiece to close the season with a monument of musical expression. This concert also features the Okanagan Symphony Chorus in Ola Gjeilo’s <em>Sunrise Mass</em>, a profound and expressive journey, full of soaring melodies and walls of sonic power.</p>",
+        "address1": "1375 Water Street",
         "state": "BC",
+        "zip": "V1Y 6P6",
         "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "18:30:00",
-        "endTime": "19:30:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 1
+        "nextDate": "2026-05-09T06:59:59.000Z"
+      }
     },
     {
-      "title": "Comedy for a Cause for CNIWT Family Camp presented by Whitetail Concrete",
-      "date": "2026-03-15",
-      "startDate": "2026-03-14",
-      "endDate": "2026-03-15",
+      "title": "Blossom & Bites: A Spring Lunch for Two",
+      "date": "2026-05-09",
+      "startDate": "2026-03-18",
+      "endDate": "2026-07-01",
+      "venue": "Meadow Vista Honey Wines",
+      "city": "Kelowna",
+      "description": "A Springtime Meadery lunch for TWO! Enjoy the Spring Sunshine on our farm! Start with a Local, Charcuterie Bento Lunch in our Picnic Area or our picturesque outdoor Bistro and a guided wine tasting or flight of our honey wines. Take our self-guided Bee Tour, take the Honeybee Challenge, play lawn games &amp; enjoy farm fun.  Finish your experience with a scrumptious local Bernard Callebaut Chocolate Brownie with homemade honey ice cream for two! \r\nIncludes:\r\nBento Local Charcuterie for two\r\nLoca",
+      "url": "https://www.tourismkelowna.com/event/blossom-%26-bites%3a-a-spring-lunch-for-two/42729/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/IMG_1411_0833B066-CB31-4CF3-8DBF689161D061FB_271100d0-da9b-4154-a13306323527bea2.jpg",
+      "lat": 49.8385965,
+      "lng": -119.4070744,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69fd4ecfb22934a884552ddc",
+        "location": "Meadow Vista Honey Wines",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-03-18T07:00:00.000Z",
+        "endDate": "2026-07-01T06:59:59.000Z",
+        "recurrence": "Recurring daily",
+        "recurType": 1,
+        "latitude": 49.8385965,
+        "longitude": -119.4070744,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/IMG_1411_0833B066-CB31-4CF3-8DBF689161D061FB_271100d0-da9b-4154-a13306323527bea2.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "42729",
+        "title": "Blossom & Bites: A Spring Lunch for Two",
+        "url": "/event/blossom-%26-bites%3a-a-spring-lunch-for-two/42729/",
+        "categories": [
+          {
+            "catName": "Food & Drink",
+            "catId": "23"
+          },
+          {
+            "catName": "Wineries & Vineyards",
+            "catId": "29"
+          },
+          {
+            "catName": "Happy Hours & Specials",
+            "catId": "76"
+          }
+        ],
+        "accountId": 17847,
+        "city": "Kelowna",
+        "admission": "$56 ",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 53,
+            "subcatname": "All Wineries",
+            "catname": "Wineries",
+            "catid": 18
+          },
+          "rankname": "Enhanced Winery Listing",
+          "recid": 286,
+          "acctid": 17847,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Meadow Vista Honey Wines",
+          "url": "/listing/meadow-vista-honey-wines/286/"
+        },
+        "description": "<p>A Springtime Meadery lunch for TWO! Enjoy the Spring Sunshine on our farm! Start with a Local, Charcuterie Bento Lunch in our Picnic Area or our picturesque outdoor Bistro and a guided wine tasting or flight of our honey wines. Take our self-guided Bee Tour, take the Honeybee Challenge, play lawn games &amp; enjoy farm fun.  Finish your experience with a scrumptious local Bernard Callebaut Chocolate Brownie with homemade honey ice cream for two! </p>\r\n<p><strong>Includes:</strong></p>\r\n<p>Bento Local Charcuterie for two</p>\r\n<p>Local meats &amp; cheeses, house-made pickles, fresh fruit, house-made organic crostinis, homemade honey jams &amp; accoutrements</p>\r\n<p>2 Guided Wine Tastings featuring five of our award-winning honey wines  (local mocktails for non-drinkers or under 19!)</p>\r\n<p>Bernard Callebaut Chocolate Brownie dessert with homemade honey ice cream to share</p>\r\n<p>Self-Guided Bee Tour</p>\r\n<p>Lawn games and picnic area</p>\r\n<p>Take the Honeybee Challenge</p>\r\n<p>Entry into our Spring Draw</p>\r\n<p>*Please select a time slot between 11:30 am and 3:30 pm. Tickets required. We look forward to seeing you at the winery!</p>",
+        "address1": "3975 June Springs Rd.",
+        "state": "BC",
+        "zip": "V1W 4E4",
+        "expired": false,
+        "nextDate": "2026-05-08T06:59:59.000Z",
+        "startTime": "11:30:00",
+        "endTime": "15:30:00"
+      }
+    },
+    {
+      "title": "Comedy for a Cause for Okangan United FC Mens Soccer",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
       "venue": "Dakoda's Comedy Lounge",
       "city": "Kelowna",
-      "description": "Get ready for a powerful night of laughter in support of an incredible cause as Comedy for a Cause for CNIWT Camp, presented by Whitetail Concrete, comes to Dakoda\u2019s Comedy Lounge.This special fundraiser supports CNIWT Camp, which brings together families of Deaf, deafblind, and Hard of Hearing children from across the BC Interior for a barrier-free, inclusive camp experience. The camp includes ASL interpreters, Deaf and Hard of Hearing leaders and role models, resource professionals, and parent",
-      "url": "https://www.tourismkelowna.com/event/comedy-for-a-cause-for-cniwt-family-camp-presented-by-whitetail-concrete/43081/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Friends_Dining_at_Bernie_s_Supper_Club_1_-1-_42C4951E-DE64-267F-E428C67FA7E2197F_42c95540-0717-787d-7538269d98436a2e.jpg",
+      "description": "Kick off your weekend with non-stop comedy for an awesome cause! Join us Friday, May 8th at 6:30 PM at Dakoda’s Comedy Lounge for Comedy for a Cause, benefiting the Okanagan United Men’s Soccer League (OUSL).The OUSL is quickly becoming the hotspot for the best local soccer talent in the Okanagan — a competitive, community-powered league that’s giving players the stage they deserve. Now you can support it while catching a stacked lineup of Kelowna’s funniest comedians in one ridiculously fun nig",
+      "url": "https://www.tourismkelowna.com/event/comedy-for-a-cause-for-okangan-united-fc-mens-soccer/43698/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Friends-Dining-at-Bernie-s-Supper-Club-1_B95C3867-D06F-FDEB-11FC8B2CC989B653_b95ef680-dd8c-9ccd-203ec75297e9c791.jpg",
       "lat": 49.8824739,
       "lng": -119.4637975,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69a86facec5fe98da29d48b5",
+        "_id": "69f3961baa2314d6c31a536e",
         "location": "Dakoda's Comedy Lounge",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-14T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
         "recurType": 0,
         "latitude": 49.8824739,
         "longitude": -119.4637975,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Friends_Dining_at_Bernie_s_Supper_Club_1_-1-_42C4951E-DE64-267F-E428C67FA7E2197F_42c95540-0717-787d-7538269d98436a2e.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Friends-Dining-at-Bernie-s-Supper-Club-1_B95C3867-D06F-FDEB-11FC8B2CC989B653_b95ef680-dd8c-9ccd-203ec75297e9c791.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "43081",
-        "title": "Comedy for a Cause for CNIWT Family Camp presented by Whitetail Concrete",
-        "url": "/event/comedy-for-a-cause-for-cniwt-family-camp-presented-by-whitetail-concrete/43081/",
+        "recid": "43698",
+        "title": "Comedy for a Cause for Okangan United FC Mens Soccer",
+        "url": "/event/comedy-for-a-cause-for-okangan-united-fc-mens-soccer/43698/",
         "categories": [
           {
             "catName": "Theatre, Comedy & Performing Arts",
@@ -149,37 +255,102 @@
         ],
         "accountId": 0,
         "city": "Kelowna",
-        "admission": "$20",
+        "admission": "$21.63",
         "featured": false,
-        "description": "<p>Get ready for a powerful night of laughter in support of an incredible cause as Comedy for a Cause for CNIWT Camp, presented by Whitetail Concrete, comes to Dakoda\u2019s Comedy Lounge.<br>This special fundraiser supports CNIWT Camp, which brings together families of Deaf, deafblind, and Hard of Hearing children from across the BC Interior for a barrier-free, inclusive camp experience. The camp includes ASL interpreters, Deaf and Hard of Hearing leaders and role models, resource professionals, and parent workshops focused on supporting their children.<br>The night will feature a stacked lineup of Kelowna Comedy\u2019s top performers, with a special performance by Joey Commisso.<br>Joey is one of Western Canada\u2019s fastest-rising stand-up comics. His debut album and special Nachosferatu (2025) was filmed to sold-out crowds and released through Comedy Here Often?. He has performed multiple times at Just For Laughs Vancouver and was selected for NBC\u2019s prestigious StandUp NBC showcase. A Vancouver Comedy Award nominee, Joey tours relentlessly across Canada, the United States, and Europe with high-energy material about fatherhood and his \u201cFake Italian\u201d life. His viral clips and packed club shows have made him a fan favorite wherever he performs.<br>Join us for a night filled with big laughs and real impact. Every ticket helps send families to camp.<br>Thanks to the generous sponsorship of Whitetail Concrete, 100% of ticket sales will go directly to this cause. Whitetail Concrete is committed to showing up on time, standing behind their work, and making sure every customer feels taken care of from start to finish</p>",
+        "description": "<p>Kick off your weekend with non-stop comedy for an awesome cause! Join us Friday, May 8th at 6:30 PM at Dakoda’s Comedy Lounge for Comedy for a Cause, benefiting the Okanagan United Men’s Soccer League (OUSL).The OUSL is quickly becoming the hotspot for the best local soccer talent in the Okanagan — a competitive, community-powered league that’s giving players the stage they deserve. Now you can support it while catching a stacked lineup of Kelowna’s funniest comedians in one ridiculously fun night.Expect sharp jokes, high-energy vibes, and laughs so good you’ll forget whether your team made the playoffs or not. Bring your friends, grab your tickets, and be part of a night that keeps both the comedy scene and the league thriving.See you there — the only thing better than the jokes will be the cause you’re supporting.</p>",
         "address1": "1574 Harvey Ave",
         "state": "BC",
         "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
+        "nextDate": "2026-05-09T06:59:59.000Z",
         "startTime": "18:30:00",
         "endTime": "20:00:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 2
+      }
+    },
+    {
+      "title": "Cooking Class: A Taste of Spain | The Art of Paella",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
+      "venue": "Lakehouse Kitchens Cooking School",
+      "city": "Kelowna",
+      "description": "Join us in the Chef’s Theatre for an unforgettable evening celebrating the bold, vibrant flavours of Spain.At the heart of this demonstration dinner is the iconic paella—crafted live as our chefs guide you through the traditions, techniques, and ingredients that define this beloved dish.From the layering of saffron-infused rice to the careful building of flavour over fire, you’ll experience the artistry behind authentic paella while enjoying a curated selection of Spanish-inspired dishes. Expect",
+      "url": "https://www.tourismkelowna.com/event/cooking-class%3a-a-taste-of-spain-%7c-the-art-of-paella/43668/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lakehouse-Kitchens-Cooking-School-2-2-_92260940-97CF-698B-BF78E99B62E1DDB3_922981a4-d15b-6926-1169faff91d508f8.jpg",
+      "lat": 49.8866732,
+      "lng": -119.4932184,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69f5b9fbaa2314d6c35e295a",
+        "location": "Lakehouse Kitchens Cooking School",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
+        "recurType": 0,
+        "latitude": 49.8866732,
+        "longitude": -119.4932184,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lakehouse-Kitchens-Cooking-School-2-2-_92260940-97CF-698B-BF78E99B62E1DDB3_922981a4-d15b-6926-1169faff91d508f8.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43668",
+        "title": "Cooking Class: A Taste of Spain | The Art of Paella",
+        "url": "/event/cooking-class%3a-a-taste-of-spain-%7c-the-art-of-paella/43668/",
+        "categories": [
+          {
+            "catName": "Food & Drink",
+            "catId": "23"
+          }
+        ],
+        "accountId": 18333,
+        "city": "Kelowna",
+        "admission": "$125",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 219,
+            "subcatname": "Education & Workshops",
+            "catname": "Activities & Attractions",
+            "catid": 9
+          },
+          "rankname": "Enhanced Listings",
+          "recid": 6095,
+          "acctid": 18333,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Lakehouse Kitchens Cooking School",
+          "url": "/listing/lakehouse-kitchens-cooking-school/6095/"
+        },
+        "description": "<p>Join us in the Chef’s Theatre for an unforgettable evening celebrating the bold, vibrant flavours of Spain.<br><br>At the heart of this demonstration dinner is the iconic paella—crafted live as our chefs guide you through the traditions, techniques, and ingredients that define this beloved dish.<br><br>From the layering of saffron-infused rice to the careful building of flavour over fire, you’ll experience the artistry behind authentic paella while enjoying a curated selection of Spanish-inspired dishes. Expect rich aromas, lively storytelling, and a true taste of coastal Spain brought to life before you.<br><br>Sit back, sip, and savour an evening of culinary craftsmanship—where every dish tells a story of tradition, technique, and passion.</p>",
+        "address1": "200-510 Bernard Avenue",
+        "state": "BC",
+        "zip": "V1Y 6P1",
+        "expired": false,
+        "nextDate": "2026-05-09T06:59:59.000Z",
+        "startTime": "18:00:00",
+        "endTime": "21:00:00"
+      }
     },
     {
       "title": "Coverboy",
-      "date": "2026-03-15",
+      "date": "2026-05-09",
       "startDate": "2026-02-21",
       "endDate": "2026-05-30",
       "venue": "Crown & Thieves",
       "city": "Kelowna",
-      "description": "Introducing \"Coverboy\" -\u00a0 an exhilarating experience of cover songs done with a proper twist! Playing all your favorite hits from rock classics to new and fresh hip tunes!Doors open at 8:00pm, show starts at 9:00pm.",
+      "description": "Introducing \"Coverboy\" -  an exhilarating experience of cover songs done with a proper twist! Playing all your favorite hits from rock classics to new and fresh hip tunes!Doors open at 8:00pm, show starts at 9:00pm.",
       "url": "https://www.tourismkelowna.com/event/coverboy/42625/",
       "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/coverboy_A0A9593F-C38E-C304-5EA972049B0AA5C0_a0c4fd7b-b90b-dce3-2ae1d68b1275ebcf.png",
       "lat": 49.8224266,
       "lng": -119.6252182,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69b45bd7ecf2b231a5f12b64",
+        "_id": "69fbb6dab22934a884259553",
         "location": "Crown & Thieves",
-        "date": "2026-03-15T06:59:59.000Z",
+        "date": "2026-05-09T06:59:59.000Z",
         "startDate": "2026-02-21T08:00:00.000Z",
         "endDate": "2026-05-30T06:59:59.000Z",
         "recurType": 99,
@@ -221,490 +392,101 @@
           "title": "Crown & Thieves",
           "url": "/listing/crown-%26-thieves/6765/"
         },
-        "description": "<p>Introducing \"Coverboy\" -\u00a0 an exhilarating experience of cover songs done with a proper twist! Playing all your favorite hits from rock classics to new and fresh hip tunes!<br><br>Doors open at 8:00pm, show starts at 9:00pm.<br><br></p>",
+        "description": "<p>Introducing \"Coverboy\" -  an exhilarating experience of cover songs done with a proper twist! Playing all your favorite hits from rock classics to new and fresh hip tunes!<br><br>Doors open at 8:00pm, show starts at 9:00pm.<br><br></p>",
         "address1": "3887C Brown Rd",
         "state": "BC",
         "zip": "V4T 2J3",
         "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
+        "nextDate": "2026-05-09T06:59:59.000Z",
         "startTime": "21:00:00",
         "endTime": "23:00:00"
-      },
-      "mode": "family",
-      "emoji": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
-      "index": 3
+      }
     },
     {
-      "title": "Culinary Class | Butcher's Table",
-      "date": "2026-03-15",
-      "startDate": "2026-03-13",
-      "endDate": "2026-03-15",
-      "venue": "Mission Hill Family Estate",
+      "title": "Everything Everywhere All at Once",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
+      "venue": "Bernie’s Supper Club and Cinema",
       "city": "Kelowna",
-      "description": "Experience the craft of fine butchery where technique meets uncompromising flavour. From expertly prepared cuts to bold, hearty dishes, each plate showcases precision and richness, complemented by a selection of winning wines.",
-      "url": "https://www.tourismkelowna.com/event/culinary-class-%7c-butchers-table/42615/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/MH-Culinary-Class-Plating-Line-Alternating_679AFBE0-B5E5-447D-89FB5456F1F381B1_679cadd5-d14f-e8fe-45cedf00a1138b32.jpg",
-      "lat": 49.8356124,
-      "lng": -119.5876873,
+      "description": "Come and see \"Everything Everywhere All at Once\" at Bernie's! An aging Chinese immigrant is swept up in an insane adventure, where she alone can save what’s important to her by connecting with the lives she could have led in other universes.",
+      "url": "https://www.tourismkelowna.com/event/everything-everywhere-all-at-once/43743/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Audience-at-Mary-Irwin-Theatre-Rotary-Centre-for-the-Arts-1-_324C0C62-EAD7-A53E-8186275B22BB014C_3251bec0-934b-630e-8d5ad5ff0336e34b.jpg",
+      "lat": 49.886029,
+      "lng": -119.4957847,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69b3b282ecf2b231a5a6a02f",
-        "location": "Mission Hill Family Estate",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-13T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
-        "recurType": 99,
-        "latitude": 49.8356124,
-        "longitude": -119.5876873,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/MH-Culinary-Class-Plating-Line-Alternating_679AFBE0-B5E5-447D-89FB5456F1F381B1_679cadd5-d14f-e8fe-45cedf00a1138b32.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "42615",
-        "title": "Culinary Class | Butcher's Table",
-        "url": "/event/culinary-class-%7c-butchers-table/42615/",
-        "categories": [
-          {
-            "catName": "Food & Drink",
-            "catId": "23"
-          },
-          {
-            "catName": "Wineries & Vineyards",
-            "catId": "29"
-          }
-        ],
-        "accountId": 17856,
-        "city": "West Kelowna",
-        "admission": "$185",
-        "featured": false,
-        "listing": {
-          "primary_category": {
-            "primary": true,
-            "subcatid": 53,
-            "subcatname": "All Wineries",
-            "catname": "Wineries",
-            "catid": 18
-          },
-          "rankname": "Enhanced Winery Listing",
-          "recid": 295,
-          "acctid": 17856,
-          "city": "West Kelowna",
-          "region": "Within Kelowna and Area",
-          "title": "Mission Hill Family Estate",
-          "url": "/listing/mission-hill-family-estate/295/"
-        },
-        "description": "<p>Experience the craft of fine butchery where technique meets uncompromising flavour. From expertly prepared cuts to bold, hearty dishes, each plate showcases precision and richness, complemented by a selection of winning wines.</p>",
-        "address1": "1730 Mission Hill Road",
-        "state": "BC",
-        "zip": "V4T 2E4",
-        "expired": false,
-        "nextDate": "2026-03-14T06:59:59.000Z",
-        "startTime": "17:30:00",
-        "endTime": "20:00:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 4
-    },
-    {
-      "title": "Demystifying Sourdough",
-      "date": "2026-03-15",
-      "startDate": "2026-03-14",
-      "endDate": "2026-03-15",
-      "venue": "Okanagan Regional Library - Kelowna Branch",
-      "city": "Kelowna",
-      "description": "This presentation led by Frithjof Petscheleit, Sourdough Guide, will explain all about the process of baking sourdough bread including the science, tools, starter, and baking process. All registered participants will receive a small jar with a live starter culture.",
-      "url": "https://www.tourismkelowna.com/event/demystifying-sourdough/42970/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/25-1707-Demystifying-Sourdough-200x200_DDF3C632-0EA9-A339-05734ED1559688E2_ddf62974-ca30-6319-4ddc6adfae69c647.jpg",
-      "lat": 49.88957629999999,
-      "lng": -119.4940998,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69ab9f82ec5fe98da2936c46",
-        "location": "Okanagan Regional Library - Kelowna Branch",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-14T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
+        "_id": "69f6a8f4aa2314d6c377d4d1",
+        "location": "Bernie’s Supper Club and Cinema",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
         "recurType": 0,
-        "latitude": 49.88957629999999,
-        "longitude": -119.4940998,
+        "latitude": 49.886029,
+        "longitude": -119.4957847,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/25-1707-Demystifying-Sourdough-200x200_DDF3C632-0EA9-A339-05734ED1559688E2_ddf62974-ca30-6319-4ddc6adfae69c647.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Audience-at-Mary-Irwin-Theatre-Rotary-Centre-for-the-Arts-1-_324C0C62-EAD7-A53E-8186275B22BB014C_3251bec0-934b-630e-8d5ad5ff0336e34b.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "42970",
-        "title": "Demystifying Sourdough",
-        "url": "/event/demystifying-sourdough/42970/",
+        "recid": "43743",
+        "title": "Everything Everywhere All at Once",
+        "url": "/event/everything-everywhere-all-at-once/43743/",
         "categories": [
           {
-            "catName": "Classes & Workshops",
-            "catId": "48"
+            "catName": "Theatre, Comedy & Performing Arts",
+            "catId": "38"
           }
         ],
-        "accountId": 17878,
+        "accountId": 20475,
         "city": "Kelowna",
+        "admission": "$10.99",
         "featured": false,
         "listing": {
           "primary_category": {
             "primary": true,
-            "subcatid": 24,
-            "subcatname": "Attractions",
-            "catname": "Activities & Attractions",
-            "catid": 9
+            "subcatid": 41,
+            "subcatname": "Casual",
+            "catname": "Restaurants",
+            "catid": 12
           },
           "rankname": "Standard Listings",
-          "recid": 317,
-          "acctid": 17878,
+          "recid": 6003,
+          "acctid": 20475,
           "city": "Kelowna",
           "region": "Within Kelowna and Area",
-          "title": "Okanagan Regional Library - Kelowna Branch",
-          "url": "/listing/okanagan-regional-library-kelowna-branch/317/"
+          "title": "Bernie’s Supper Club and Cinema",
+          "url": "/listing/bernie%e2%80%99s-supper-club-and-cinema/6003/"
         },
-        "description": "<p>This presentation led by Frithjof Petscheleit, Sourdough Guide, will explain all about the process of baking sourdough bread including the science, tools, starter, and baking process. All registered participants will receive a small jar with a live starter culture.</p>",
-        "address1": "1380 Ellis St.",
+        "description": "<p>Come and see \"Everything Everywhere All at Once\" at Bernie's! <br><br>An aging Chinese immigrant is swept up in an insane adventure, where she alone can save what’s important to her by connecting with the lives she could have led in other universes.</p>",
+        "address1": "353 Bernard Ave",
         "state": "BC",
-        "zip": "V1Y 2A2",
+        "zip": "V1Y 6N6",
         "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "10:00:00",
-        "endTime": "11:30:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 5
-    },
-    {
-      "title": "Devon Coyote Trio Live",
-      "date": "2026-03-15",
-      "startDate": "2026-03-14",
-      "endDate": "2026-03-15",
-      "venue": "Red Bird Brewing",
-      "city": "Kelowna",
-      "description": "Roots grit. Soul grooves. Rock &amp; roll that actually moves you.This live music event brings a double dose of groove-driven energy to Red Bird as the Devon Coyote Trio takes the stage with Nico opening the night.The Devon Coyote Trio deliver raw, electrifying rock &amp; roll with a chemistry you can feel from the first note. This collective of long-time friends blends Roots, Rock, Blues and beyond into a sound that feels both nostalgic and fresh. Their live shows are high-energy without being ",
-      "url": "https://www.tourismkelowna.com/event/devon-coyote-trio-live/42935/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/DEVON-COYOTE_EA44E543-0E65-B989-C4C51B429A34C861_ea466009-9e8e-0b84-7c7e26a6d294bfec_EABFFBEA-E204-B715-510E0BE9C1B76A84_eac494dc-cd26-ab73-1a6127aadf5fba8f.jpg",
-      "lat": 49.8960899,
-      "lng": -119.4891799,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69b45bd7ecf2b231a5f12b7f",
-        "location": "Red Bird Brewing",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-14T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.8960899,
-        "longitude": -119.4891799,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/DEVON-COYOTE_EA44E543-0E65-B989-C4C51B429A34C861_ea466009-9e8e-0b84-7c7e26a6d294bfec_EABFFBEA-E204-B715-510E0BE9C1B76A84_eac494dc-cd26-ab73-1a6127aadf5fba8f.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "42935",
-        "title": "Devon Coyote Trio Live",
-        "url": "/event/devon-coyote-trio-live/42935/",
-        "categories": [
-          {
-            "catName": "Music",
-            "catId": "25"
-          }
-        ],
-        "accountId": 18936,
-        "city": "Kelowna",
-        "admission": "$15",
-        "featured": false,
-        "listing": {
-          "primary_category": {
-            "primary": true,
-            "subcatid": 205,
-            "subcatname": "Breweries",
-            "catname": "Craft Beverages",
-            "catid": 10
-          },
-          "rankname": "Standard Listings",
-          "recid": 6234,
-          "acctid": 18936,
-          "city": "Kelowna",
-          "region": "Within Kelowna and Area",
-          "title": "Red Bird Brewing",
-          "url": "/listing/red-bird-brewing/6234/"
-        },
-        "description": "<p>Roots grit. Soul grooves. Rock &amp; roll that actually moves you.<br><br>This live music event brings a double dose of groove-driven energy to Red Bird as the Devon Coyote Trio takes the stage with Nico opening the night.<br><br>The Devon Coyote Trio deliver raw, electrifying rock &amp; roll with a chemistry you can feel from the first note. This collective of long-time friends blends Roots, Rock, Blues and beyond into a sound that feels both nostalgic and fresh. Their live shows are high-energy without being overworked \u2014 powerful musicianship, tight grooves, and that laid-back, down-to-earth vibe that pulls the whole room in. It\u2019s the kind of night where the band is locked in, the crowd is locked in, and the connection carries from stage to the floor.<br><br>Nico<br><br>Opening the night is Kelowna-based artist Nico \u2014 a smooth, genre-blending force of funky-folk and jazzy-soul. Equal parts groove and glow, Nico mixes original music with soulful reimaginings of 70s classics that make you want to move without even thinking about it. Having played everywhere from European streets to North American festivals, Nico brings polish, personality, and just the right amount of swagger to set the tone for the evening.<br><br>This is live music the way it\u2019s meant to be: honest, soulful, and impossible to stand still through.</p>",
-        "address1": "1080 Richter Street",
-        "state": "BC",
-        "zip": "V1Y 2K5",
-        "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "20:00:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 6
-    },
-    {
-      "title": "Drop In DIY Sign Painting",
-      "date": "2026-03-15",
-      "startDate": "2025-01-04",
-      "endDate": null,
-      "venue": "Rustic Chalk Decor DIY Studio",
-      "city": "Kelowna",
-      "description": "Join us for an afternoon down town Kelowna creating personalized wood signs and home decor. HOW DOES IT WORK?- Reserve Your seat online or by calling Lasma- Drop in will also be open if there is space available the day of Crafternoon:)When you arrive at the studio you will:- Choose your project- Design from the design catalog - coloursYou will be able to bring the project home with you the same day.Each person attending must be creating a project except kids 6 and under can create one project to",
-      "url": "https://www.tourismkelowna.com/event/drop-in-diy-sign-painting/38520/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/rustccrop_CF46CCF0-D29B-969A-BE0B8C0768F6AF2C_cf648b98-9760-718c-6c2abf90fb822416.png",
-      "lat": 49.8856888,
-      "lng": -119.4911655,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69ae1839ec5fe98da2427592",
-        "location": "Rustic Chalk Decor DIY Studio",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2025-01-04T08:00:00.000Z",
-        "recurrence": "Recurring weekly on Saturday",
-        "recurType": 3,
-        "latitude": 49.8856888,
-        "longitude": -119.4911655,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/rustccrop_CF46CCF0-D29B-969A-BE0B8C0768F6AF2C_cf648b98-9760-718c-6c2abf90fb822416.png",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "38520",
-        "title": "Drop In DIY Sign Painting",
-        "url": "/event/drop-in-diy-sign-painting/38520/",
-        "categories": [
-          {
-            "catName": "Classes & Workshops",
-            "catId": "48"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "from $25",
-        "featured": false,
-        "description": "<p>Join us for an afternoon down town Kelowna creating personalized wood signs and home decor. <br><br>HOW DOES IT WORK?<br><br>- Reserve Your seat online or by calling Lasma<br>- Drop in will also be open if there is space available the day of Crafternoon:)<br><br>When you arrive at the studio you will:<br>- Choose your project<br>- Design from the design catalog <br>- colours<br><br>You will be able to bring the project home with you the same day.<br><br>Each person attending must be creating a project except kids 6 and under can create one project together with a parent. <br><br></p>",
-        "address1": "542 Lawernec Ave.",
-        "state": "BC",
-        "zip": "V1Y6L8",
-        "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "10:30:00",
-        "endTime": "12:30:00"
-      },
-      "mode": "family",
-      "emoji": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
-      "index": 7
-    },
-    {
-      "title": "Eagle Eyes: The Tribute to The Eagles",
-      "date": "2026-03-15",
-      "startDate": "2026-03-14",
-      "endDate": "2026-03-15",
-      "venue": "Kelowna Community Theatre",
-      "city": "Kelowna",
-      "description": "\"Eagles dominated soft rock throughout the 70\u2019s with unforgettable hits like Take It Easy, Witchy Woman, Best Of My Love, One of These Nights, Lyin\u2019 Eyes, Take It To The Limit, New Kid In Town. Hotel California, Life In The Fast Lane, Heartache Tonight, The Long Run, I Can\u2019t Tell You Why\u2026 and more.Beautiful and catchy melodies with amazing lead and harmony vocals have made the Eagles one of the most famous, respected and loved rock groups of all time, with broad appeal to all ages. Eagle Eyes ca",
-      "url": "https://www.tourismkelowna.com/event/eagle-eyes%3a-the-tribute-to-the-eagles/42538/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-33_D662F49A-C30D-2469-D7D2F34FB0F6846D_d6641393-9450-0219-c65020279e70b1b6.jpg",
-      "lat": 49.88947719999999,
-      "lng": -119.4955449,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69ac6499ec5fe98da20a4774",
-        "location": "Kelowna Community Theatre",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2026-03-14T07:00:00.000Z",
-        "endDate": "2026-03-15T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.88947719999999,
-        "longitude": -119.4955449,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-33_D662F49A-C30D-2469-D7D2F34FB0F6846D_d6641393-9450-0219-c65020279e70b1b6.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "42538",
-        "title": "Eagle Eyes: The Tribute to The Eagles",
-        "url": "/event/eagle-eyes%3a-the-tribute-to-the-eagles/42538/",
-        "categories": [
-          {
-            "catName": "Music",
-            "catId": "25"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "$60.26",
-        "featured": false,
-        "description": "<p>\"Eagles dominated soft rock throughout the 70\u2019s with unforgettable hits like Take It Easy, Witchy Woman, Best Of My Love, One of These Nights, Lyin\u2019 Eyes, Take It To The Limit, New Kid In Town. Hotel California, Life In The Fast Lane, Heartache Tonight, The Long Run, I Can\u2019t Tell You Why\u2026 and more.<br><br>Beautiful and catchy melodies with amazing lead and harmony vocals have made the Eagles one of the most famous, respected and loved rock groups of all time, with broad appeal to all ages. Eagle Eyes capture lead and harmony vocals with breath-taking precision that is nothing less than stunning. All vocals are live\u2026. you won\u2019t hear a single pre-recorded vocal track and no auto-tune.<br><br>Eagle Eyes is the best Eagles tribute in North America, and has received standing ovations from audiences in Canada, and in several States in the USA, including Washington, Oregon, California, Arizona, Idaho and Alaska Eagle Eyes are\u2026 Jack Gunderson, bass and lead vocals, fills the vocal roles of Glenn Frey and Timothy B. Schmidt. Jason Dunajski, guitars and lead vocals, fills the vocal roles of Don Henley and Randy Meisner. Ray Harvey, guitars and lead vocals, fills the vocal role of Joe Walsh. Kenneth Ermter, drums and lead vocals, also fills the vocal roles of Henley and Meisner.<br><br>All four members of Eagle Eyes are lifetime professional musicians with several decades of combined experience on the road and in the studio with a number of different bands and projects over the years. Eagle Eyes embrace all of this musical dedication and experience to deliver a show that is nothing short of magnificent, making them among the top-drawing tribute acts wherever they perform.\"</p>",
-        "address1": "1375 Water St",
-        "state": "BC",
-        "zip": "V1Y 0B4",
-        "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "19:30:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 8
-    },
-    {
-      "title": "Fireside Warm-Up: Wine Tasting, Smores & Mulled Wine",
-      "date": "2026-03-15",
-      "startDate": "2025-11-01",
-      "endDate": "2026-04-01",
-      "venue": "Meadow Vista Honey Wines",
-      "city": "Kelowna",
-      "description": "Join us for an exceptional experience and immerse yourself in the charm of our artisan farm!\r\nWith the changing of the seasons, this in-person event promises a warm and cozy atmosphere. You can enjoy the farm, indulge in delicious treats, and experience the scenic beauty of East Kelowna.\r\nExperience an informative guided wine tasting, followed by a cozy and unwinding sesh by the fire. Savour the perfect pairing of warm mulled wine and s'mores you've roasted on the fire!\r\nIncludes:\r\n\r\nGuided wine",
-      "url": "https://www.tourismkelowna.com/event/fireside-warm-up%3a-wine-tasting-smores-%26-mulled-wine/42054/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Screenshot-2025-11-19-110940_2729C172-CFF8-F895-8BA9C1CE68BA9B8A_272ec15b-eb16-963b-a72606e6e7e75a1c.png",
-      "lat": 49.8385965,
-      "lng": -119.4070744,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69ade07eec5fe98da20f14e5",
-        "location": "Meadow Vista Honey Wines",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2025-11-01T07:00:00.000Z",
-        "endDate": "2026-04-01T06:59:59.000Z",
-        "recurrence": "Recurring daily",
-        "recurType": 1,
-        "latitude": 49.8385965,
-        "longitude": -119.4070744,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Screenshot-2025-11-19-110940_2729C172-CFF8-F895-8BA9C1CE68BA9B8A_272ec15b-eb16-963b-a72606e6e7e75a1c.png",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "42054",
-        "title": "Fireside Warm-Up: Wine Tasting, Smores & Mulled Wine",
-        "url": "/event/fireside-warm-up%3a-wine-tasting-smores-%26-mulled-wine/42054/",
-        "categories": [
-          {
-            "catName": "Food & Drink",
-            "catId": "23"
-          },
-          {
-            "catName": "Happy Hours & Specials",
-            "catId": "76"
-          }
-        ],
-        "accountId": 17847,
-        "city": "Kelowna",
-        "admission": "$25",
-        "featured": false,
-        "listing": {
-          "primary_category": {
-            "primary": true,
-            "subcatid": 53,
-            "subcatname": "All Wineries",
-            "catname": "Wineries",
-            "catid": 18
-          },
-          "rankname": "Enhanced Winery Listing",
-          "recid": 286,
-          "acctid": 17847,
-          "city": "Kelowna",
-          "region": "Within Kelowna and Area",
-          "title": "Meadow Vista Honey Wines",
-          "url": "/listing/meadow-vista-honey-wines/286/"
-        },
-        "description": "<p><!-- x-tinymce/html --></p>\r\n<p>Join us for an exceptional experience and immerse yourself in the charm of our artisan farm!</p>\r\n<p>With the changing of the seasons, this in-person event promises a warm and cozy atmosphere. You can enjoy the farm, indulge in delicious treats, and experience the scenic beauty of East Kelowna.</p>\r\n<p>Experience an informative guided wine tasting, followed by a cozy and unwinding sesh by the fire. Savour the perfect pairing of warm mulled wine and s'mores you've roasted on the fire!</p>\r\n<p>Includes:</p>\r\n<ul>\r\n<li>Guided wine tasting (or Mocktails!)</li>\r\n<li>Everything you need to roast S'mores over the fire pits!</li>\r\n<li>A glass of our famous Mulled Mead (or homemade hot chocolate)\u00a0</li>\r\n<li>Enter to win our winter basket</li>\r\n</ul>\r\n<p>*Mocktails &amp; Hot chocolate available for any non-drinkers or persons under 19 years</p>\r\n<p>No physical ticket? Please just show the booking upon arrival.</p>\r\n<p>*Please note that in accordance with BC Liquor laws, participants must show 2 pieces of ID for Wine tasting/Mulled Wine.*</p>",
-        "address1": "3975 June Springs Rd.",
-        "state": "BC",
-        "zip": "V1W 4E4",
-        "expired": false,
-        "nextDate": "2026-03-09T06:59:59.000Z",
-        "startTime": "11:30:00",
-        "endTime": "16:00:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 9
-    },
-    {
-      "title": "Fireworks Show at Big White",
-      "date": "2026-03-15",
-      "startDate": "2025-11-29",
-      "endDate": "2026-04-05",
-      "venue": null,
-      "city": "Kelowna",
-      "description": "Kick off winter evenings with a spectacular show at Big White.Fireworks will light up the sky every Saturday at 7 p.m., from Nov. 29 through April 4. The season opens with a special show in the Village Centre on Saturday, Nov. 29. After opening night, weekly fireworks move to Happy Valley, where the magic continues all winter. Whether you watch from your accommodation, a favourite restaurant or patio, or at the Happy Valley Skating Rink, each show will fill the night sky with vibrant colour and ",
-      "url": "https://www.tourismkelowna.com/event/fireworks-show-at-big-white/41280/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/DJI_0065-Edit-3_4AA96059-DD4A-C186-61421173378BE56A_4aae46a2-009a-732d-53769405c4cbdf5b.jpg",
-      "lat": 49.72177259999999,
-      "lng": -118.9273362,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69aeebb9ec5fe98da2d901fe",
-        "date": "2026-03-15T06:59:59.000Z",
-        "startDate": "2025-11-29T08:00:00.000Z",
-        "endDate": "2026-04-05T06:59:59.000Z",
-        "recurrence": "Recurring weekly on Saturday",
-        "recurType": 3,
-        "latitude": 49.72177259999999,
-        "longitude": -118.9273362,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/DJI_0065-Edit-3_4AA96059-DD4A-C186-61421173378BE56A_4aae46a2-009a-732d-53769405c4cbdf5b.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "41280",
-        "title": "Fireworks Show at Big White",
-        "url": "/event/fireworks-show-at-big-white/41280/",
-        "categories": [
-          {
-            "catName": "Community Events",
-            "catId": "80"
-          }
-        ],
-        "accountId": 0,
-        "city": "Big White Mountain",
-        "admission": "Free",
-        "featured": false,
-        "description": "<p>Kick off winter evenings with a spectacular show at Big White.<br>Fireworks will light up the sky every Saturday at 7 p.m., from Nov. 29 through April 4. The season opens with a special show in the Village Centre on Saturday, Nov. 29. After opening night, weekly fireworks move to Happy Valley, where the magic continues all winter. Whether you watch from your accommodation, a favourite restaurant or patio, or at the Happy Valley Skating Rink, each show will fill the night sky with vibrant colour and sparkling light. On Christmas Eve, fireworks return to the Village Centre for one special night to celebrate the holiday season.</p>",
-        "address1": "5315 Big White Road",
-        "state": "BC",
-        "zip": "V1P 1T4",
-        "expired": false,
-        "nextDate": "2026-03-15T06:59:59.000Z",
-        "startTime": "19:00:00"
-      },
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 10
+        "nextDate": "2026-05-09T06:59:59.000Z",
+        "startTime": "21:00:00",
+        "endTime": "23:00:00"
+      }
     },
     {
       "title": "Floor Opener",
-      "date": "2026-03-15",
+      "date": "2026-05-09",
       "startDate": "2026-01-24",
       "endDate": "2026-06-01",
       "venue": "Kelowna Art Gallery",
       "city": "Kelowna",
-      "description": "Lawrence Paul Yuxweluptun is one of Canada\u2019s most outspoken and influential contemporary artists, confronting colonial suppression, environmental degradation, and the ongoing struggles for Indigenous sovereignty. Of Cowichan (Hul\u2019q\u2019umi\u2019num Coast Salish) and Okanagan (Syilx) descent, his forty-year practice brings together traditional iconography, fearless critique, and biting satire to challenge and unsettle.\u00a0Floor Opener\u00a0presents a selection of works that are at once polemical and playful, imbu",
+      "description": "Lawrence Paul Yuxweluptun is one of Canada’s most outspoken and influential contemporary artists, confronting colonial suppression, environmental degradation, and the ongoing struggles for Indigenous sovereignty. Of Cowichan (Hul’q’umi’num Coast Salish) and Okanagan (Syilx) descent, his forty-year practice brings together traditional iconography, fearless critique, and biting satire to challenge and unsettle. Floor Opener presents a selection of works that are at once polemical and playful, imbu",
       "url": "https://www.tourismkelowna.com/event/floor-opener/42235/",
       "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Kelowna-Art-Gallery-1-_043019D8-EF31-63BC-6AA9AA1FE2ED0A17_04311412-0c8c-9dca-68acf83c6ebde480.jpg",
       "lat": 49.8911233,
       "lng": -119.4965822,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69b35e7cecf2b231a593fa14",
+        "_id": "69f6d2e7aa2314d6c37f9223",
         "location": "Kelowna Art Gallery",
-        "date": "2026-03-15T06:59:59.000Z",
+        "date": "2026-05-09T06:59:59.000Z",
         "startDate": "2026-01-24T08:00:00.000Z",
         "endDate": "2026-06-01T06:59:59.000Z",
         "recurrence": "Recurring daily",
@@ -746,391 +528,251 @@
           "title": "Kelowna Art Gallery",
           "url": "/listing/kelowna-art-gallery/246/"
         },
-        "description": "<p>Lawrence Paul Yuxweluptun is one of Canada\u2019s most outspoken and influential contemporary artists, confronting colonial suppression, environmental degradation, and the ongoing struggles for Indigenous sovereignty. Of Cowichan (Hul\u2019q\u2019umi\u2019num Coast Salish) and Okanagan (Syilx) descent, his forty-year practice brings together traditional iconography, fearless critique, and biting satire to challenge and unsettle.<em>\u00a0Floor Opener</em>\u00a0presents a selection of works that are at once polemical and playful, imbued with a spiritual resonance that speaks urgently to the political and social realities of our time. This nationally significant exhibition is organized and circulated by the Kitchener-Waterloo Art Gallery, with artwork sourced from private collections in British Columbia.</p>\r\n<p>\u00a0</p>",
+        "description": "<p>Lawrence Paul Yuxweluptun is one of Canada’s most outspoken and influential contemporary artists, confronting colonial suppression, environmental degradation, and the ongoing struggles for Indigenous sovereignty. Of Cowichan (Hul’q’umi’num Coast Salish) and Okanagan (Syilx) descent, his forty-year practice brings together traditional iconography, fearless critique, and biting satire to challenge and unsettle.<em> Floor Opener</em> presents a selection of works that are at once polemical and playful, imbued with a spiritual resonance that speaks urgently to the political and social realities of our time. This nationally significant exhibition is organized and circulated by the Kitchener-Waterloo Art Gallery, with artwork sourced from private collections in British Columbia.</p>\r\n<p> </p>",
         "address1": "1315 Water Street",
         "state": "BC",
         "zip": "V1Y 9R3",
         "expired": false,
-        "nextDate": "2026-03-13T06:59:59.000Z"
-      },
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 11
+        "nextDate": "2026-05-03T06:59:59.000Z"
+      }
     },
     {
-      "title": "Canadian Blood Services Plasma Donors Needed",
-      "date": null,
-      "venue": null,
+      "title": "Guys & Dolls",
+      "date": "2026-05-09",
+      "startDate": "2026-04-22",
+      "endDate": "2026-05-11",
+      "venue": "Actors Studio and Dinner Theatre",
       "city": "Kelowna",
-      "url": "https://www.castanet.net/events/canadian_blood_services_plasma_donors_needed/150011",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 12
+      "description": "Luck be a Lady Tonight!Hailed as the perfect musical comedy, Guys &amp; Dolls is a high-stakes hit packed with charm, wit, and one unforgettable score. Set in the stylized streets of Damon Runyon’s New York City, this classic tale of gamblers, showgirls, and salvation rolls the dice on love—and delivers big.When slick gambler Nathan Detroit tries to secure a spot for his legendary floating craps game, he bets fellow high-roller Sky Masterson that he can’t take a proper missionary, Sarah Brown, o",
+      "url": "https://www.tourismkelowna.com/event/guys-%26-dolls/41914/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Crowd_Clapping_and_Cheering_During_CCMA_Legends_Show_C4CFD662-9215-63CD-6355DA402A803226_c4d8da4c-ee79-6745-b7ecfabe14645ca8.jpg",
+      "lat": 49.8897499,
+      "lng": -119.4930744,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69f6464aaa2314d6c36bd643",
+        "location": "Actors Studio and Dinner Theatre",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-04-22T07:00:00.000Z",
+        "endDate": "2026-05-11T06:59:59.000Z",
+        "recurType": 99,
+        "latitude": 49.8897499,
+        "longitude": -119.4930744,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Crowd_Clapping_and_Cheering_During_CCMA_Legends_Show_C4CFD662-9215-63CD-6355DA402A803226_c4d8da4c-ee79-6745-b7ecfabe14645ca8.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "41914",
+        "title": "Guys & Dolls",
+        "url": "/event/guys-%26-dolls/41914/",
+        "categories": [
+          {
+            "catName": "Theatre, Comedy & Performing Arts",
+            "catId": "38"
+          }
+        ],
+        "accountId": 17805,
+        "city": "Kelowna",
+        "admission": "$72-$99",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 20,
+            "subcatname": "Performing Arts",
+            "catname": "Arts & Entertainment",
+            "catid": 7
+          },
+          "rankname": "Enhanced Listings",
+          "recid": 244,
+          "acctid": 17805,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Actors Studio and Dinner Theatre",
+          "url": "/listing/actors-studio-and-dinner-theatre/244/"
+        },
+        "description": "<p>Luck be a Lady Tonight!<br><br>Hailed as the perfect musical comedy, Guys &amp; Dolls is a high-stakes hit packed with charm, wit, and one unforgettable score. Set in the stylized streets of Damon Runyon’s New York City, this classic tale of gamblers, showgirls, and salvation rolls the dice on love—and delivers big.<br><br>When slick gambler Nathan Detroit tries to secure a spot for his legendary floating craps game, he bets fellow high-roller Sky Masterson that he can’t take a proper missionary, Sarah Brown, out on a date. What follows is a madcap ride from Times Square to Havana, filled with romance, hijinks, and one showstopper after another.<br><br>Featuring Frank Loesser’s golden score—including hits like Luck Be a Lady and Sit Down, You’re Rockin’ the Boat—Guys &amp; Dolls is a toe-tapping, heartwarming crowd-pleaser that proves when it comes to love… everyone’s got a shot.</p>\r\n<h3><span style=\"font-size: 12pt;\">Dinner &amp; Show Experience: Table, Diamond Booth &amp; Private Box Seating</span></h3>\r\n<p>Doors open at 5:30 PM for dinner service prior to the performance, which begins promptly at 7:00 PM. We kindly ask that all guests arrive in time to enjoy their meal before the show starts, as food service concludes prior to curtain to ensure a quiet and uninterrupted performance.</p>\r\n<p>Enjoy full table service, including a curated selection of beverages, wines, and cocktails. Please note that food and beverages are not included in the ticket price. However, a complimentary dessert is included for all table seating guests and will be served during intermission.</p>\r\n<p>For matinee performances, there is no food service offered, but a complimentary dessert is still included for table seating guests. All drinks are sold separately at both evening and matinee performances.</p>\r\n<p>Join us early, relax, and make your evening a full dinner-and-show experience!</p>\r\n<p><br><br>‍</p>",
+        "address1": "1379 Ellis Street",
+        "state": "BC",
+        "zip": "V1Y 1Z9",
+        "expired": false,
+        "nextDate": "2026-05-03T06:59:59.000Z",
+        "startTime": "19:00:00"
+      }
     },
     {
-      "title": "Indie State of Mind 3",
-      "date": null,
-      "venue": null,
+      "title": "Indiana Jones and the Temple of Doom",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
+      "venue": "Bernie’s Supper Club and Cinema",
       "city": "Kelowna",
-      "url": "https://www.castanet.net/events/indie_state_of_mind_3/150762",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 13
+      "description": "Come and see the \"Temple of Doom\" at Bernie's!After arriving in India, Indiana Jones is asked by a desperate village to find a mystical stone. He agrees &#8211; and stumbles upon a secret cult plotting a terrible plan in the catacombs of an ancient palace.",
+      "url": "https://www.tourismkelowna.com/event/indiana-jones-and-the-temple-of-doom/43742/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Audience-at-Mary-Irwin-Theatre-Rotary-Centre-for-the-Arts-1-_322D06B8-0CD0-B9DD-4F6AF4889C6A753D_32328324-b112-bc22-dda9cdf697cb143c.jpg",
+      "lat": 49.886029,
+      "lng": -119.4957847,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69f6a8f4aa2314d6c377d4d0",
+        "location": "Bernie’s Supper Club and Cinema",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
+        "recurType": 0,
+        "latitude": 49.886029,
+        "longitude": -119.4957847,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Audience-at-Mary-Irwin-Theatre-Rotary-Centre-for-the-Arts-1-_322D06B8-0CD0-B9DD-4F6AF4889C6A753D_32328324-b112-bc22-dda9cdf697cb143c.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43742",
+        "title": "Indiana Jones and the Temple of Doom",
+        "url": "/event/indiana-jones-and-the-temple-of-doom/43742/",
+        "categories": [
+          {
+            "catName": "Theatre, Comedy & Performing Arts",
+            "catId": "38"
+          }
+        ],
+        "accountId": 20475,
+        "city": "Kelowna",
+        "admission": "$10.99",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 41,
+            "subcatname": "Casual",
+            "catname": "Restaurants",
+            "catid": 12
+          },
+          "rankname": "Standard Listings",
+          "recid": 6003,
+          "acctid": 20475,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Bernie’s Supper Club and Cinema",
+          "url": "/listing/bernie%e2%80%99s-supper-club-and-cinema/6003/"
+        },
+        "description": "<p>Come and see the \"Temple of Doom\" at Bernie's!<br><br>After arriving in India, Indiana Jones is asked by a desperate village to find a mystical stone. He agrees &#8211; and stumbles upon a secret cult plotting a terrible plan in the catacombs of an ancient palace.</p>",
+        "address1": "353 Bernard Ave",
+        "state": "BC",
+        "zip": "V1Y 6N6",
+        "expired": false,
+        "nextDate": "2026-05-09T06:59:59.000Z",
+        "startTime": "18:00:00",
+        "endTime": "20:00:00"
+      }
     },
     {
-      "title": "UBCO Pediatric Exercise Study- Participants Needed",
-      "date": null,
-      "venue": null,
+      "title": "Jazz Nights",
+      "date": "2026-05-09",
+      "startDate": "2025-08-08",
+      "endDate": null,
+      "venue": "Naked Cafe",
       "city": "Kelowna",
-      "url": "https://www.castanet.net/events/ubco_pediatric_exercise_study-_participants_needed/150420",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 14
+      "description": "Trevor Salloum presents Jazz Night at Naked Cafe! Where music meets plant based magic! No cover, come hungry. BOGO plant pizzas for the last hour of the night. Tables fill up fast - reservations strongly recommended.",
+      "url": "https://www.tourismkelowna.com/event/jazz-nights/39283/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/alberto-bigoni-4-DeS5a-hAM-unsplash_AF29BC04-D9B1-D064-C1990A9D0BEA6D87_af2a5799-ede2-39cb-8e8bb4581bfaba54.jpg",
+      "lat": 49.8852642,
+      "lng": -119.4909179,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69f8a371aa2314d6c3aca1a1",
+        "location": "Naked Cafe",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2025-08-08T07:00:00.000Z",
+        "recurrence": "Recurring monthly on the 2nd Friday",
+        "recurType": 5,
+        "latitude": 49.8852642,
+        "longitude": -119.4909179,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/alberto-bigoni-4-DeS5a-hAM-unsplash_AF29BC04-D9B1-D064-C1990A9D0BEA6D87_af2a5799-ede2-39cb-8e8bb4581bfaba54.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "39283",
+        "title": "Jazz Nights",
+        "url": "/event/jazz-nights/39283/",
+        "categories": [
+          {
+            "catName": "Music",
+            "catId": "25"
+          }
+        ],
+        "accountId": 0,
+        "city": "Kelowna",
+        "admission": "$0",
+        "featured": false,
+        "description": "<p>Trevor Salloum presents Jazz Night at Naked Cafe! Where music meets plant based magic! No cover, come hungry. BOGO plant pizzas for the last hour of the night. Tables fill up fast - reservations strongly recommended.</p>",
+        "address1": "571 Lawrence Avenue",
+        "state": "BC",
+        "zip": "V1Y 6L8",
+        "expired": false,
+        "nextDate": "2026-05-09T06:59:59.000Z",
+        "startTime": "19:00:00",
+        "endTime": "21:00:00"
+      }
     },
     {
-      "title": "Okanagan Parkrun",
-      "date": null,
-      "venue": null,
+      "title": "Jese Lawrence Live",
+      "date": "2026-05-09",
+      "startDate": "2026-05-08",
+      "endDate": "2026-05-09",
+      "venue": "Freddy's Brewpub",
       "city": "Kelowna",
-      "url": "https://www.castanet.net/events/okanagan_parkrun/146579",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 15
-    },
-    {
-      "title": "Auto Masters: New Drivers",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/auto_masters_new_drivers/150256",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 16
-    },
-    {
-      "title": "Pysanka (Ukrainian Easter Egg) Workshop",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/pysanka_ukrainian_easter_egg_workshop/149932",
-      "source": "castanet",
-      "mode": "family",
-      "emoji": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
-      "index": 17
-    },
-    {
-      "title": "Weird & Wonderful",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/weird_wonderful/148414",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 18
-    },
-    {
-      "title": "Yoga Live Music Chocolate & Wine @ The View",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/yoga_live_music_chocolate_wine_the_view/148974",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 19
-    },
-    {
-      "title": "Lawrence Paul Yuxweluptun Lets\u2019lo:tseltun",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/lawrence_paul_yuxweluptun_letslotseltun/150142",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 20
-    },
-    {
-      "title": "Dome Dining At Frind Estate Winery",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/dome_dining_at_frind_estate_winery/150154",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 21
-    },
-    {
-      "title": "Encore Breakfast",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/encore_breakfast_/150241",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 22
-    },
-    {
-      "title": "Peachland Pop-up Recycling Depot",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/peachland_pop-up_recycling_depot/150613",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 23
-    },
-    {
-      "title": "Drop In Sign Painting OPEN on from 10:30am",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/drop_in_sign_painting_open_on_from_1030am/149697",
-      "source": "castanet",
-      "mode": "family",
-      "emoji": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
-      "index": 24
-    },
-    {
-      "title": "The Weird & Wonderful Tour",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/the_weird_wonderful_tour/149544",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 25
-    },
-    {
-      "title": "Fireside Wine Warmup at Meadow Vista",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/fireside_wine_warmup_at_meadow_vista/149891",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 26
-    },
-    {
-      "title": "Hydration Infusion Facial Treatment",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/hydration_infusion_facial_treatment/150635",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 27
-    },
-    {
-      "title": "Pizza & Pinot at Oak+Cru Social Kitchen and Wine Bar",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/pizza_pinot_at_oakcru_social_kitchen_and_wine_bar/150808",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 28
-    },
-    {
-      "title": "Mahjong Tournament",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/mahjong_tournament/149509",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 29
-    },
-    {
-      "title": "Quails' Gate Pinot & Truffle Celebration",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/quails_gate_pinot_truffle_celebration/150505",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 30
-    },
-    {
-      "title": "Gardening with Ornamental Grasses",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/gardening_with_ornamental_grasses/150457",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 31
-    },
-    {
-      "title": "Rodgers and Hammerstein's Cinderella",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/rodgers_and_hammersteins_cinderella/150560",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 32
-    },
-    {
-      "title": "Professional Makeup Tutorial",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/professional_makeup_tutorial/150636",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 33
-    },
-    {
-      "title": "Happy Hour at Little Straw Vineyards",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/happy_hour_at_little_straw_vineyards/148951",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 34
-    },
-    {
-      "title": "Heritage High Tea at the Eldorado",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/heritage_high_tea_at_the_eldorado/149976",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 35
-    },
-    {
-      "title": "Open Level Theatre Jazz- Adult Drop in Dance Class",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/open_level_theatre_jazz-_adult_drop_in_dance_class/150226",
-      "source": "castanet",
-      "mode": "family",
-      "emoji": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
-      "index": 36
-    },
-    {
-      "title": "Open Mic",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/open_mic_/150578",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 37
-    },
-    {
-      "title": "Open Mic at Three Lakes Brewing",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/open_mic_at_three_lakes_brewing/150752",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 38
-    },
-    {
-      "title": "Comedy for a Cause -Deaf/Hard of Hearing Camp",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/comedy_for_a_cause_-deaf-hard_of_hearing_camp/150484",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 39
-    },
-    {
-      "title": "Comedy for a Cause for CNIWT Family Camp",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/comedy_for_a_cause_for_cniwt_family_camp/150700",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 40
-    },
-    {
-      "title": "Unwind with Live Music at 97 Street Pub",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/unwind_with_live_music_at_97_street_pub/143293",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 41
-    },
-    {
-      "title": "MadFox Theatre: How I Learned to Drive by Paula Vogel",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/madfox_theatre_how_i_learned_to_drive_by_paula_vogel/150231",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 42
-    },
-    {
-      "title": "Connie-Lynn's 1st Year Birthday Show",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/connie-lynns_1st_year_birthday_show/150803",
-      "source": "castanet",
-      "mode": "day",
-      "emoji": "\u2600\ufe0f",
-      "index": 43
-    },
-    {
-      "title": "Live Music with Devon Coyote Trio",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/live_music_with_devon_coyote_trio/150676",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 44
-    },
-    {
-      "title": "Wine & Laughs at Dakoda's Comedy Lounge",
-      "date": null,
-      "venue": null,
-      "city": "Kelowna",
-      "url": "https://www.castanet.net/events/wine_laughs_at_dakodas_comedy_lounge/150701",
-      "source": "castanet",
-      "mode": "night",
-      "emoji": "\ud83c\udf19",
-      "index": 45
+      "description": "Jese Lawrence is an emerging alt-country artist from the Okanagan Valley, blending country, folk, &amp; blues with raw, honest storytelling based upon his life experiences and rural upbringing. With a soulful style and a growing fanbase, he's quickly gaining the attention of the country music scene.",
+      "url": "https://www.tourismkelowna.com/event/jese-lawrence-live/43781/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Freddy-s-Brewpub-14_C1B6A890-BE20-2EDA-03DB5434EA34D9C7_c1bdc783-038b-ce63-a70236ba3e9957ee.jpg",
+      "lat": 49.9021622,
+      "lng": -119.4052736,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "69fa64f3b22934a88401c78b",
+        "location": "Freddy's Brewpub",
+        "date": "2026-05-09T06:59:59.000Z",
+        "startDate": "2026-05-08T07:00:00.000Z",
+        "endDate": "2026-05-09T06:59:59.000Z",
+        "recurType": 0,
+        "latitude": 49.9021622,
+        "longitude": -119.4052736,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Freddy-s-Brewpub-14_C1B6A890-BE20-2EDA-03DB5434EA34D9C7_c1bdc783-038b-ce63-a70236ba3e9957ee.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43781",
+        "title": "Jese Lawrence Live",
+        "url": "/event/jese-lawrence-live/43781/",
+        "categories": [
+          {
+            "catName": "Music",
+            "catId": "25"
+          }
+        ],
+        "accountId": 0,
+        "city": "Kelowna",
+        "featured": false,
+        "description": "<p>Jese Lawrence is an emerging alt-country artist from the Okanagan Valley, blending country, folk, &amp; blues with raw, honest storytelling based upon his life experiences and rural upbringing. With a soulful style and a growing fanbase, he's quickly gaining the attention of the country music scene.</p>",
+        "address1": "948 McCurdy Rd #124",
+        "state": "BC",
+        "zip": "V1X 2P7",
+        "expired": false,
+        "nextDate": "2026-05-09T06:59:59.000Z",
+        "startTime": "19:00:00",
+        "endTime": "21:30:00"
+      }
     }
-  ],
-  "scrapedAt": "2026-03-14T21:32:34.418Z"
+  ]
 }

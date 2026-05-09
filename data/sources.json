@@ -26,6 +26,14 @@
       "notes": "Ticketed events across Kelowna"
     },
     {
+      "id": "livemusic-kelowna",
+      "name": "Live Music Kelowna",
+      "type": "jsonld",
+      "url": "https://livemusickelowna.ca/events/",
+      "active": true,
+      "notes": "Local live music calendar with structured event data and venue-level details"
+    },
+    {
       "id": "city-of-kelowna",
       "name": "City of Kelowna",
       "type": "scraper",

@@ -2,6 +2,22 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+let posthogRef = null;
+async function getPostHog() {
+  if (posthogRef) return posthogRef;
+  if (typeof window === 'undefined') return null;
+  try {
+    const { default: posthog } = await import('posthog-js');
+    posthogRef = posthog;
+    return posthog;
+  } catch {
+    return null;
+  }
+}
+function capture(event, props = {}) {
+  getPostHog().then((ph) => ph?.capture?.(event, props)).catch(() => {});
+}
+
 const INSERT_BEFORE_TUESDAY = 'TUESDAY';
 const INSERT_BEFORE_FRIDAY = 'FRIDAY';
 const MODES = {
@@ -10,15 +26,24 @@ const MODES = {
   family: { img: 'translateY(-66.67%)', content: 'translateY(0%)' },
 };
 const MODE_ORDER = ['night', 'grownup', 'family'];
-const EVENT_DATA = [
-  { day: '☀️ 28°C  ·  🍷 Wine  ·  🕐 2PM', night: '🌙 18°C  ·  🎵 Live Music  ·  🕘 9PM', family: '☀️ 28°C  ·  📚 Storytime  ·  🕙 10AM' },
-  { day: '☀️ 30°C  ·  🍇 Tasting  ·  🕐 1PM', night: '🌧️ 16°C  ·  🔥 Bonfire  ·  🕗 8PM', family: '☀️ 30°C  ·  💦 Splash Pad  ·  🕛 12PM' },
-  { day: '⛅ 24°C  ·  🍺 Pub  ·  🕒 3PM', night: '🌙 12°C  ·  🔭 Stargazing  ·  🕙 10PM', family: '⛅ 24°C  ·  ⛳ Mini Golf  ·  🕑 2PM' },
-  { day: '☀️ 27°C  ·  🏒 Hockey  ·  🕖 7PM', night: '⛅ 20°C  ·  🎸 Concert  ·  🕗 8PM', family: '☀️ 27°C  ·  🔬 Science  ·  🕐 1PM' },
-  { day: '☀️ 31°C  ·  🍷 Wine  ·  🕑 2PM', night: '🌙 19°C  ·  🍸 Cocktails  ·  🕙 10PM', family: '☀️ 31°C  ·  🍓 Berry Picking  ·  🕙 10AM' },
-  { day: '☀️ 29°C  ·  🍖 BBQ  ·  🕛 12PM', night: '🌙 17°C  ·  🎆 Fireworks  ·  🕘 9PM', family: '☀️ 29°C  ·  🏄 Waterpark  ·  🕚 11AM' },
-  { day: '⛅ 25°C  ·  🎪 Carnival  ·  🕐 1PM', night: '🌧️ 14°C  ·  🎠 Rides  ·  🕚 11PM', family: '⛅ 25°C  ·  🐾 Petting Zoo  ·  🕙 10AM' },
-];
+function weatherIcon(code) {
+  if ([0, 1].includes(code)) return '☀️';
+  if ([2, 3].includes(code)) return '⛅';
+  if ([45, 48].includes(code)) return '🌫️';
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return '🌧️';
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return '❄️';
+  if ([95, 96, 99].includes(code)) return '⛈️';
+  return '🌤️';
+}
+
+function buildMeta(day, mode, forecast) {
+  const entry = day.entries?.[mode] || EMPTY_ENTRY;
+  const bits = [];
+  if (forecast) bits.push(`${weatherIcon(forecast.code)} ${Math.round(forecast.high)}°/${Math.round(forecast.low)}°C`);
+  if (entry.venue) bits.push(entry.venue);
+  if (entry.city) bits.push(entry.city);
+  return bits.join('  ·  ');
+}
 
 function AnimatedCardMedia({ entry }) {
   const [ready, setReady] = useState(false);
@@ -117,6 +142,31 @@ export default function HomepageClient({ currentWeek }) {
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
   const [sheet, setSheet] = useState({ visible: false, day: null, index: -1 });
   const [isMobile, setIsMobile] = useState(false);
+  const [forecasts, setForecasts] = useState(currentWeek.weatherByDate || {});
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState({ state: 'idle', message: '' });
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=49.8880&longitude=-119.4960&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=America%2FVancouver&forecast_days=7');
+        if (!res.ok) return;
+        const data = await res.json();
+        const next = {};
+        data.daily?.time?.forEach((date, index) => {
+          next[date] = {
+            code: data.daily.weather_code?.[index],
+            high: data.daily.temperature_2m_max?.[index],
+            low: data.daily.temperature_2m_min?.[index],
+          };
+        });
+        if (!cancelled) setForecasts(next);
+      } catch {}
+    }
+    loadWeather();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768);
@@ -183,6 +233,13 @@ export default function HomepageClient({ currentWeek }) {
   const dayLabel = dayMode ? { title: 'Daytime', desc: 'daytime events' } : { title: 'Nightlife', desc: 'evening events' };
   const cardCount = currentWeek.days.length || 1;
   const staggerMs = cardCount > 1 ? Math.round((720 - 400) / (cardCount - 1)) : 0;
+  const weekStart = currentWeek.weekKey ? new Date(`${currentWeek.weekKey}T12:00:00`) : null;
+  const dateForIndex = (index) => {
+    if (!weekStart) return null;
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + index);
+    return d.toISOString().slice(0, 10);
+  };
 
   const moveTooltip = (event) => {
     const OFFSET = 12;
@@ -193,6 +250,48 @@ export default function HomepageClient({ currentWeek }) {
     if (x + tooltipWidth > window.innerWidth) x = event.clientX - tooltipWidth - OFFSET;
     if (y + tooltipHeight > window.innerHeight) y = event.clientY - tooltipHeight - OFFSET;
     setTooltip((prev) => ({ ...prev, x: Math.max(12, x), y: Math.max(12, y) }));
+  };
+
+  const forwardNewsletterEmail = (email) => {
+    try {
+      const form = new FormData();
+      form.append('email', email);
+      form.append('_subject', 'New OKLetsGo newsletter signup');
+      form.append('_template', 'table');
+      form.append('_captcha', 'false');
+      form.append('source', 'okletsgo.ca homepage form');
+      fetch('https://formsubmit.co/sam@samzamor.com', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: form,
+      }).catch(() => {});
+    } catch {}
+  };
+
+  const handleNewsletterSubmit = async (event) => {
+    event.preventDefault();
+    const email = newsletterEmail.trim();
+    if (!email) {
+      setNewsletterStatus({ state: 'error', message: 'Enter your email first.' });
+      return;
+    }
+    setNewsletterStatus({ state: 'loading', message: 'Adding you…' });
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'homepage-footer' }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Could not join right now.');
+      forwardNewsletterEmail(email);
+      setNewsletterEmail('');
+      setNewsletterStatus({ state: 'success', message: data.message || 'You\'re on the list.' });
+      capture('newsletter_subscribe', { source: 'homepage-footer', success: true });
+    } catch (err) {
+      setNewsletterStatus({ state: 'error', message: err.message || 'Could not join right now.' });
+      capture('newsletter_subscribe', { source: 'homepage-footer', success: false, error: err.message || 'unknown' });
+    }
   };
 
   return (
@@ -214,6 +313,7 @@ export default function HomepageClient({ currentWeek }) {
                     const checked = e.target.checked;
                     setFamilyMode(checked);
                     if (checked && !dayMode) setDayMode(true);
+                    capture('mode_toggle', { family: checked });
                   }} />
                   <div className="toggle-track toggle-track--family"><div className="toggle-knob"></div></div>
                 </label>
@@ -227,6 +327,7 @@ export default function HomepageClient({ currentWeek }) {
                     const checked = e.target.checked;
                     setDayMode(checked);
                     if (!checked) setFamilyMode(false);
+                    capture('daynight_toggle', { dayMode: checked });
                   }} />
                   <div className="toggle-track toggle-track--day">
                     <div className="toggle-knob toggle-knob--day">
@@ -247,21 +348,38 @@ export default function HomepageClient({ currentWeek }) {
                   if (item.type === 'brand') {
                     return <a key={`brand-${order}`} href="#newsletter" className="utility-tile utility-tile--brand" aria-label="OK LET&apos;S GO brand tile"><div className="utility-inner utility-inner--brand"><span className="utility-logo"><span className="utility-logo-ok">OK</span><br />LET&apos;S<br />GO</span></div></a>;
                   }
-                  const tooltipText = !dayMode ? EVENT_DATA[item.index]?.night : familyMode ? EVENT_DATA[item.index]?.family : EVENT_DATA[item.index]?.day;
+                  const tooltipMode = !dayMode ? 'night' : familyMode ? 'family' : 'grownup';
+                  const tooltipText = buildMeta(item.day, tooltipMode, forecasts[dateForIndex(item.index)]);
                   const entry = item.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'];
                   return (
                     <div
                       key={item.day.day}
                       className="card-wrapper"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open details for ${item.day.day}`}
                       onClick={(e) => {
-                        if (isMobile) {
+                        e.preventDefault();
+                        setTooltip((prev) => ({ ...prev, visible: false }));
+                        const opening = !(sheet.visible && sheet.index === item.index);
+                        setSheet((prev) => prev.visible && prev.index === item.index
+                          ? { visible: false, day: null, index: -1 }
+                          : { visible: true, day: item.day, index: item.index });
+                        if (opening) {
+                          const entry = item.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'] || {};
+                          capture('event_card_click', { day: item.day.day, mode, venue: entry.venue || '', city: entry.city || '' });
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
+                          setTooltip((prev) => ({ ...prev, visible: false }));
                           setSheet((prev) => prev.visible && prev.index === item.index
                             ? { visible: false, day: null, index: -1 }
                             : { visible: true, day: item.day, index: item.index });
                         }
                       }}
-                      onMouseEnter={(e) => { if (!isMobile) { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); } }}
+                      onMouseEnter={(e) => { if (!isMobile && !sheet.visible) { setTooltip({ visible: true, text: tooltipText || '', x: 0, y: 0 }); moveTooltip(e); } }}
                       onMouseMove={(e) => { if (!isMobile) moveTooltip(e); }}
                       onMouseLeave={() => { if (!isMobile) setTooltip((prev) => ({ ...prev, visible: false })); }}
                     >
@@ -272,7 +390,23 @@ export default function HomepageClient({ currentWeek }) {
               </div>
               <div className="footer">
                 <div className="timer-area"><span className="footer-text">List resets in <span id="countdown">{countdown}</span></span></div>
-                <div className="newsletter-area" id="newsletter"><span className="footer-text">Always stay up to date</span><button className="newsletter-btn">Join the Newsletter</button></div>
+                <form className="newsletter-area" id="newsletter" onSubmit={handleNewsletterSubmit}>
+                  <label className="newsletter-label" htmlFor="newsletterEmail">Always stay up to date</label>
+                  <input
+                    id="newsletterEmail"
+                    className="newsletter-input"
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    required
+                  />
+                  <button className="newsletter-btn" type="submit" disabled={newsletterStatus.state === 'loading'}>
+                    {newsletterStatus.state === 'loading' ? 'Joining…' : 'Join'}
+                  </button>
+                  {newsletterStatus.message && <span className={`newsletter-message newsletter-message--${newsletterStatus.state}`}>{newsletterStatus.message}</span>}
+                </form>
               </div>
             </div>
           </div>
@@ -285,18 +419,42 @@ export default function HomepageClient({ currentWeek }) {
       <div className={`bottom-sheet ${sheet.visible ? 'visible' : ''}`}>
         {sheet.day && (() => {
           const entry = sheet.day.entries[mode === 'grownup' ? 'grownup' : mode === 'night' ? 'night' : 'family'] || EMPTY_ENTRY;
-          const eventInfo = !dayMode ? EVENT_DATA[sheet.index]?.night : familyMode ? EVENT_DATA[sheet.index]?.family : EVENT_DATA[sheet.index]?.day;
+          const sheetMode = !dayMode ? 'night' : familyMode ? 'family' : 'grownup';
+          const forecast = forecasts[dateForIndex(sheet.index)];
+          const weatherText = forecast ? `${weatherIcon(forecast.code)} ${Math.round(forecast.high)}°/${Math.round(forecast.low)}°C` : 'Forecast loading';
+          const eventInfo = buildMeta(sheet.day, sheetMode, forecast);
           return (
             <>
               <div className="bottom-sheet-handle" />
               <div className="bottom-sheet-content">
                 <div className="bottom-sheet-day">{sheet.day.day}</div>
                 <div className="bottom-sheet-venue">{entry?.venue || 'Coming soon'}</div>
+                {entry?.eventVenue && <div className="bottom-sheet-location">{entry.eventVenue}</div>}
                 {entry?.city && <div className="bottom-sheet-city">{entry.city}</div>}
+                {entry?.description && <p className="bottom-sheet-blurb">{entry.description}</p>}
+                <div className="bottom-sheet-facts">
+                  <div><span>Weather</span><strong>{weatherText}</strong></div>
+                  <div><span>When</span><strong>{entry?.duration || 'Check listing'}</strong></div>
+                  <div><span>Price</span><strong>{entry?.pricing || 'Check listing'}</strong></div>
+                </div>
+                {entry?.address && <div className="bottom-sheet-address">📍 {entry.address}</div>}
                 {eventInfo && <div className="bottom-sheet-meta">{eventInfo}</div>}
-                <button className="bottom-sheet-btn" onClick={(e) => { e.stopPropagation(); setSheet({ visible: false, day: null, index: -1 }); }}>
-                  Close
-                </button>
+                <div className="bottom-sheet-actions">
+                  {entry?.ticketUrl && <a className="bottom-sheet-link" href={entry.ticketUrl} target="_blank" rel="noreferrer" onClick={() => capture('open_listing', { day: sheet.day.day, mode, venue: entry.venue || '', url: entry.ticketUrl })}>Open listing</a>}
+                  <button className="bottom-sheet-btn bottom-sheet-btn--share" onClick={(e) => {
+                    e.stopPropagation();
+                    const shareTitle = `${entry.venue || 'Event'} · ${sheet.day.day} — OK LET'S GO`;
+                    const shareUrl = entry.ticketUrl || entry.sourceUrl || 'https://okletsgo.ca';
+                    if (navigator.share) {
+                      navigator.share({ title: shareTitle, url: shareUrl }).then(() => capture('share_event', { method: 'native', day: sheet.day.day, venue: entry.venue || '' })).catch(() => {});
+                    } else {
+                      navigator.clipboard?.writeText?.(shareUrl).then(() => capture('share_event', { method: 'clipboard', day: sheet.day.day, venue: entry.venue || '' })).catch(() => {});
+                    }
+                  }}>Share</button>
+                  <button className="bottom-sheet-btn" onClick={(e) => { e.stopPropagation(); setSheet({ visible: false, day: null, index: -1 }); }}>
+                    Close
+                  </button>
+                </div>
               </div>
             </>
           );

@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/admin/manual', label: 'Manual' },
   { href: '/admin/assets', label: 'Assets' },
   { href: '/admin/publish', label: 'Publish' },
+  { href: '/admin/newsletter', label: 'Newsletter' },
   { href: '/admin/guide', label: 'Guide' },
 ];
 
