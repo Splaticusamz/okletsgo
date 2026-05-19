@@ -1,142 +1,38 @@
 {
-  "scrapedAt": "2026-05-09T16:07:40.721Z",
+  "scrapedAt": "2026-05-19T16:02:02.632Z",
   "events": [
     {
-      "title": "An Evening of Bliss: Yin Yoga, Craniosacral, Massage & Tea",
-      "date": "2026-05-10",
-      "startDate": "2026-04-23",
-      "endDate": "2026-06-27",
-      "venue": "Pranify Yoga Headquarters",
+      "title": "Andrew Judah",
+      "date": "2026-05-20",
+      "startDate": "2026-05-19",
+      "endDate": "2026-05-20",
+      "venue": "Micro Bar & Bites",
       "city": "Kelowna",
-      "description": "A Candlelit Journey of Deep Rest, Healing Touch &amp; Nervous System ResetStep into the soft glow of candlelight and let the world melt away...Join Aleena McKinnon of Buddha Beats Yoga and Eline Vary, Registered Massage Therapist &amp; Craniosacral Practitioner, for a deeply nourishing 75-minute experience that blends Yin Yoga, massage, and craniosacral therapy — all held in a serene, candlelit space designed to soothe your senses and restore your soul.What to Expect:In this slow and meditative ",
-      "url": "https://www.tourismkelowna.com/event/an-evening-of-bliss%3a-yin-yoga-craniosacral-massage-%26-tea/43279/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/newcandlelight_C1161559-F924-1201-C9BEEF19A1D821EC_c12e9d3f-c361-724d-825d0f052553a7c7.jpg",
-      "lat": 49.8644694,
-      "lng": -119.4909496,
+      "description": "Since the summer of 2022, Tuesday nights at micro + bar and bites are home to live music. Our curated schedule is comprised of talented musicians, performing in an intimate, listening-style environment. And of course, the music is designed to be enjoyed with friends new and old over creative cocktails and tasty tapas.Over 100+ nights of music have been held at our cozy bar, featuring a variety of Okanagan talent representing genres such as singer-songwriter, soul, blues, latin folclórica, and ea",
+      "url": "https://www.tourismkelowna.com/event/andrew-judah/43736/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Spring-Landscape-View-of-Kelowna-Looking-North-2-_3099C2B1-EA12-FB8A-750115AA2BEE061D_30a19857-ea3b-ae37-11fffdad1c486d5d.jpg",
+      "lat": 49.8859965,
+      "lng": -119.4967342,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69f87950aa2314d6c3a90fe7",
-        "location": "Pranify Yoga Headquarters",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-04-23T07:00:00.000Z",
-        "endDate": "2026-06-27T06:59:59.000Z",
-        "recurType": 99,
-        "latitude": 49.8644694,
-        "longitude": -119.4909496,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/newcandlelight_C1161559-F924-1201-C9BEEF19A1D821EC_c12e9d3f-c361-724d-825d0f052553a7c7.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "43279",
-        "title": "An Evening of Bliss: Yin Yoga, Craniosacral, Massage & Tea",
-        "url": "/event/an-evening-of-bliss%3a-yin-yoga-craniosacral-massage-%26-tea/43279/",
-        "categories": [
-          {
-            "catName": "Classes & Workshops",
-            "catId": "48"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "$45",
-        "featured": false,
-        "description": "<p><br>A Candlelit Journey of Deep Rest, Healing Touch &amp; Nervous System Reset<br><br>Step into the soft glow of candlelight and let the world melt away...<br><br>Join Aleena McKinnon of Buddha Beats Yoga and Eline Vary, Registered Massage Therapist &amp; Craniosacral Practitioner, for a deeply nourishing 75-minute experience that blends Yin Yoga, massage, and craniosacral therapy — all held in a serene, candlelit space designed to soothe your senses and restore your soul.<br><br><strong>What to Expect:</strong><br><br>In this slow and meditative class, you’ll be guided through a series of gentle Yin Yoga postures, held for several minutes to release tension and open the body from deep within. As you rest in each shape, Elaine will offer hands-on massage and craniosacral therapy, intuitively supporting your body with skilled, healing touch.<br><br>Set entirely by candlelight, this immersive experience invites you to fully surrender — physically, emotionally, and energetically — into a space of peace and inner stillness.<br><br>After-Class Tea &amp; Connection<br><br>To close the evening, we’ll gather for a warm cup of herbal tea and a brief connection, giving space to integrate the experience, connect with the community, or sit in silence and enjoy the stillness. It’s a gentle way to land back into your body — and into the present moment — before you float off into the rest of your evening.<br><br>With years of experience in massage therapy and a gift for craniosacral healing, Eline offers a nurturing, intuitive presence that makes you feel completely supported and cared for.</p>",
-        "address1": "Suite 203, 2915 Pandosy St",
-        "state": "BC",
-        "zip": "v1y 1v9",
-        "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "19:00:00",
-        "endTime": "20:30:00"
-      }
-    },
-    {
-      "title": "Artist Development Series: Art and Accountability on sʔuknaqinx / syilx / Okanagan Territory",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "Alternator Centre for Contemporary Art",
-      "city": "Kelowna",
-      "description": "The Art &amp; Accountability on sʔuknaqinx / syilx / Okanagan Territory session is a foundational learning experience designed for settler and non-Indigenous artists, hosted in direct partnership with the Sncewips Heritage Museum. This session moves toward meaningful action by grounding creative practices in respect, truth, and the historical context of the unceded, ancestral territory of the sʔuknaqinx/syilx people. Led by expert museum staff, participants will take part in a curated tour focus",
-      "url": "https://www.tourismkelowna.com/event/artist-development-series%3a-art-and-accountability-on-s%ca%94uknaqinx-syilx-okanagan-territory/43768/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lebanon-Creek-Regional-Park-Spring-2_8FB0860D-915A-3395-0E6B3D7DD94A6F04_8fb39bcd-bebf-a9bc-a32737f4ac278838.jpg",
-      "lat": 49.891518,
-      "lng": -119.494912,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69f921f7aa2314d6c3ba25bd",
-        "location": "Alternator Centre for Contemporary Art",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
+        "_id": "6a0a9a1411371cf6eefd96b5",
+        "location": "Micro Bar & Bites",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-05-19T07:00:00.000Z",
+        "endDate": "2026-05-20T06:59:59.000Z",
         "recurType": 0,
-        "latitude": 49.891518,
-        "longitude": -119.494912,
+        "latitude": 49.8859965,
+        "longitude": -119.4967342,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lebanon-Creek-Regional-Park-Spring-2_8FB0860D-915A-3395-0E6B3D7DD94A6F04_8fb39bcd-bebf-a9bc-a32737f4ac278838.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Spring-Landscape-View-of-Kelowna-Looking-North-2-_3099C2B1-EA12-FB8A-750115AA2BEE061D_30a19857-ea3b-ae37-11fffdad1c486d5d.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "43768",
-        "title": "Artist Development Series: Art and Accountability on sʔuknaqinx / syilx / Okanagan Territory",
-        "url": "/event/artist-development-series%3a-art-and-accountability-on-s%ca%94uknaqinx-syilx-okanagan-territory/43768/",
-        "categories": [
-          {
-            "catName": "Classes & Workshops",
-            "catId": "48"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "Pay It Forward/If You Can (Please register on website link.)",
-        "featured": false,
-        "description": "<p>The Art &amp; Accountability on sʔuknaqinx / syilx / Okanagan Territory session is a foundational learning experience designed for settler and non-Indigenous artists, hosted in direct partnership with the Sncewips Heritage Museum. This session moves toward meaningful action by grounding creative practices in respect, truth, and the historical context of the unceded, ancestral territory of the sʔuknaqinx/syilx people. Led by expert museum staff, participants will take part in a curated tour focused on the living history, sovereignty, and enduring presence of the sʔuknaqinx/syilx peoples.<br><br>Following the tour, the session facilitates an in-depth discussion on ethical creative practices, helping artists distinguish between cultural appreciation and appropriation to avoid the extraction of Indigenous narratives. Central to this work is an exploration of positionality, providing creators with the tools to identify their roles as guests on the land and reflect this authentically in their artist statements and professional practices. By moving beyond symbolic gestures, the program empowers creators to transform their work into an act of reciprocity and have genuine engagement within a sʔuknaqinx/syilx/Okanagan space such as the museum.<br><br>This workshop is free to attend. However, for those with the capacity to do so, we invite you to participate in our Pay It Forward program.</p>",
-        "address1": "421 Cawston Avenue- Unit 103",
-        "state": "BC",
-        "zip": "V1Y 61Z",
-        "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "13:00:00",
-        "endTime": "15:00:00"
-      }
-    },
-    {
-      "title": "BEETHOVEN’S FIFTH",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "Kelowna Community Theatre",
-      "city": "Kelowna",
-      "description": "Experience the symphony that changed music forever. Shocking at the time of its premiere with its emotional intensity, today Beethoven’s 5th is one of the world’s most recognizable works of art. After more than a decade, the OSO returns to this iconic masterpiece to close the season with a monument of musical expression. This concert also features the Okanagan Symphony Chorus in Ola Gjeilo’s Sunrise Mass, a profound and expressive journey, full of soaring melodies and walls of sonic power.",
-      "url": "https://www.tourismkelowna.com/event/beethoven%e2%80%99s-fifth/43201/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Screenshot-2026-03-12-154532_EA230819-FF4B-3D04-B1F13EF142FCE210_ea264b69-bb74-2c68-381a183bc065a299.png",
-      "lat": 49.88947719999999,
-      "lng": -119.4955449,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69fccfebb22934a88445c6b5",
-        "location": "Kelowna Community Theatre",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.88947719999999,
-        "longitude": -119.4955449,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Screenshot-2026-03-12-154532_EA230819-FF4B-3D04-B1F13EF142FCE210_ea264b69-bb74-2c68-381a183bc065a299.png",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "43201",
-        "title": "BEETHOVEN’S FIFTH",
-        "url": "/event/beethoven%e2%80%99s-fifth/43201/",
+        "recid": "43736",
+        "title": "Andrew Judah",
+        "url": "/event/andrew-judah/43736/",
         "categories": [
           {
             "catName": "Music",
@@ -145,21 +41,87 @@
         ],
         "accountId": 0,
         "city": "Kelowna",
-        "admission": "Adults $35 - 70, Seniors $35 - $52.50, Youth $15 + fees & taxes",
+        "admission": "FREE",
         "featured": false,
-        "description": "<p>Experience the symphony that changed music forever. Shocking at the time of its premiere with its emotional intensity, today Beethoven’s 5th is one of the world’s most recognizable works of art. After more than a decade, the OSO returns to this iconic masterpiece to close the season with a monument of musical expression. This concert also features the Okanagan Symphony Chorus in Ola Gjeilo’s Sunrise Mass, a profound and expressive journey, full of soaring melodies and walls of sonic power.</p>",
-        "address1": "1375 Water Street",
+        "description": "<p>Since the summer of 2022, Tuesday nights at micro + bar and bites are home to live music. Our curated schedule is comprised of talented musicians, performing in an intimate, listening-style environment. And of course, the music is designed to be enjoyed with friends new and old over creative cocktails and tasty tapas.<br><br>Over 100+ nights of music have been held at our cozy bar, featuring a variety of Okanagan talent representing genres such as singer-songwriter, soul, blues, latin folclórica, and eastern-European jazz.<br><br>Given that our seating is limited (and we do not take reservations), we recommend you come early to secure your spot at the bar and enjoy an unforgettable night of live music, great cocktails, and a few bites from our tapas menu.</p>",
+        "address1": "1500 Water Street",
         "state": "BC",
-        "zip": "V1Y 0B4",
         "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "14:00:00",
-        "endTime": "16:00:00"
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "19:30:00",
+        "endTime": "21:30:00"
+      }
+    },
+    {
+      "title": "Bat Nights: After-Dark Discovery",
+      "date": "2026-05-20",
+      "startDate": "2026-05-19",
+      "endDate": "2026-05-20",
+      "venue": "Johns Family Nature Conservancy Regional Park",
+      "city": "Kelowna",
+      "description": "Free Program - Registration Required to secure your spot: https://www.rdco.intellionline.ca/WEBSITE/public/category/browse/BATNGHTUsing special audio detectors, we’ll tune into bat echolocation calls and uncover the secret lives of bats. On this evening nature walk, we’ll be watching for bats in action and learning about their nocturnal habits, ecological importance, and conservation needs.  For more information on other programs offered by the RDCO and registration details, please visit our web",
+      "url": "https://www.tourismkelowna.com/event/bat-nights%3a-after-dark-discovery/43348/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/dreamstime-CCO_135689318_B141C68A-AA42-7DD6-02F8C6D839CC0380_b14c8a38-f08a-3913-99861143c97434f8.jpg",
+      "lat": 49.7742111,
+      "lng": -119.5211404,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "6a07782411371cf6ee9f803c",
+        "location": "Johns Family Nature Conservancy Regional Park",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-05-19T07:00:00.000Z",
+        "endDate": "2026-05-20T06:59:59.000Z",
+        "recurType": 0,
+        "latitude": 49.7742111,
+        "longitude": -119.5211404,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/dreamstime-CCO_135689318_B141C68A-AA42-7DD6-02F8C6D839CC0380_b14c8a38-f08a-3913-99861143c97434f8.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43348",
+        "title": "Bat Nights: After-Dark Discovery",
+        "url": "/event/bat-nights%3a-after-dark-discovery/43348/",
+        "categories": [
+          {
+            "catName": "Sports & Recreation",
+            "catId": "27"
+          }
+        ],
+        "accountId": 18770,
+        "city": "Kelowna",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 181,
+            "subcatname": "Easy",
+            "catname": "Hiking",
+            "catid": 50
+          },
+          "rankname": "Outdoor Listings",
+          "recid": 1586,
+          "acctid": 18770,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Johns Family Nature Conservancy Regional Park",
+          "url": "/listing/johns-family-nature-conservancy-regional-park/1586/"
+        },
+        "description": "<p>Free Program - Registration Required to secure your spot: https://www.rdco.intellionline.ca/WEBSITE/public/category/browse/BATNGHT<br><br>Using special audio detectors, we’ll tune into bat echolocation calls and uncover the secret lives of bats. On this evening nature walk, we’ll be watching for bats in action and learning about their nocturnal habits, ecological importance, and conservation needs.  <br><br>For more information on other programs offered by the RDCO and registration details, please visit our website: https://www.rdco.intellionline.ca/WEBSITE/public.</p>",
+        "address1": "6970 Chute Lake Rd",
+        "state": "BC",
+        "zip": "V1W 4L5",
+        "expired": false,
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "19:30:00",
+        "endTime": "21:00:00"
       }
     },
     {
       "title": "Blossom & Bites: A Spring Lunch for Two",
-      "date": "2026-05-10",
+      "date": "2026-05-20",
       "startDate": "2026-03-18",
       "endDate": "2026-07-01",
       "venue": "Meadow Vista Honey Wines",
@@ -171,9 +133,9 @@
       "lng": -119.4070744,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69fd4ecfb22934a884552ddd",
+        "_id": "6a0ad1a911371cf6ee028a8c",
         "location": "Meadow Vista Honey Wines",
-        "date": "2026-05-10T06:59:59.000Z",
+        "date": "2026-05-20T06:59:59.000Z",
         "startDate": "2026-03-18T07:00:00.000Z",
         "endDate": "2026-07-01T06:59:59.000Z",
         "recurrence": "Recurring daily",
@@ -229,309 +191,82 @@
         "state": "BC",
         "zip": "V1W 4E4",
         "expired": false,
-        "nextDate": "2026-05-08T06:59:59.000Z",
+        "nextDate": "2026-05-19T06:59:59.000Z",
         "startTime": "11:30:00",
         "endTime": "15:30:00"
       }
     },
     {
-      "title": "Cooking Class: Mother's Day Series",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "Lakehouse Kitchens Cooking School",
+      "title": "Dynamic Duo Band",
+      "date": "2026-05-20",
+      "startDate": "2026-01-20",
+      "endDate": "2026-12-16",
+      "venue": "TownePlace Suites by Marriott West Kelowna",
       "city": "Kelowna",
-      "description": "Celebrate Mother’s Day in the most meaningful way—gathered in the kitchen, cooking side by side.In this special hands-on class, you’ll be guided through cherished Italian recipes inspired by Nonna’s table—simple, soulful, and rooted in tradition.Learn time-honoured techniques as you create comforting, from-scratch dishes that bring people together. From rolling fresh pasta to finishing with a classic dessert, this experience is all about connection, tradition, and sharing a beautiful meal.Cook, ",
-      "url": "https://www.tourismkelowna.com/event/cooking-class%3a-mothers-day-series/43662/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lakehouse-Kitchens-Cooking-School-2_8F283838-F632-D64D-6712DB0D7D9EAA18_8f30503b-f6f9-6b30-f7dccf6437815586.jpg",
-      "lat": 49.8866732,
-      "lng": -119.4932184,
+      "description": "Enjoy Dynamic Duo once a month on Tuesdays! Curtis Kieres &amp; Dennis Lyne are two accomplished musicians who joined forces to provide high-quality entertainment for all to enjoy.\r\nCurtis is a professional saxophonist, composer and multi-instrumentalist who brings a sultry and soothing sound that is characteristic of the saxophone.\r\nDennis is a versatile keyboardist and accomplished vocalist who has woven a rich tapestry of musical experiences throughout his career. Together, they perform the b",
+      "url": "https://www.tourismkelowna.com/event/dynamic-duo-band/42387/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-13_387B447D-0F34-E6F4-7B55E0CDAFB23780_387f1e74-cc79-cfd2-476a255ff441aecd.jpg",
+      "lat": 49.8366037,
+      "lng": -119.6107422,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69f60100aa2314d6c364cc70",
-        "location": "Lakehouse Kitchens Cooking School",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.8866732,
-        "longitude": -119.4932184,
+        "_id": "6a0bc0a911371cf6ee246813",
+        "location": "TownePlace Suites by Marriott West Kelowna",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-01-20T08:00:00.000Z",
+        "endDate": "2026-12-16T07:59:59.000Z",
+        "recurType": 99,
+        "latitude": 49.8366037,
+        "longitude": -119.6107422,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lakehouse-Kitchens-Cooking-School-2_8F283838-F632-D64D-6712DB0D7D9EAA18_8f30503b-f6f9-6b30-f7dccf6437815586.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-13_387B447D-0F34-E6F4-7B55E0CDAFB23780_387f1e74-cc79-cfd2-476a255ff441aecd.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "43662",
-        "title": "Cooking Class: Mother's Day Series",
-        "url": "/event/cooking-class%3a-mothers-day-series/43662/",
-        "categories": [
-          {
-            "catName": "Food & Drink",
-            "catId": "23"
-          }
-        ],
-        "accountId": 18333,
-        "city": "Kelowna",
-        "admission": "$150 ($120 Youth)",
-        "featured": false,
-        "listing": {
-          "primary_category": {
-            "primary": true,
-            "subcatid": 219,
-            "subcatname": "Education & Workshops",
-            "catname": "Activities & Attractions",
-            "catid": 9
-          },
-          "rankname": "Enhanced Listings",
-          "recid": 6095,
-          "acctid": 18333,
-          "city": "Kelowna",
-          "region": "Within Kelowna and Area",
-          "title": "Lakehouse Kitchens Cooking School",
-          "url": "/listing/lakehouse-kitchens-cooking-school/6095/"
-        },
-        "description": "<p>Celebrate Mother’s Day in the most meaningful way—gathered in the kitchen, cooking side by side.<br><br>In this special hands-on class, you’ll be guided through cherished Italian recipes inspired by Nonna’s table—simple, soulful, and rooted in tradition.<br><br>Learn time-honoured techniques as you create comforting, from-scratch dishes that bring people together. From rolling fresh pasta to finishing with a classic dessert, this experience is all about connection, tradition, and sharing a beautiful meal.<br><br>Cook, laugh, and sit down together to enjoy a heartfelt Mother’s Day celebration—just like Nonna would.</p>",
-        "address1": "200-510 Bernard Avenue",
-        "state": "BC",
-        "zip": "V1Y 6P1",
-        "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "18:00:00",
-        "endTime": "21:00:00"
-      }
-    },
-    {
-      "title": "Drop In DIY Sign Painting",
-      "date": "2026-05-10",
-      "startDate": "2025-01-04",
-      "endDate": null,
-      "venue": "Rustic Chalk Decor DIY Studio",
-      "city": "Kelowna",
-      "description": "Join us for an afternoon down town Kelowna creating personalized wood signs and home decor. HOW DOES IT WORK?- Reserve Your seat online or by calling Lasma- Drop in will also be open if there is space available the day of Crafternoon:)When you arrive at the studio you will:- Choose your project- Design from the design catalog - coloursYou will be able to bring the project home with you the same day.Each person attending must be creating a project except kids 6 and under can create one project to",
-      "url": "https://www.tourismkelowna.com/event/drop-in-diy-sign-painting/38520/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/rustccrop_CF46CCF0-D29B-969A-BE0B8C0768F6AF2C_cf648b98-9760-718c-6c2abf90fb822416.png",
-      "lat": 49.8856888,
-      "lng": -119.4911655,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69f62a40aa2314d6c368cc47",
-        "location": "Rustic Chalk Decor DIY Studio",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2025-01-04T08:00:00.000Z",
-        "recurrence": "Recurring weekly on Saturday",
-        "recurType": 3,
-        "latitude": 49.8856888,
-        "longitude": -119.4911655,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/rustccrop_CF46CCF0-D29B-969A-BE0B8C0768F6AF2C_cf648b98-9760-718c-6c2abf90fb822416.png",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "38520",
-        "title": "Drop In DIY Sign Painting",
-        "url": "/event/drop-in-diy-sign-painting/38520/",
-        "categories": [
-          {
-            "catName": "Classes & Workshops",
-            "catId": "48"
-          },
-          {
-            "catName": "Happy Hours & Specials",
-            "catId": "76"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "from $25",
-        "featured": false,
-        "description": "<p>Join us for an afternoon down town Kelowna creating personalized wood signs and home decor. <br><br>HOW DOES IT WORK?<br><br>- Reserve Your seat online or by calling Lasma<br>- Drop in will also be open if there is space available the day of Crafternoon:)<br><br>When you arrive at the studio you will:<br>- Choose your project<br>- Design from the design catalog <br>- colours<br><br>You will be able to bring the project home with you the same day.<br><br>Each person attending must be creating a project except kids 6 and under can create one project together with a parent. <br><br></p>",
-        "address1": "542 Lawernec Ave.",
-        "state": "BC",
-        "zip": "V1Y6L8",
-        "expired": false,
-        "nextDate": "2026-05-03T06:59:59.000Z",
-        "startTime": "10:30:00",
-        "endTime": "12:30:00"
-      }
-    },
-    {
-      "title": "Elli Hart and Tess Anderson",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "Red Bird Brewing",
-      "city": "Kelowna",
-      "description": "Alt-rock energy meets haunting indie power on the Red Bird stageLive music in Kelowna continues Saturday, May 9, as Elli Hart and Tess Anderson share the stage for a powerful night of indie rock and alt rock at Red Bird Brewing. Music runs from 8 pm to 11 pm for a special ticketed show featuring two Canadian artists known for emotionally charged songwriting and unforgettable live performances.",
-      "url": "https://www.tourismkelowna.com/event/elli-hart-and-tess-anderson/43731/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-34_2D715C41-A52B-7FEE-9298AD1D6519144B_2d73e020-ac90-cc36-7dd3602c61f4ce2c.jpg",
-      "lat": 49.8960899,
-      "lng": -119.4891799,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69f69b07aa2314d6c376064d",
-        "location": "Red Bird Brewing",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.8960899,
-        "longitude": -119.4891799,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/BreakOut-West-2018-Kelowna-34_2D715C41-A52B-7FEE-9298AD1D6519144B_2d73e020-ac90-cc36-7dd3602c61f4ce2c.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "43731",
-        "title": "Elli Hart and Tess Anderson",
-        "url": "/event/elli-hart-and-tess-anderson/43731/",
+        "recid": "42387",
+        "title": "Dynamic Duo Band",
+        "url": "/event/dynamic-duo-band/42387/",
         "categories": [
           {
             "catName": "Music",
             "catId": "25"
           }
         ],
-        "accountId": 18936,
-        "city": "Kelowna",
-        "admission": "$15-20",
+        "accountId": 20418,
+        "city": "West Kelowna",
+        "admission": "Free",
         "featured": false,
         "listing": {
           "primary_category": {
             "primary": true,
-            "subcatid": 205,
-            "subcatname": "Breweries",
-            "catname": "Craft Beverages",
-            "catid": 10
+            "subcatid": 7,
+            "subcatname": "Hotels, Motels & Resorts",
+            "catname": "Accommodations",
+            "catid": 6
           },
           "rankname": "Standard Listings",
-          "recid": 6234,
-          "acctid": 18936,
-          "city": "Kelowna",
+          "recid": 5415,
+          "acctid": 20418,
+          "city": "West Kelowna",
           "region": "Within Kelowna and Area",
-          "title": "Red Bird Brewing",
-          "url": "/listing/red-bird-brewing/6234/"
+          "title": "TownePlace Suites by Marriott West Kelowna",
+          "url": "/listing/towneplace-suites-by-marriott-west-kelowna/5415/"
         },
-        "description": "<p>Alt-rock energy meets haunting indie power on the Red Bird stage<br>Live music in Kelowna continues Saturday, May 9, as Elli Hart and Tess Anderson share the stage for a powerful night of indie rock and alt rock at Red Bird Brewing. Music runs from 8 pm to 11 pm for a special ticketed show featuring two Canadian artists known for emotionally charged songwriting and unforgettable live performances.</p>",
-        "address1": "1080 Richter Street",
+        "description": "<p>Enjoy Dynamic Duo once a month on Tuesdays! Curtis Kieres &amp; Dennis Lyne are two accomplished musicians who joined forces to provide high-quality entertainment for all to enjoy.</p>\r\n<p>Curtis is a professional saxophonist, composer and multi-instrumentalist who brings a sultry and soothing sound that is characteristic of the saxophone.</p>\r\n<p>Dennis is a versatile keyboardist and accomplished vocalist who has woven a rich tapestry of musical experiences throughout his career. Together, they perform the blues &amp; rock classics in a variety of venues in BC.</p>",
+        "address1": "3551 Carrington Rd",
         "state": "BC",
-        "zip": "V1Y 2K5",
+        "zip": "V4T 3L8",
         "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "20:00:00",
-        "endTime": "23:00:00"
-      }
-    },
-    {
-      "title": "Eric Kane's \"right by my side\" Music Tour",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "Freddy's Brewpub",
-      "city": "Kelowna",
-      "description": "Join Eric Kane for another lap around Western Canada for his latest, and long-awaited single \"Right by My Side\".",
-      "url": "https://www.tourismkelowna.com/event/eric-kanes-right-by-my-side-music-tour/43782/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Freddy-s-Brewpub-14_C2281EE3-F7FE-6A57-B33488B16D33E577_c22b3892-ba0c-bf52-066794ef16890a71.jpg",
-      "lat": 49.9021622,
-      "lng": -119.4052736,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69fa64f3b22934a88401c78c",
-        "location": "Freddy's Brewpub",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.9021622,
-        "longitude": -119.4052736,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Freddy-s-Brewpub-14_C2281EE3-F7FE-6A57-B33488B16D33E577_c22b3892-ba0c-bf52-066794ef16890a71.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "43782",
-        "title": "Eric Kane's \"right by my side\" Music Tour",
-        "url": "/event/eric-kanes-right-by-my-side-music-tour/43782/",
-        "categories": [
-          {
-            "catName": "Music",
-            "catId": "25"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "$35.12",
-        "featured": false,
-        "description": "<p>Join Eric Kane for another lap around Western Canada for his latest, and long-awaited single \"Right by My Side\".</p>",
-        "address1": "124-948 McCurdy Road",
-        "state": "BC",
-        "zip": "V1X 2P7",
-        "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "19:30:00",
-        "endTime": "22:30:00"
-      }
-    },
-    {
-      "title": "Femme Fatale Saucy Saturdays",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "DunnEnzies Pizza (Mission Location)",
-      "city": "Kelowna",
-      "description": "Welcome to Saucy Saturdays, where burlesque meets carbs. This monthly residency serves up cheeky performances with extra cheese. Think playful tease, over-the-top charm, and a relaxed party vibe where laughter is encouraged and sauce happens. Grab a slice, tip your dancers and let things get saucy!This is a 19+ event only.",
-      "url": "https://www.tourismkelowna.com/event/femme-fatale-saucy-saturdays/43753/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Mission-Creek-Greenway-Regional-Park-Fall-1_586B56B2-ADEF-4753-3756D694C7BB0145_586ecb53-d17d-cc44-a350295b8f5230c9.jpg",
-      "lat": 49.816486,
-      "lng": -119.4955981,
-      "source": "tourismkelowna",
-      "raw": {
-        "_id": "69f7ec8caa2314d6c39a7da7",
-        "location": "DunnEnzies Pizza (Mission Location)",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.816486,
-        "longitude": -119.4955981,
-        "media_raw": [
-          {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Mission-Creek-Greenway-Regional-Park-Fall-1_586B56B2-ADEF-4753-3756D694C7BB0145_586ecb53-d17d-cc44-a350295b8f5230c9.jpg",
-            "sortorder": 1,
-            "mediatype": "Image"
-          }
-        ],
-        "recid": "43753",
-        "title": "Femme Fatale Saucy Saturdays",
-        "url": "/event/femme-fatale-saucy-saturdays/43753/",
-        "categories": [
-          {
-            "catName": "Theatre, Comedy & Performing Arts",
-            "catId": "38"
-          }
-        ],
-        "accountId": 0,
-        "city": "Kelowna",
-        "admission": "$21.00",
-        "featured": false,
-        "description": "<p>Welcome to Saucy Saturdays, where burlesque meets carbs. <br><br>This monthly residency serves up cheeky performances with extra cheese. Think playful tease, over-the-top charm, and a relaxed party vibe where laughter is encouraged and sauce happens. Grab a slice, tip your dancers and let things get saucy!<br><br>This is a 19+ event only.</p>",
-        "address1": "4638 Lakeshore Road",
-        "state": "BC",
-        "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "20:00:00",
-        "endTime": "22:00:00"
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "18:30:00",
+        "endTime": "20:30:00"
       }
     },
     {
       "title": "Floor Opener",
-      "date": "2026-05-10",
+      "date": "2026-05-20",
       "startDate": "2026-01-24",
       "endDate": "2026-06-01",
       "venue": "Kelowna Art Gallery",
@@ -543,9 +278,9 @@
       "lng": -119.4965822,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69f6d2e7aa2314d6c37f9224",
+        "_id": "6a0a45a811371cf6eef15dac",
         "location": "Kelowna Art Gallery",
-        "date": "2026-05-10T06:59:59.000Z",
+        "date": "2026-05-20T06:59:59.000Z",
         "startDate": "2026-01-24T08:00:00.000Z",
         "endDate": "2026-06-01T06:59:59.000Z",
         "recurrence": "Recurring daily",
@@ -592,41 +327,298 @@
         "state": "BC",
         "zip": "V1Y 9R3",
         "expired": false,
-        "nextDate": "2026-05-03T06:59:59.000Z"
+        "nextDate": "2026-05-18T06:59:59.000Z"
       }
     },
     {
-      "title": "Garden Party Festival",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "City Park",
+      "title": "Free Public Skating",
+      "date": "2026-05-20",
+      "startDate": "2026-04-07",
+      "endDate": "2026-05-22",
+      "venue": "Winfield Arena",
       "city": "Kelowna",
-      "description": "Garden Party unfolds as a 360-degree open-air house music experience at the center of Kelowna’s City Park. Curated sound, exceptional pours, and a sunlit dancefloor set the stage for a day defined by music, style, and connection.",
-      "url": "https://www.tourismkelowna.com/event/garden-party-festival/43710/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Audience-Applauding-During-Live-Performance-at-CCMA-Legends-Show_C6CCCAB0-0E27-21FC-4D5B5B08F1FDC4CF_c6cd4490-0bca-6e3a-5408e4cc381326e4.jpg",
-      "lat": 49.88411319999999,
-      "lng": -119.5015924,
+      "description": "Come join us for Public Skating at Winfield Arena. A fun and welcoming session for skaters of all ages and abilities! This session is open to everyone and offers a relaxed, recreational atmosphere. All participants are encouraged to skate responsibly and be mindful of others on the ice. Helmets are strongly recommended for all skaters and are mandatory for children. Rentals are not available.",
+      "url": "https://www.tourismkelowna.com/event/free-public-skating/43465/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Memorial_EDCD280A-E050-6CD5-9751E21DE924A948_edda877b-9af4-924b-8aa3d82ff42799b4.jpg",
+      "lat": 50.0245124,
+      "lng": -119.4004854,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69f51f62aa2314d6c34be7be",
-        "location": "City Park",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.88411319999999,
-        "longitude": -119.5015924,
+        "_id": "6a0642aa11371cf6ee7a1434",
+        "location": "Winfield Arena",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-04-07T07:00:00.000Z",
+        "endDate": "2026-05-22T06:59:59.000Z",
+        "recurType": 99,
+        "latitude": 50.0245124,
+        "longitude": -119.4004854,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Audience-Applauding-During-Live-Performance-at-CCMA-Legends-Show_C6CCCAB0-0E27-21FC-4D5B5B08F1FDC4CF_c6cd4490-0bca-6e3a-5408e4cc381326e4.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Memorial_EDCD280A-E050-6CD5-9751E21DE924A948_edda877b-9af4-924b-8aa3d82ff42799b4.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "43710",
-        "title": "Garden Party Festival",
-        "url": "/event/garden-party-festival/43710/",
+        "recid": "43465",
+        "title": "Free Public Skating",
+        "url": "/event/free-public-skating/43465/",
+        "categories": [
+          {
+            "catName": "Sports & Recreation",
+            "catId": "27"
+          }
+        ],
+        "accountId": 0,
+        "city": "Lake Country",
+        "admission": "FREE",
+        "featured": false,
+        "description": "<p>Come join us for Public Skating at Winfield Arena. A fun and welcoming session for skaters of all ages and abilities! <br><br>This session is open to everyone and offers a relaxed, recreational atmosphere. All participants are encouraged to skate responsibly and be mindful of others on the ice. Helmets are strongly recommended for all skaters and are mandatory for children. <br><br>Rentals are not available.</p>",
+        "address1": "9830 Bottom Wood Lake Road",
+        "state": "BC",
+        "expired": false,
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "10:00:00",
+        "endTime": "11:15:00"
+      }
+    },
+    {
+      "title": "From Then Until Now: A Michael Adamson Painting Survey",
+      "date": "2026-05-20",
+      "startDate": "2026-05-18",
+      "endDate": "2026-06-02",
+      "venue": "SOPA Fine Arts",
+      "city": "Kelowna",
+      "description": "From Then Until Now: A Michael Adamson Painting Survey brings together works from the 1990s to 2026 and shows how Adamson’s painting has evolved over more than three decades.Painting has often been declared “dead,” especially with the rise of conceptual art and now AI-generated images, but Adamson’s work is proof that painting is still very much alive. Digital tools can quickly produce polished images, but paintings focus on touch, material, and human intuition. hey are slower, more uncertain, a",
+      "url": "https://www.tourismkelowna.com/event/from-then-until-now%3a-a-michael-adamson-painting-survey/43959/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lebanon-Creek-Regional-Park-Spring-2_66D06209-C662-73A9-F0DFF8C7A2199709_66dae835-b055-6d4b-b462eeb82ca2611e.jpg",
+      "lat": 49.86415479999999,
+      "lng": -119.491689,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "6a0bb2cf11371cf6ee22cc3e",
+        "location": "SOPA Fine Arts",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-05-18T07:00:00.000Z",
+        "endDate": "2026-06-02T06:59:59.000Z",
+        "recurrence": "Recurring weekly on Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday",
+        "recurType": 3,
+        "latitude": 49.86415479999999,
+        "longitude": -119.491689,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Lebanon-Creek-Regional-Park-Spring-2_66D06209-C662-73A9-F0DFF8C7A2199709_66dae835-b055-6d4b-b462eeb82ca2611e.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43959",
+        "title": "From Then Until Now: A Michael Adamson Painting Survey",
+        "url": "/event/from-then-until-now%3a-a-michael-adamson-painting-survey/43959/",
+        "categories": [
+          {
+            "catName": "Museum & Gallery Exhibitions",
+            "catId": "79"
+          }
+        ],
+        "accountId": 0,
+        "city": "Kelowna",
+        "admission": "FREE",
+        "featured": false,
+        "description": "<p>From Then Until Now: A Michael Adamson Painting Survey brings together works from the 1990s to 2026 and shows how Adamson’s painting has evolved over more than three decades.<br><br>Painting has often been declared “dead,” especially with the rise of conceptual art and now AI-generated images, but Adamson’s work is proof that painting is still very much alive. Digital tools can quickly produce polished images, but paintings focus on touch, material, and human intuition. hey are slower, more uncertain, and more personal.<br><br>Adamson trained at a time in the 1990s when photography and digital media were becoming dominant, but rather than turning away from painting, he absorbed those influences into it with his work that emphasizes what makes painting distinct, its physical presence and emotional weight.<br><br>This exhibition doesn’t present a strict timeline, but more so a consistent approach to seeing and making. Adamson continues to explore perception and how images come into being, and in a fast-moving, image-saturated world, his paintings offer a slower experience.<br><br>We ask viewers to pause, look carefully, and spend time with what they see.<br><br>-A Note from Michael Adamson and Louis Elmer</p>",
+        "address1": "2934 South Pandosy Street",
+        "state": "BC",
+        "zip": "V1Y 1V9",
+        "expired": false,
+        "nextDate": "2026-05-19T06:59:59.000Z",
+        "startTime": "10:00:00",
+        "endTime": "17:00:00"
+      }
+    },
+    {
+      "title": "Latin Nights at Red Bird",
+      "date": "2026-05-20",
+      "startDate": "2026-05-19",
+      "endDate": "2026-05-20",
+      "venue": "Red Bird Brewing",
+      "city": "Kelowna",
+      "description": "Get ready to dance the night away at Red Bird Brewing’s Latin Night! Whether you’re a seasoned dancer or a complete beginner, this event is perfect for everyone.Schedule6:00 PM: DJ Roberto Stylz kicks off the night with some fantastic tunes.7:00 PM: Free salsa lesson to get you moving with confidence.7:30 PM: Professional dance demonstration followed by free dance time.",
+      "url": "https://www.tourismkelowna.com/event/latin-nights-at-red-bird/43933/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Red-Bird-Brewing-21_F317EE79-D0C2-AB9B-79CE9C520CC5298F_f31fc77c-c800-d41c-b857c1a217359164.jpg",
+      "lat": 49.8960899,
+      "lng": -119.4891799,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "6a08e5cd11371cf6eec70c12",
+        "location": "Red Bird Brewing",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-05-19T07:00:00.000Z",
+        "endDate": "2026-05-20T06:59:59.000Z",
+        "recurType": 0,
+        "latitude": 49.8960899,
+        "longitude": -119.4891799,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Red-Bird-Brewing-21_F317EE79-D0C2-AB9B-79CE9C520CC5298F_f31fc77c-c800-d41c-b857c1a217359164.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43933",
+        "title": "Latin Nights at Red Bird",
+        "url": "/event/latin-nights-at-red-bird/43933/",
+        "categories": [
+          {
+            "catName": "Music",
+            "catId": "25"
+          }
+        ],
+        "accountId": 18936,
+        "city": "Kelowna",
+        "admission": "Free",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 205,
+            "subcatname": "Breweries",
+            "catname": "Craft Beverages",
+            "catid": 10
+          },
+          "rankname": "Standard Listings",
+          "recid": 6234,
+          "acctid": 18936,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Red Bird Brewing",
+          "url": "/listing/red-bird-brewing/6234/"
+        },
+        "description": "<p>Get ready to dance the night away at Red Bird Brewing’s Latin Night! Whether you’re a seasoned dancer or a complete beginner, this event is perfect for everyone.<br><br>Schedule<br><br>6:00 PM: DJ Roberto Stylz kicks off the night with some fantastic tunes.<br>7:00 PM: Free salsa lesson to get you moving with confidence.<br>7:30 PM: Professional dance demonstration followed by free dance time.</p>",
+        "address1": "1080 Richter Street",
+        "state": "BC",
+        "zip": "V1Y 2K5",
+        "expired": false,
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "18:00:00",
+        "endTime": "22:00:00"
+      }
+    },
+    {
+      "title": "Memorial Cup Wine & Water Experiences & Private Lake Cruises",
+      "date": "2026-05-20",
+      "startDate": "2026-05-14",
+      "endDate": null,
+      "venue": "Lake Life Pontoon Cruises",
+      "city": "Kelowna",
+      "description": "Visiting Kelowna during the Memorial Cup? Experience the Okanagan beyond the arena with a private lake cruise, sunset cruise, or curated Wine &amp; Water experience with Lake Life Pontoon Cruises.Enjoy scenic cruising on Okanagan Lake aboard a private luxury pontoon with a professional captain, or explore the Central Okanagan with private winery transportation in our newly branded premium touring van.Experiences are perfect for hockey fans, families, corporate groups, and visitors looking to rel",
+      "url": "https://www.tourismkelowna.com/event/memorial-cup-wine-%26-water-experiences-%26-private-lake-cruises/43916/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/boat-cruise-lake-okanagan-private-experience_A2873C58-FB23-1472-432AF5BCA6AE1CE8_a2c058a9-9c3e-68ef-22c1b9e9c28f2038.jpg",
+      "lat": 49.9857577,
+      "lng": -119.441337,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "6a073fbb11371cf6ee983c5a",
+        "location": "Lake Life Pontoon Cruises",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-05-14T07:00:00.000Z",
+        "recurrence": "Recurring daily",
+        "recurType": 1,
+        "latitude": 49.9857577,
+        "longitude": -119.441337,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/boat-cruise-lake-okanagan-private-experience_A2873C58-FB23-1472-432AF5BCA6AE1CE8_a2c058a9-9c3e-68ef-22c1b9e9c28f2038.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/kelowna-wine-and-water-boat-experience_A28B4A30-AD9B-36FD-35CC15222E93A6EF_a2c09215-ce59-131d-1e905ddbb8eb646f.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/kelowna-wine-and-boat-tour-experience_A28E34FB-0C9B-E9D5-76BE385BB62981CF_a2c0bb1c-e925-feb5-5715a19bf0b2d7b3.jpg",
+            "sortorder": 3,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43916",
+        "title": "Memorial Cup Wine & Water Experiences & Private Lake Cruises",
+        "url": "/event/memorial-cup-wine-%26-water-experiences-%26-private-lake-cruises/43916/",
+        "categories": [
+          {
+            "catName": "Sports & Recreation",
+            "catId": "27"
+          },
+          {
+            "catName": "Community Events",
+            "catId": "80"
+          },
+          {
+            "catName": "2026 Memorial Cup",
+            "catId": "86"
+          }
+        ],
+        "accountId": 20654,
+        "city": "Kelowna",
+        "featured": false,
+        "listing": {
+          "primary_category": {
+            "primary": true,
+            "subcatid": 197,
+            "subcatname": "Guided Tours",
+            "catname": "Tour Operators",
+            "catid": 54
+          },
+          "rankname": "Standard Listings",
+          "recid": 6772,
+          "acctid": 20654,
+          "city": "Kelowna",
+          "region": "Within Kelowna and Area",
+          "title": "Lake Life Pontoon Cruises",
+          "url": "/listing/lake-life-pontoon-cruises/6772/"
+        },
+        "description": "<p>Visiting Kelowna during the Memorial Cup? Experience the Okanagan beyond the arena with a private lake cruise, sunset cruise, or curated Wine &amp; Water experience with Lake Life Pontoon Cruises.<br><br>Enjoy scenic cruising on Okanagan Lake aboard a private luxury pontoon with a professional captain, or explore the Central Okanagan with private winery transportation in our newly branded premium touring van.<br><br>Experiences are perfect for hockey fans, families, corporate groups, and visitors looking to relax and experience the best of Kelowna during Memorial Cup week.<br><br>Private experiences available throughout the event week:<br>• Scenic lake cruises<br>• Sunset cruises<br>• Wine &amp; Water experiences<br>• Private winery transportation<br>• Custom group experiences<br><br>Advance booking recommended.</p>",
+        "address1": "3378 lavender lane",
+        "state": "BC",
+        "zip": "V1V0C6",
+        "expired": false,
+        "nextDate": "2026-05-16T06:59:59.000Z",
+        "startTime": "08:00:00",
+        "endTime": "22:00:00"
+      }
+    },
+    {
+      "title": "Open Mic Night",
+      "date": "2026-05-20",
+      "startDate": "2026-04-21",
+      "endDate": "2026-07-22",
+      "venue": "Freddy's Brewpub",
+      "city": "Kelowna",
+      "description": "Take the stage at Freddy's for Open Mic Nights! This event takes place on the first Tuesday of the month, as well as the third Tuesday of the month. There is no advance sign-up, please show up no later than 6:30 PM and come in advance before this time if you wish to perform.",
+      "url": "https://www.tourismkelowna.com/event/open-mic-night/43449/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Freddy-s-Brewpub-16-1-_7DFA1063-91D3-947F-368DDEFE3C861EAD_7dfc82b1-9fa8-d0a2-c806b668c6285576.jpg",
+      "lat": 49.9021622,
+      "lng": -119.4052736,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "6a0626c411371cf6ee767e2a",
+        "location": "Freddy's Brewpub",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-04-21T07:00:00.000Z",
+        "endDate": "2026-07-22T06:59:59.000Z",
+        "recurType": 99,
+        "latitude": 49.9021622,
+        "longitude": -119.4052736,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Freddy-s-Brewpub-16-1-_7DFA1063-91D3-947F-368DDEFE3C861EAD_7dfc82b1-9fa8-d0a2-c806b668c6285576.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43449",
+        "title": "Open Mic Night",
+        "url": "/event/open-mic-night/43449/",
         "categories": [
           {
             "catName": "Music",
@@ -635,83 +627,114 @@
         ],
         "accountId": 0,
         "city": "Kelowna",
-        "admission": "From $70",
+        "admission": "FREE",
         "featured": false,
-        "description": "<p>Garden Party unfolds as a 360-degree open-air house music experience at the center of Kelowna’s City Park. Curated sound, exceptional pours, and a sunlit dancefloor set the stage for a day defined by music, style, and connection.</p>",
-        "address1": "1600 Abbott Street",
+        "description": "<p>Take the stage at Freddy's for Open Mic Nights! <br><br>This event takes place on the first Tuesday of the month, as well as the third Tuesday of the month. <br><br>There is no advance sign-up, please show up no later than 6:30 PM and come in advance before this time if you wish to perform.</p>",
+        "address1": "124-948 McCurdy Road",
         "state": "BC",
         "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "14:00:00",
-        "endTime": "20:00:00"
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "18:30:00",
+        "endTime": "20:30:00"
       }
     },
     {
-      "title": "Geology & Landforms Hike",
-      "date": "2026-05-10",
-      "startDate": "2026-05-09",
-      "endDate": "2026-05-10",
-      "venue": "Scenic Canyon Regional Park",
+      "title": "Stillness & Sound Yin Yoga + Crystal Sound Bowl in the Himalayan Salt Cave!",
+      "date": "2026-05-20",
+      "startDate": "2025-11-25",
+      "endDate": "2026-05-20",
+      "venue": "Room and Pillar",
       "city": "Kelowna",
-      "description": "Free Program - Registration Required to secure your spot: https://www.rdco.intellionline.ca/WEBSITE/public/category/browse/GEOLOGYTake a guided hike into the Regional Parks most known for their unique geological features. We’ll uncover the geological forces that shaped the Okanagan landscapes and learn about the rock cycle, geology basics, and the natural history beneath your feet.For more information on other programs offered by the RDCO and registration details, please visit our website: https",
-      "url": "https://www.tourismkelowna.com/event/geology-%26-landforms-hike/43358/",
-      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/_MHP8374_E0D723C8-F727-B405-5E1DF15D2A21E592_e0d7e54f-ba9c-8e74-1428056ca424e4b0.jpg",
-      "lat": 49.8643601,
-      "lng": -119.3890835,
+      "description": "Unwind in the soft glow of the Himalayan Salt Cave as you’re guided through an evening of deep rest, gentle movement, and healing sound.Stillness &amp; Sound is a calming Yin Yoga practice paired with the soothing vibrations of a single crystal sound bowl and delicate chimes — creating a peaceful and grounding experience designed to melt away stress and restore balance.Held in the tranquil environment of the salt cave, this practice invites you to slow down, breathe deeply, and reconnect with yo",
+      "url": "https://www.tourismkelowna.com/event/stillness-%26-sound-yin-yoga-%2b-crystal-sound-bowl-in-the-himalayan-salt-cave!/41464/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Salty_Yoga2_7A3B7F08-D7A2-3D74-434BAB735DF5E8D5_7a418950-960f-914e-b4821bf1123d0976.jpg",
+      "lat": 49.8822793,
+      "lng": -119.464409,
       "source": "tourismkelowna",
       "raw": {
-        "_id": "69fcc216b22934a8844444b3",
-        "location": "Scenic Canyon Regional Park",
-        "date": "2026-05-10T06:59:59.000Z",
-        "startDate": "2026-05-09T07:00:00.000Z",
-        "endDate": "2026-05-10T06:59:59.000Z",
-        "recurType": 0,
-        "latitude": 49.8643601,
-        "longitude": -119.3890835,
+        "_id": "6a0bead311371cf6ee2b6db4",
+        "location": "Room and Pillar",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2025-11-25T08:00:00.000Z",
+        "endDate": "2026-05-20T06:59:59.000Z",
+        "recurType": 99,
+        "latitude": 49.8822793,
+        "longitude": -119.464409,
         "media_raw": [
           {
-            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/_MHP8374_E0D723C8-F727-B405-5E1DF15D2A21E592_e0d7e54f-ba9c-8e74-1428056ca424e4b0.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Salty_Yoga2_7A3B7F08-D7A2-3D74-434BAB735DF5E8D5_7a418950-960f-914e-b4821bf1123d0976.jpg",
             "sortorder": 1,
             "mediatype": "Image"
           }
         ],
-        "recid": "43358",
-        "title": "Geology & Landforms Hike",
-        "url": "/event/geology-%26-landforms-hike/43358/",
+        "recid": "41464",
+        "title": "Stillness & Sound Yin Yoga + Crystal Sound Bowl in the Himalayan Salt Cave!",
+        "url": "/event/stillness-%26-sound-yin-yoga-%2b-crystal-sound-bowl-in-the-himalayan-salt-cave!/41464/",
         "categories": [
           {
-            "catName": "Sports & Recreation",
-            "catId": "27"
+            "catName": "Health & Wellness",
+            "catId": "78"
           }
         ],
-        "accountId": 18782,
+        "accountId": 0,
         "city": "Kelowna",
-        "admission": "Free",
+        "admission": "$55",
         "featured": false,
-        "listing": {
-          "primary_category": {
-            "primary": true,
-            "subcatid": 182,
-            "subcatname": "Moderate",
-            "catname": "Hiking",
-            "catid": 50
-          },
-          "rankname": "Outdoor Listings",
-          "recid": 1603,
-          "acctid": 18782,
-          "city": "Kelowna",
-          "region": "Within Kelowna and Area",
-          "title": "Scenic Canyon Regional Park",
-          "url": "/listing/scenic-canyon-regional-park/1603/"
-        },
-        "description": "<p>Free Program - Registration Required to secure your spot: https://www.rdco.intellionline.ca/WEBSITE/public/category/browse/GEOLOGY<br><br>Take a guided hike into the Regional Parks most known for their unique geological features. We’ll uncover the geological forces that shaped the Okanagan landscapes and learn about the rock cycle, geology basics, and the natural history beneath your feet.<br><br>For more information on other programs offered by the RDCO and registration details, please visit our website: https://www.rdco.intellionline.ca/WEBSITE/public.</p>",
-        "address1": "The Greenway",
+        "description": "<p>Unwind in the soft glow of the Himalayan Salt Cave as you’re guided through an evening of deep rest, gentle movement, and healing sound.<br><br>Stillness &amp; Sound is a calming Yin Yoga practice paired with the soothing vibrations of a single crystal sound bowl and delicate chimes — creating a peaceful and grounding experience designed to melt away stress and restore balance.<br><br>Held in the tranquil environment of the salt cave, this practice invites you to slow down, breathe deeply, and reconnect with yourself on every level — physical, emotional, and energetic.<br><br>What to Expect:<br><br>A slow, supportive Yin Yoga sequence with long-held postures<br><br>Gentle sound throughout using one crystal sound bowl and chimes, enhancing the meditative state<br><br>A deeply restorative atmosphere lit by the warm glow of salt walls<br><br>Breath awareness and moments of quiet reflection<br><br>A space to release tension and reset your nervous system<br><br>🧂 Why the Salt Cave?<br><br>Practicing in the Himalayan Salt Cave offers more than serenity — it provides the natural benefits of dry salt therapy (halotherapy). A halo-generator disperses fine, pharmaceutical-grade salt particles into the air, helping to:<br><br>Support respiratory health and lung function<br><br>Reduce inflammation and ease muscular tension<br><br>Promote detoxification and skin clarity<br><br>Enhance relaxation, calm, and clarity<br><br>When combined with yoga and sound, the healing effects of the salt cave are amplified — creating a full-body experience of renewal and restoration.<br><br><br></p>",
+        "address1": "1546 Harvey Ave",
         "state": "BC",
-        "zip": "V1W 4G1",
+        "zip": "V1Y 6G2",
         "expired": false,
-        "nextDate": "2026-05-10T06:59:59.000Z",
-        "startTime": "10:00:00",
-        "endTime": "12:00:00"
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "18:30:00",
+        "endTime": "19:30:00"
+      }
+    },
+    {
+      "title": "Toonie Tuesday's",
+      "date": "2026-05-20",
+      "startDate": "2026-05-19",
+      "endDate": null,
+      "venue": null,
+      "city": "Kelowna",
+      "description": "Treat yourself by enjoying $2 off movie tickets every Tuesday. With double showings every Tuesday, it’s the best night to be at the movies! Brand new showtimes every Tuesday, and a whole new line up every month!",
+      "url": "https://www.tourismkelowna.com/event/toonie-tuesdays/43901/",
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Bernie-s--07_F63B285E-6DDF-4B8D-B86BCF292B523FB0_a5867d68-ce42-460b-8b54cdef51f276b9.jpg",
+      "lat": 56.130366,
+      "lng": -106.346771,
+      "source": "tourismkelowna",
+      "raw": {
+        "_id": "6a0642aa11371cf6ee7a143a",
+        "date": "2026-05-20T06:59:59.000Z",
+        "startDate": "2026-05-19T07:00:00.000Z",
+        "recurrence": "Recurring weekly on Tuesday",
+        "recurType": 3,
+        "latitude": 56.130366,
+        "longitude": -106.346771,
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/kelowna/Bernie-s--07_F63B285E-6DDF-4B8D-B86BCF292B523FB0_a5867d68-ce42-460b-8b54cdef51f276b9.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "recid": "43901",
+        "title": "Toonie Tuesday's",
+        "url": "/event/toonie-tuesdays/43901/",
+        "categories": [
+          {
+            "catName": "Food & Drink",
+            "catId": "23"
+          }
+        ],
+        "accountId": 20475,
+        "admission": "$8.99",
+        "featured": false,
+        "description": "<p>Treat yourself by enjoying $2 off movie tickets every Tuesday. With double showings every Tuesday, it’s the best night to be at the movies! Brand new showtimes every Tuesday, and a whole new line up every month!</p>",
+        "expired": false,
+        "nextDate": "2026-05-20T06:59:59.000Z",
+        "startTime": "18:00:00",
+        "endTime": "23:00:00"
       }
     }
   ]
